@@ -11,5 +11,5 @@ import pl.basistam.turysta.database.model.TrailPoint;
 @Dao
 public interface TrailPointDao {
     @Query("SELECT * FROM trail_points WHERE trail_id = :trailId")
-    List<TrailPoint> getByTrailId(Long trailId);
+    List<TrailPoint> getByTrailId(Integer trailId);
 }

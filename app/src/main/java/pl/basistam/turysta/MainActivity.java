@@ -23,6 +23,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.basistam.turysta.components.buttons.ZoomButtons;
+import pl.basistam.turysta.database.AppDatabase;
+import pl.basistam.turysta.map.MapInitializer;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
@@ -137,7 +139,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        this.map = googleMap;
+        map = googleMap;
+        MapInitializer.init(AppDatabase.getInstance(this), map);
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(MapInitializer.INITIAL_LOCATION, MapInitializer.INITIAL_ZOOM));
+        map.getUiSettings().setMapToolbarEnabled(false);
+
         new ZoomButtons(map,
                 (ImageButton) findViewById(R.id.zoom_in),
                 (ImageButton) findViewById(R.id.zoom_out)).initializeListeners();
