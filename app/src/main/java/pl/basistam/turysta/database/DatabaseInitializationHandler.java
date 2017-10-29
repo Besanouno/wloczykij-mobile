@@ -35,5 +35,6 @@ public class DatabaseInitializationHandler {
                 e.printStackTrace();
             }
         }
+
     }
 }
