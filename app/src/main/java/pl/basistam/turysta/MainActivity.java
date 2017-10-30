@@ -14,24 +14,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-
-import pl.basistam.turysta.components.buttons.ZoomButtons;
-import pl.basistam.turysta.database.AppDatabase;
+import pl.basistam.turysta.components.utils.KeyboardUtils;
 import pl.basistam.turysta.fragments.LoginFragment;
 import pl.basistam.turysta.fragments.MapViewFragment;
-import pl.basistam.turysta.map.MapInitializer;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private MapViewFragment mapFragment = new MapViewFragment();
     private LoginFragment loginFragment = new LoginFragment();
-    private GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,38 +81,31 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         FragmentManager fragmentManager = getFragmentManager();
+        View searchPanel = findViewById(R.id.action_search);
+        searchPanel.setVisibility(View.GONE);
         fragmentManager.beginTransaction().hide(mapFragment).commit();
         if (loginFragment.isAdded()) fragmentManager.beginTransaction().hide(loginFragment).commit();
 
+        KeyboardUtils.hide(this, mapFragment.getView());
+
         int id = item.getItemId();
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_map) {
+            fragmentManager.beginTransaction().show(mapFragment).commit();
+            searchPanel.setVisibility(View.VISIBLE);
+        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_send) {
             if (!loginFragment.isAdded())
                 fragmentManager.beginTransaction().add(R.id.content, loginFragment).commit();
             else
                 fragmentManager.beginTransaction().show(loginFragment).commit();
-        } else if (id == R.id.nav_gallery) {
-            fragmentManager.beginTransaction().show(mapFragment).commit();
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
-
-    }
-
 
 
 }

@@ -10,4 +10,19 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_abcd">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">login/email</string>
+    <string name="prompt_password">hasło</string>
+    <string name="action_sign_in">Zaloguj się</string>
+    <string name="action_sign_in_short">Zarejestruj się</string>
+    <string name="error_invalid_email">Niepoprawny adres email</string>
+    <string name="error_invalid_password">Hasło jest zbyt krótkie</string>
+    <string name="error_incorrect_password">Hasło jest niepoprawne</string>
+    <string name="error_field_required">To pole jest wymagane</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="access_section">Dostęp</string>
 </resources>
