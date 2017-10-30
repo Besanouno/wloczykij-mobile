@@ -13,6 +13,7 @@ import pl.basistam.turysta.R;
 import pl.basistam.turysta.components.utils.KeyboardUtils;
 import pl.basistam.turysta.database.AppDatabase;
 import pl.basistam.turysta.database.dao.PlaceDao;
+import pl.basistam.turysta.map.MapInitializer;
 
 public class SearchField {
     private final Context context;

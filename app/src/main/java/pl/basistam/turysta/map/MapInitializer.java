@@ -1,5 +1,6 @@
 package pl.basistam.turysta.map;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -12,5 +13,8 @@ public class MapInitializer {
     public static void init(AppDatabase database, GoogleMap map) {
         new PlacesInitializer(database, map).execute();
         new TrailsInitializer(database, map).execute();
+
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(MapInitializer.INITIAL_LOCATION, MapInitializer.INITIAL_ZOOM));
+        map.getUiSettings().setMapToolbarEnabled(false);
     }
 }
