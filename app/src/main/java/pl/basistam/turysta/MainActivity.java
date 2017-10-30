@@ -2,6 +2,7 @@ package pl.basistam.turysta;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -21,20 +22,20 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 
 import pl.basistam.turysta.components.buttons.ZoomButtons;
 import pl.basistam.turysta.database.AppDatabase;
+import pl.basistam.turysta.fragments.LoginFragment;
 import pl.basistam.turysta.fragments.MapViewFragment;
 import pl.basistam.turysta.map.MapInitializer;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
-    private MapViewFragment mapFragment;
+    private MapViewFragment mapFragment = new MapViewFragment();
+    private LoginFragment loginFragment = new LoginFragment();
     private GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mapFragment = new MapViewFragment();
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -86,13 +87,17 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().hide(mapFragment).commit();
+        if (loginFragment.isAdded()) fragmentManager.beginTransaction().hide(loginFragment).commit();
 
         int id = item.getItemId();
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            if (!loginFragment.isAdded())
+                fragmentManager.beginTransaction().add(R.id.content, loginFragment).commit();
+            else
+                fragmentManager.beginTransaction().show(loginFragment).commit();
         } else if (id == R.id.nav_gallery) {
             fragmentManager.beginTransaction().show(mapFragment).commit();
         } else if (id == R.id.nav_slideshow) {
@@ -114,9 +119,6 @@ public class MainActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
-        new ZoomButtons(map,
-                (ImageButton) findViewById(R.id.zoom_in),
-                (ImageButton) findViewById(R.id.zoom_out)).initializeListeners();
     }
 
 
