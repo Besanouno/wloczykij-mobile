@@ -83,23 +83,17 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         View searchPanel = findViewById(R.id.action_search);
         searchPanel.setVisibility(View.GONE);
-        fragmentManager.beginTransaction().hide(mapFragment).commit();
-        if (loginFragment.isAdded()) fragmentManager.beginTransaction().hide(loginFragment).commit();
 
-        KeyboardUtils.hide(this, mapFragment.getView());
+        KeyboardUtils.hide(this, getCurrentFocus());
 
         int id = item.getItemId();
         if (id == R.id.nav_map) {
-            fragmentManager.beginTransaction().show(mapFragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content, mapFragment).commit();
             searchPanel.setVisibility(View.VISIBLE);
-        } else if (id == R.id.nav_gallery) {
         } else if (id == R.id.nav_slideshow) {
         } else if (id == R.id.nav_manage) {
         } else if (id == R.id.nav_send) {
-            if (!loginFragment.isAdded())
-                fragmentManager.beginTransaction().add(R.id.content, loginFragment).commit();
-            else
-                fragmentManager.beginTransaction().show(loginFragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.content, loginFragment).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
