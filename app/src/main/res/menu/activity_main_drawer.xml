@@ -7,19 +7,19 @@
             android:icon="@drawable/ic_menu_map"
             android:title="@string/map_menu_item" />
         <item
+            android:id="@+id/nav_event"
+            android:icon="@drawable/ic_event"
+            android:title="@string/event" />
+        <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
     </group>
 
     <item android:title="@string/access_section">
         <menu>
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/nav_log_in"
                 android:icon="@drawable/ic_log_in"
                 android:title="@string/action_sign_in" />
         </menu>

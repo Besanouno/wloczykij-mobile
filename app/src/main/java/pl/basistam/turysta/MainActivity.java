@@ -1,5 +1,8 @@
 package pl.basistam.turysta;
 
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,15 +18,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import pl.basistam.turysta.auth.AccountGeneral;
 import pl.basistam.turysta.components.utils.KeyboardUtils;
-import pl.basistam.turysta.fragments.LoginFragment;
+import pl.basistam.turysta.fragments.EventFragment;
 import pl.basistam.turysta.fragments.MapViewFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private MapViewFragment mapFragment = new MapViewFragment();
-    private LoginFragment loginFragment = new LoginFragment();
+    private EventFragment eventFragment = new EventFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +76,7 @@ public class MainActivity extends AppCompatActivity
 //        new SearchField(this, (SearchView) searchItem.getActionView(), map).initialize();
         return super.onCreateOptionsMenu(menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
@@ -90,16 +95,25 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_map) {
             fragmentManager.beginTransaction().replace(R.id.content, mapFragment).commit();
             searchPanel.setVisibility(View.VISIBLE);
-        } else if (id == R.id.nav_slideshow) {
-        } else if (id == R.id.nav_manage) {
-        } else if (id == R.id.nav_send) {
-                fragmentManager.beginTransaction().replace(R.id.content, loginFragment).commit();
+        } else if (id == R.id.nav_event) {
+            fragmentManager.beginTransaction().replace(R.id.content, eventFragment).commit();
+        } else if (id == R.id.nav_log_in) {
+            AccountManager accountManager = AccountManager.get(this);
+            accountManager.addAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
+                @Override
+                public void run(AccountManagerFuture<Bundle> future) {
+                    try {
+                        Bundle bundle = future.getResult();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, null);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
 }

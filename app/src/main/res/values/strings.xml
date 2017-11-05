@@ -25,4 +25,15 @@
         completions."
     </string>
     <string name="access_section">Dostęp</string>
+    <string name="event">Wydarzenie</string>
+    <string name="prompt_event_name">Nazwa*</string>
+    <string name="prompt_place_of_meeting">Skąd wyruszamy?*</string>
+    <string name="prompt_start_date">Start*</string>
+    <string name="end_date">Koniec</string>
+    <string name="prompt_participants_limit">Limit uczestników*</string>
+    <string name="public_access">Publiczny dostęp</string>
+    <string name="action_save_event">Zapisz</string>
+    <string name="prompt_end_date">Koniec</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="label">Turysta</string>
 </resources>
