@@ -22,6 +22,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import pl.basistam.turysta.auth.AccountGeneral;
 import pl.basistam.turysta.auth.ServerAuthenticateImpl;
@@ -168,16 +169,18 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
                 @Override
                 protected Intent doInBackground(String... params) {
                     String authToken = null;
-
-                    authToken = ServerAuthenticateImpl.getInstance()
-                            .signIn(login, password, accountType);
-
                     Bundle data = new Bundle();
-                    data.putString(AccountManager.KEY_ACCOUNT_NAME, login);
-                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-                    data.putString(AccountManager.KEY_AUTHTOKEN, authToken);
-                    data.putString(PARAM_USER_PASS, password);
+                    try {
+                        authToken = ServerAuthenticateImpl.getInstance()
+                                .signIn(login, password, accountType);
 
+                        data.putString(AccountManager.KEY_ACCOUNT_NAME, login);
+                        data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+                        data.putString(AccountManager.KEY_AUTHTOKEN, authToken);
+                        data.putString(PARAM_USER_PASS, password);
+                    } catch(Exception e) {
+                        data.putString(KEY_ERROR_MESSAGE, e.getMessage());
+                    }
                     final Intent result = new Intent();
                     result.putExtras(data);
                     return result;
@@ -185,7 +188,11 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
 
                 @Override
                 protected void onPostExecute(Intent intent) {
-                    finishLogin(intent);
+                    if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
+                        Toast.makeText(getBaseContext(), intent.getStringExtra(KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
+                    } else {
+                        finishLogin(intent);
+                    }
                 }
             }.execute();
         }
@@ -208,7 +215,7 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        return true;
     }
 
     private boolean isPasswordValid(String password) {
@@ -243,62 +250,6 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
                 progressView.setVisibility(show ? View.VISIBLE : View.GONE);
             }
         });
-    }
-
-/*
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
-
-        addEmailsToAutoComplete(emails);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
-
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        edtLogin.setAdapter(adapter);
-    }
-*/
-
-
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
     }
 
     private void finishLogin(Intent intent) {
