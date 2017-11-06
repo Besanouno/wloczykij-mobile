@@ -1,7 +1,15 @@
 package pl.basistam.turysta.auth;
 
 
+import android.accounts.AccountManager;
 import android.util.Base64;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,10 +18,16 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
+import java.util.Date;
 
 import pl.basistam.turysta.exceptions.AuthorizationException;
+import pl.basistam.turysta.json.UserInputJson;
+import pl.basistam.turysta.model.UserDetails;
 
 import static android.util.Base64.DEFAULT;
 
@@ -80,7 +94,28 @@ public class ServerAuthenticateImpl implements ServerAuthenticate {
     }
 
     @Override
-    public String signUp(String name, String email, String password, String authType)  throws AuthorizationException {
-        return null;
+    public void signUp(UserInputJson userInputJson, String authType)  throws AuthorizationException {
+        try {
+            URL url = new URL("http://192.168.1.3:8070/api/user");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            String json = new Gson().toJson(userInputJson);
+            connection.setDoOutput(true);
+
+            DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
+            dataOutputStream.writeBytes(json);
+            dataOutputStream.flush();
+            dataOutputStream.close();
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode != 201) {
+                throw new AuthorizationException(Integer.toString(responseCode));
+            }
+        } catch (IOException e) {
+            throw new AuthorizationException(e.getMessage());
+        }
     }
+
+
 }

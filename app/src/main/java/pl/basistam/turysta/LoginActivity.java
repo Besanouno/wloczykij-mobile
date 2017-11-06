@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
@@ -70,7 +69,7 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
     private void initFields() {
         edtLogin = findViewById(R.id.email);
         populateAutoComplete();
-        edtPassword =  findViewById(R.id.password);
+        edtPassword =  findViewById(R.id.repeat_password);
         edtPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -82,7 +81,7 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
             }
         });
 
-        findViewById(R.id.email_sign_in_button)
+        findViewById(R.id.sign_up_button)
                 .setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,6 +91,14 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
 
         loginFormView = findViewById(R.id.login_form);
         progressView = findViewById(R.id.login_progress);
+        findViewById(R.id.sign_up).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent signup = new Intent(getBaseContext(), SignUpActivity.class);
+                signup.putExtras(getIntent().getExtras());
+                startActivityForResult(signup, REQ_SIGNUP);
+            }
+        });
     }
 
     private void populateAutoComplete() {
