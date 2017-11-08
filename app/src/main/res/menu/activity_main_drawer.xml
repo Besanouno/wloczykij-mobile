@@ -20,20 +20,11 @@
         android:id="@+id/account"
         android:title="@string/access_section">
         <menu
-            android:id="@+id/unlogged_user_menu">
+            android:id="@+id/account_menu">
             <item
-                android:id="@+id/nav_log_in"
-                android:icon="@drawable/ic_log_in"
-                android:title="@string/action_sign_in" />
-            <item
-                android:id="@+id/nav_sign_up"
-                android:icon="@drawable/ic_sign_up"
-                android:title="@string/action_sign_up" />
-            <item
-                android:id="@+id/nav_unlog"
-                android:icon="@drawable/ic_unlog"
-                android:title="@string/action_unlog"
-                android:visibility="gone"/>
+                android:id="@+id/nav_manage_account"
+                android:icon="@drawable/ic_account"
+                android:title="@string/action_manage_account" />
         </menu>
     </item>
 

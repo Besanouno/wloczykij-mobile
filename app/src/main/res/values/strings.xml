@@ -48,4 +48,5 @@
     <string name="action_sign_up">Zarejestruj się</string>
     <string name="title_sign_up">Zarejestruj się</string>
     <string name="action_unlog">Wyloguj się</string>
+    <string name="action_manage_account">Zarządzaj kontem</string>
 </resources>
