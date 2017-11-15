@@ -68,7 +68,7 @@ public class SignUpActivity extends AccountAuthenticatorActivity /*implements Lo
                     user.setYearOfBirth(Integer.parseInt(yearOfBirth));
 
                     ServerAuthenticateImpl.getInstance()
-                            .signUp(user, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+                            .signUp(user);
                 } catch (ServerConnectionException e) {
                     data.putString(KEY_ERROR_MESSAGE, e.getMessage());
                 }

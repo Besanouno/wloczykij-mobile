@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -25,7 +24,6 @@ import java.util.List;
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.auth.AccountGeneral;
 import pl.basistam.turysta.auth.LoggedUser;
-import pl.basistam.turysta.exceptions.ServerConnectionException;
 import pl.basistam.turysta.json.Page;
 import pl.basistam.turysta.json.UserSimpleDetails;
 import pl.basistam.turysta.service.UserService;
@@ -57,9 +55,12 @@ public class FriendsFragment extends Fragment {
                                 try {
                                     Bundle bundle = future.getResult();
                                     final String authtoken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                                    UserService userService = new UserService();
-                                    return userService.obtainUsersByPattern(authtoken, pattern, 1, 15);
-                                } catch (OperationCanceledException | IOException | AuthenticatorException | ServerConnectionException e) {
+                                    return UserService.getInstance()
+                                            .userService()
+                                            .getUserSimpleDetailsByPattern("Bearer " + authtoken, pattern, 1, 15)
+                                            .execute()
+                                            .body();
+                                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
                                     e.printStackTrace();
                                     return null;
                                 }
