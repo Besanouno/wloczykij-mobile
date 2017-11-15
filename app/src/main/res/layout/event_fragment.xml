@@ -101,7 +101,15 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <HorizontalScrollView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Uczestnicy:"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:paddingTop="6dp"/>
+
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="25dp">
@@ -111,14 +119,14 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical" >
 
-                    <ImageButton
-                        android:id="@+id/add_participant"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@drawable/ic_add_user"
-                        android:background="@drawable/green_background_with_shadow"/>
                 </LinearLayout>
-            </HorizontalScrollView>
+            </ScrollView>
+            <ImageButton
+                android:id="@+id/add_participant"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_add_user"
+                android:background="@drawable/green_background_with_shadow"/>
 
             <Button
                 android:id="@+id/event_save_button"

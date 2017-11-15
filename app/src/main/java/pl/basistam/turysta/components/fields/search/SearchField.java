@@ -41,6 +41,7 @@ public class SearchField {
                 HashMap<String, String> place = (HashMap<String, String>) adapterView.getItemAtPosition(position);
                 final String name = place.get("name");
                 new SearchViewOnItemClickListener(map, placeDao, searchAutoComplete).execute(name);
+                searchAutoComplete.dismissDropDown();
                 KeyboardUtils.hide(context, view);
             }
         });

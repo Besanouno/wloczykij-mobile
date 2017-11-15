@@ -1,10 +1,10 @@
 package pl.basistam.turysta.exceptions;
 
 
-public class AuthorizationException extends Exception{
+public class ServerConnectionException extends Exception{
     private final String message;
 
-    public AuthorizationException(String message) {
+    public ServerConnectionException(String message) {
         this.message = message;
     }
 

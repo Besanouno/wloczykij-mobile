@@ -16,18 +16,36 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 
-import pl.basistam.turysta.auth.LoggedUser;
-import pl.basistam.turysta.exceptions.AuthorizationException;
+import pl.basistam.turysta.exceptions.ServerConnectionException;
+import pl.basistam.turysta.json.UserInputJson;
 import pl.basistam.turysta.model.UserDetails;
 
 public class UserService {
 
-    public void obtainUserDetails(String authToken) throws AuthorizationException {
+    public UserDetails obtainUserDetails(String authToken) throws ServerConnectionException {
+        HttpURLConnection connection = prepareGetConnection("/users/self", authToken);
+        String response = getResponseAsString(connection);
+        return getGson().fromJson(response, UserDetails.class);
+    }
+
+    public boolean editUser(UserInputJson json, String authToken) throws ServerConnectionException, IOException {
+        return true;
+    }
+
+    private HttpURLConnection prepareGetConnection(String path, String authToken) throws ServerConnectionException {
         try {
-            URL url = new URL("http://192.168.1.3:8070/api/users/self");
+            URL url = new URL("http://192.168.1.3:8070/api" + path);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Authorization", "Bearer " + authToken);
+            return connection;
+        } catch (IOException e) {
+            throw new ServerConnectionException(e.getMessage());
+        }
+    }
+
+    private String getResponseAsString(HttpURLConnection connection) throws ServerConnectionException {
+        try {
             int responseCode = connection.getResponseCode();
             if (responseCode == 200) {
                 BufferedReader in = new BufferedReader(
@@ -38,19 +56,22 @@ public class UserService {
                     response.append(inputLine);
                 }
                 in.close();
-
-                GsonBuilder builder = new GsonBuilder();
-                builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-                    public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                        return new Date(json.getAsJsonPrimitive().getAsLong());
-                    }
-                });
-                Gson gson = builder.create();
-                UserDetails userDetails = gson.fromJson(response.toString(), UserDetails.class);
-                LoggedUser.getInstance().setUserDetails(userDetails);
+                return response.toString();
+            } else {
+                throw new ServerConnectionException(Integer.toString(responseCode));
             }
         } catch (IOException e) {
-            throw new AuthorizationException(e.getMessage());
+            throw new ServerConnectionException(e.getMessage());
         }
+    }
+
+    private Gson getGson() {
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+            public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                return new Date(json.getAsJsonPrimitive().getAsLong());
+            }
+        });
+        return builder.create();
     }
 }

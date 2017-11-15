@@ -1,15 +1,9 @@
 package pl.basistam.turysta.auth;
 
 
-import android.accounts.AccountManager;
 import android.util.Base64;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,17 +11,13 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.util.Date;
 
-import pl.basistam.turysta.exceptions.AuthorizationException;
+import pl.basistam.turysta.exceptions.ServerConnectionException;
 import pl.basistam.turysta.json.UserInputJson;
-import pl.basistam.turysta.model.UserDetails;
 
 import static android.util.Base64.DEFAULT;
 
@@ -37,7 +27,8 @@ public class ServerAuthenticateImpl implements ServerAuthenticate {
     private final String clientSecret = "dupa";
     private static ServerAuthenticate serverAuthenticate;
 
-    private ServerAuthenticateImpl() {}
+    private ServerAuthenticateImpl() {
+    }
 
     public static ServerAuthenticate getInstance() {
         if (serverAuthenticate == null) {
@@ -51,7 +42,7 @@ public class ServerAuthenticateImpl implements ServerAuthenticate {
     }
 
     @Override
-    public String signIn(String login, String password, String authType) throws AuthorizationException {
+    public String signIn(String login, String password, String authType) throws ServerConnectionException {
         String authToken = null;
         try {
             URL url = new URL("http://192.168.1.3:8070/api/oauth/token");
@@ -72,29 +63,36 @@ public class ServerAuthenticateImpl implements ServerAuthenticate {
 
             int responseCode = connection.getResponseCode();
             if (responseCode == 200) {
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(connection.getInputStream()));
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                JSONObject jsonResponse = new JSONObject(response.toString());
+                String response = readResponse(connection.getInputStream());
+                JSONObject jsonResponse = new JSONObject(response);
                 authToken = jsonResponse.getString("access_token");
+            } else {
+                String response = readResponse(connection.getErrorStream());
+                throw new ServerConnectionException(response);
             }
         } catch (IOException | JSONException e) {
-            throw new AuthorizationException(e.getMessage());
+            throw new ServerConnectionException(e.getMessage());
         }
         if (authToken == null) {
-            throw new AuthorizationException("Auth token is empty");
+            throw new ServerConnectionException("Auth token is empty");
         }
         return authToken;
     }
 
+    private String readResponse(InputStream inputStream) throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        return response.toString();
+    }
+
     @Override
-    public void signUp(UserInputJson userInputJson, String authType)  throws AuthorizationException {
+    public void signUp(UserInputJson userInputJson, String authType) throws ServerConnectionException {
         try {
             URL url = new URL("http://192.168.1.3:8070/api/user");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -110,10 +108,10 @@ public class ServerAuthenticateImpl implements ServerAuthenticate {
 
             int responseCode = connection.getResponseCode();
             if (responseCode != 201) {
-                throw new AuthorizationException(Integer.toString(responseCode));
+                throw new ServerConnectionException(Integer.toString(responseCode));
             }
         } catch (IOException e) {
-            throw new AuthorizationException(e.getMessage());
+            throw new ServerConnectionException(e.getMessage());
         }
     }
 

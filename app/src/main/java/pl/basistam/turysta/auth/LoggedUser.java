@@ -1,6 +1,6 @@
 package pl.basistam.turysta.auth;
 
-import pl.basistam.turysta.model.UserDetails;
+import android.accounts.Account;
 
 public class LoggedUser {
 
@@ -17,13 +17,20 @@ public class LoggedUser {
         return loggedUser;
     }
 
-    private UserDetails userDetails;
+    private Account account;
+    private String email;
 
-    public void setUserDetails(UserDetails userDetails) {
-        this.userDetails = userDetails;
+    public Account getAccount() {
+        return account;
+    }
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
-    public UserDetails getUserDetails() {
-        return userDetails;
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import pl.basistam.turysta.auth.AccountGeneral;
 import pl.basistam.turysta.auth.ServerAuthenticateImpl;
-import pl.basistam.turysta.exceptions.AuthorizationException;
+import pl.basistam.turysta.exceptions.ServerConnectionException;
 import pl.basistam.turysta.json.UserInputJson;
 
 import static pl.basistam.turysta.LoginActivity.ARG_ACCOUNT_TYPE;
@@ -69,7 +69,7 @@ public class SignUpActivity extends AccountAuthenticatorActivity /*implements Lo
 
                     ServerAuthenticateImpl.getInstance()
                             .signUp(user, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
-                } catch (AuthorizationException e) {
+                } catch (ServerConnectionException e) {
                     data.putString(KEY_ERROR_MESSAGE, e.getMessage());
                 }
 

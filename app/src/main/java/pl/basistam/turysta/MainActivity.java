@@ -24,12 +24,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import pl.basistam.turysta.auth.AccountGeneral;
+import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.components.utils.KeyboardUtils;
 import pl.basistam.turysta.fragments.EventFragment;
 import pl.basistam.turysta.fragments.MapViewFragment;
+import pl.basistam.turysta.fragments.UserFragment;
+import pl.basistam.turysta.service.UserService;
 
 import static pl.basistam.turysta.LoginActivity.ARG_ACCOUNT_TYPE;
 
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity
 
     private MapViewFragment mapFragment = new MapViewFragment();
     private EventFragment eventFragment = new EventFragment();
+    private UserFragment userFragment = new UserFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +52,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -87,7 +92,6 @@ public class MainActivity extends AppCompatActivity
         MenuItem searchItem = menu.findItem(R.id.action_search);
 
         mapFragment.initSearchField(this, (SearchView) searchItem.getActionView());
-//        new SearchField(this, (SearchView) searchItem.getActionView(), map).initialize();
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -106,7 +110,10 @@ public class MainActivity extends AppCompatActivity
         KeyboardUtils.hide(this, getCurrentFocus());
 
         int id = item.getItemId();
-        if (id == R.id.nav_map) {
+        if (id == R.id.nav_account ) {
+            fragmentManager.beginTransaction().replace(R.id.content, userFragment).commit();
+        }
+        else if (id == R.id.nav_map) {
             fragmentManager.beginTransaction().replace(R.id.content, mapFragment).commit();
             searchPanel.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_event) {
@@ -120,11 +127,24 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void checkIfLoggedIn() {
-        /*AccountManager accountManager = AccountManager.get(this);
+        AccountManager accountManager = AccountManager.get(this);
         Account[] accounts = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
-        navigationView.invalidate();*/
+        if (accounts.length != 0) {
+            prepareHeader(accounts[0].name);
+            final AccountManagerFuture<Bundle> future = accountManager.getAuthToken(accounts[0], AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, this, null, null);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Bundle bnd = future.getResult();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+        navigationView.invalidate();
     }
 
     private void showAccountPicker(final String authTokenType) {
@@ -146,10 +166,18 @@ public class MainActivity extends AppCompatActivity
                             signIn();
                         } else {
                             getExistingAccountAuthToken(availableAccounts[which], authTokenType);
+                            prepareHeader(availableAccounts[which].name);
                         }
                     }
                 }).create();
         alertDialog.show();
+    }
+
+    private void prepareHeader(String name) {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final View header = navigationView.getHeaderView(0);
+        ((TextView) header.findViewById(R.id.name)).setText(name);
+        LoggedUser.getInstance().setAccount(getAccountByLogin(name));
     }
 
     private void getExistingAccountAuthToken(Account account, String authTokenType) {
@@ -171,16 +199,28 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void signIn() {
-        AccountManager accountManager = AccountManager.get(this);
+        final AccountManager accountManager = AccountManager.get(this);
         accountManager.addAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
             @Override
             public void run(AccountManagerFuture<Bundle> future) {
                 try {
-                    future.getResult();
+                    String name = future.getResult().getString(AccountManager.KEY_ACCOUNT_NAME);
+                    prepareHeader(name);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }, null);
+    }
+
+    private Account getAccountByLogin(String login) {
+        final AccountManager accountManager = AccountManager.get(this);
+        Account[] accounts = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
+        for (Account account: accounts) {
+            if (account.name.equals(login)) {
+                return account;
+            }
+        }
+        return null;
     }
 }
