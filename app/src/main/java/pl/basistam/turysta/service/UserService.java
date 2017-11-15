@@ -15,12 +15,21 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 
 import pl.basistam.turysta.exceptions.ServerConnectionException;
+import pl.basistam.turysta.json.Page;
 import pl.basistam.turysta.json.UserInputJson;
+import pl.basistam.turysta.json.UserSimpleDetails;
 import pl.basistam.turysta.model.UserDetails;
 
 public class UserService {
+
+    public Page<UserSimpleDetails> obtainUsersByPattern(String authToken, String pattern, int page, int size) throws ServerConnectionException {
+        HttpURLConnection connection = prepareGetConnection("/users?pattern=" + pattern, authToken);
+        String response = getResponseAsString(connection);
+        return getGson().fromJson(response, Page.class);
+    }
 
     public UserDetails obtainUserDetails(String authToken) throws ServerConnectionException {
         HttpURLConnection connection = prepareGetConnection("/users/self", authToken);
@@ -34,7 +43,7 @@ public class UserService {
 
     private HttpURLConnection prepareGetConnection(String path, String authToken) throws ServerConnectionException {
         try {
-            URL url = new URL("http://192.168.1.3:8070/api" + path);
+            URL url = new URL("http://10.128.6.57:8070/api" + path);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Authorization", "Bearer " + authToken);

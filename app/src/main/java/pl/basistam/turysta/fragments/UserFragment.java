@@ -7,6 +7,7 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -37,6 +38,7 @@ public class UserFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+
         final EditText edtFirstName = view.findViewById(R.id.first_name);
         final EditText edtLastName = view.findViewById(R.id.last_name);
         final EditText edtCity = view.findViewById(R.id.city);
@@ -101,6 +103,18 @@ public class UserFragment extends Fragment {
                 inputJson.setLastName(edtLastName.getText().toString());
                 inputJson.setCity(edtCity.getText().toString());
                 inputJson.setYearOfBirth(Integer.parseInt(edtYearOfBirth.getText().toString()));
+            }
+        });
+
+        final FloatingActionButton btnFriends = view.findViewById(R.id.btn_friends);
+        btnFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FriendsFragment friendsFragment = new FriendsFragment();
+                getActivity().getFragmentManager().beginTransaction()
+                        .replace(R.id.content, friendsFragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
     }

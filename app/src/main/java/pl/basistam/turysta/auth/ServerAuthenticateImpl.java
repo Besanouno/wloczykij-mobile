@@ -45,7 +45,7 @@ public class ServerAuthenticateImpl implements ServerAuthenticate {
     public String signIn(String login, String password, String authType) throws ServerConnectionException {
         String authToken = null;
         try {
-            URL url = new URL("http://192.168.1.3:8070/api/oauth/token");
+            URL url = new URL("http://10.128.6.57:8070/api/oauth/token");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
 
