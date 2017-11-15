@@ -21,8 +21,8 @@ import java.io.IOException;
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.auth.AccountGeneral;
 import pl.basistam.turysta.auth.LoggedUser;
-import pl.basistam.turysta.json.UserInputJson;
-import pl.basistam.turysta.model.UserDetails;
+import pl.basistam.turysta.dto.UserInput;
+import pl.basistam.turysta.dto.UserDetails;
 import pl.basistam.turysta.service.UserService;
 
 public class UserFragment extends Fragment {
@@ -98,7 +98,7 @@ public class UserFragment extends Fragment {
                 edtCity.setEnabled(false);
                 edtYearOfBirth.setEnabled(false);
 
-                UserInputJson inputJson = new UserInputJson();
+                UserInput inputJson = new UserInput();
                 inputJson.setFirstName(edtFirstName.getText().toString());
                 inputJson.setLastName(edtLastName.getText().toString());
                 inputJson.setCity(edtCity.getText().toString());

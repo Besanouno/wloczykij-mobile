@@ -24,8 +24,8 @@ import java.util.List;
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.auth.AccountGeneral;
 import pl.basistam.turysta.auth.LoggedUser;
-import pl.basistam.turysta.json.Page;
-import pl.basistam.turysta.json.UserSimpleDetails;
+import pl.basistam.turysta.dto.Page;
+import pl.basistam.turysta.dto.UserSimpleDetails;
 import pl.basistam.turysta.service.UserService;
 
 public class FriendsFragment extends Fragment {

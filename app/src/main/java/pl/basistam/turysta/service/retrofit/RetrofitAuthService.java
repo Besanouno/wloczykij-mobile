@@ -1,6 +1,6 @@
 package pl.basistam.turysta.service.retrofit;
 
-import pl.basistam.turysta.json.TokenDetails;
+import pl.basistam.turysta.dto.TokenDetails;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;

@@ -16,7 +16,6 @@ public class Trail {
     @Ignore
     private List<TrailPoint> points;
 
-
     public Integer getId() {
         return id;
     }

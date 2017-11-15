@@ -1,9 +1,9 @@
 package pl.basistam.turysta.service.retrofit;
 
-import pl.basistam.turysta.json.Page;
-import pl.basistam.turysta.json.UserInputJson;
-import pl.basistam.turysta.json.UserSimpleDetails;
-import pl.basistam.turysta.model.UserDetails;
+import pl.basistam.turysta.dto.Page;
+import pl.basistam.turysta.dto.UserInput;
+import pl.basistam.turysta.dto.UserSimpleDetails;
+import pl.basistam.turysta.dto.UserDetails;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -25,5 +25,5 @@ public interface RetrofitUserService {
 
     @Headers("Content-Type: application/json")
     @POST("user")
-    Call<Void> signUp(@Body UserInputJson userInputJson);
+    Call<Void> signUp(@Body UserInput userInput);
 }

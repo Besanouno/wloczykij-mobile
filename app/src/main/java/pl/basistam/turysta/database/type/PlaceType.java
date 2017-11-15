@@ -11,12 +11,12 @@ public enum PlaceType {
 
     private final int value;
 
-    PlaceType(int value) {
-        this.value = value;
-    }
-
     public int getValue() {
         return value;
+    }
+
+    PlaceType(int value) {
+        this.value = value;
     }
 
     public static PlaceType fromValue(int i) {
