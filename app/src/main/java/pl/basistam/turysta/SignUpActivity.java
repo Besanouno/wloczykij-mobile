@@ -18,14 +18,10 @@ import static pl.basistam.turysta.LoginActivity.KEY_ERROR_MESSAGE;
 
 public class SignUpActivity extends AccountAuthenticatorActivity /*implements LoaderCallbacks<Cursor> */{
 
-    private String accountType;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-
-        accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
 
         findViewById(R.id.already_member).setOnClickListener(new OnClickListener() {
             @Override
@@ -44,14 +40,24 @@ public class SignUpActivity extends AccountAuthenticatorActivity /*implements Lo
 
     private void createAccount() {
 
-        final String login = ((TextView) findViewById(R.id.login)).getText().toString().trim();
+        TextView edtLogin = findViewById(R.id.login);
+        final String login = edtLogin.getText().toString().trim();
         final String email = ((TextView) findViewById(R.id.email)).getText().toString().trim();
-        final String password = ((TextView) findViewById(R.id.password)).getText().toString().trim();
+        TextView edtPassword = findViewById(R.id.password);
+        final String password = edtPassword.getText().toString().trim();
+        TextView edtRepassword = findViewById(R.id.repeat_password);
+        final String repassword = edtRepassword.getText().toString().trim();
         final String city = ((TextView) findViewById(R.id.city)).getText().toString().trim();
         final String yearOfBirth = ((TextView) findViewById(R.id.year_of_birth)).getText().toString().trim();
         final String firstName = ((TextView) findViewById(R.id.first_name)).getText().toString().trim();
         final String lastName = ((TextView) findViewById(R.id.last_name)).getText().toString().trim();
 
+        if (login.isEmpty()) {
+            edtLogin.setText("Login nie może być pusty!");
+        } else  if (!password.equals(repassword)) {
+            edtPassword.setText("Hasła nie pasują");
+            edtRepassword.setText("Hasła nie pasują");
+        }
         new AsyncTask<String, Void, Intent>() {
             @Override
             protected Intent doInBackground(String... params) {

@@ -39,11 +39,11 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
 
     public final static String PARAM_USER_PASS = "USER_PASS";
 
-    private static final int REQUEST_READ_CONTACTS = 0;
     private final int REQ_SIGNUP = 1;
 
-    private AutoCompleteTextView edtLogin;
+    private EditText edtLogin;
     private EditText edtPassword;
+    private EditText edtRepassword;
     private View progressView;
     private View loginFormView;
 
@@ -67,9 +67,9 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
     }
 
     private void initFields() {
-        edtLogin = findViewById(R.id.email);
-        populateAutoComplete();
-        edtPassword =  findViewById(R.id.repeat_password);
+        edtLogin = findViewById(R.id.login);
+        edtRepassword = findViewById(R.id.repeat_password);
+        edtPassword =  findViewById(R.id.password);
         edtPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -101,35 +101,6 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
         });
     }
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-//        getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(edtLogin, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
@@ -137,20 +108,6 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
         } else
             super.onActivityResult(requestCode, resultCode, data);
     }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
-    }
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -213,21 +170,11 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
         if (TextUtils.isEmpty(login)) {
             edtLogin.setError(getString(R.string.error_field_required));
             return edtLogin;
-        } else if (!isEmailValid(login)) {
-            edtLogin.setError(getString(R.string.error_invalid_email));
-            return edtLogin;
         }
         return null;
     }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return true;
-    }
-
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() >= 8;
     }
 
     /**

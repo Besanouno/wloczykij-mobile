@@ -121,22 +121,9 @@ public class MainActivity extends AppCompatActivity
     private void checkIfLoggedIn() {
         AccountManager accountManager = AccountManager.get(this);
         Account[] accounts = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (accounts.length != 0) {
+        if (accounts.length > 0) {
             prepareHeader(accounts[0].name);
-            final AccountManagerFuture<Bundle> future = accountManager.getAuthToken(accounts[0], AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, this, null, null);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Bundle bnd = future.getResult();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
         }
-        navigationView.invalidate();
     }
 
     private void showAccountPicker(final String authTokenType) {
@@ -148,7 +135,6 @@ public class MainActivity extends AppCompatActivity
             items[i] = availableAccounts[i].name;
         }
         items[itemsNumber - 1] = "Dodaj konto";
-        // Account picker
         AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle("Wybierz konto")
                 .setAdapter(new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_list_item_1, items), new DialogInterface.OnClickListener() {
@@ -157,7 +143,6 @@ public class MainActivity extends AppCompatActivity
                         if (which == itemsNumber - 1) {
                             signIn();
                         } else {
-                            getExistingAccountAuthToken(availableAccounts[which], authTokenType);
                             prepareHeader(availableAccounts[which].name);
                         }
                     }
@@ -170,24 +155,6 @@ public class MainActivity extends AppCompatActivity
         final View header = navigationView.getHeaderView(0);
         ((TextView) header.findViewById(R.id.name)).setText(name);
         LoggedUser.getInstance().setAccount(getAccountByLogin(name));
-    }
-
-    private void getExistingAccountAuthToken(Account account, String authTokenType) {
-        final AccountManagerFuture<Bundle> future = AccountManager
-                .get(this)
-                .getAuthToken(account, authTokenType, null, this, null, null);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Bundle bnd = future.getResult();
-                    final String authtoken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
 
     private void signIn() {
