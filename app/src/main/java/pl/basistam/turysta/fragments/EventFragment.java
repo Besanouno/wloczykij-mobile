@@ -9,10 +9,11 @@ import android.view.ViewGroup;
 
 import pl.basistam.turysta.R;
 
-public class LoginFragment extends Fragment {
+public class EventFragment extends Fragment {
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.login_fragment, container, false);
+        return inflater.inflate(R.layout.event_fragment, container, false);
     }
 }

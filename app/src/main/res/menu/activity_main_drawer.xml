@@ -3,25 +3,32 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_account"
+            android:icon="@drawable/ic_account_data"
+            android:title="@string/account" />
+        <item
             android:id="@+id/nav_map"
             android:icon="@drawable/ic_menu_map"
             android:title="@string/map_menu_item" />
         <item
+            android:id="@+id/nav_event"
+            android:icon="@drawable/ic_event"
+            android:title="@string/event" />
+        <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
     </group>
 
-    <item android:title="@string/access_section">
-        <menu>
+    <item
+        android:id="@+id/account"
+        android:title="@string/access_section">
+        <menu
+            android:id="@+id/account_menu">
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_log_in"
-                android:title="@string/action_sign_in" />
+                android:id="@+id/nav_manage_account"
+                android:icon="@drawable/ic_account"
+                android:title="@string/action_manage_account" />
         </menu>
     </item>
 

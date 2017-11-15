@@ -15,7 +15,7 @@ public class CameraUtils {
 
     public static void moveAndZoom(GoogleMap map, double lat, double lon, float zoom) {
         map.animateCamera(
-                CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), zoom),
+                CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), Math.max(zoom, map.getCameraPosition().zoom)),
                 400,
                 null);
     }

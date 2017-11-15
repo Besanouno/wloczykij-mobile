@@ -13,7 +13,7 @@
     <string name="title_activity_abcd">Sign in</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">login/email</string>
+    <string name="prompt_email">login</string>
     <string name="prompt_password">hasło</string>
     <string name="action_sign_in">Zaloguj się</string>
     <string name="action_sign_in_short">Zarejestruj się</string>
@@ -25,4 +25,29 @@
         completions."
     </string>
     <string name="access_section">Dostęp</string>
+    <string name="event">Wydarzenie</string>
+    <string name="prompt_event_name">Nazwa*</string>
+    <string name="prompt_place_of_meeting">Skąd wyruszamy?*</string>
+    <string name="prompt_start_date">Start*</string>
+    <string name="end_date">Koniec</string>
+    <string name="prompt_participants_limit">Limit uczestników*</string>
+    <string name="public_access">Publiczny dostęp</string>
+    <string name="action_save_event">Zapisz</string>
+    <string name="prompt_end_date">Koniec</string>
+    <string name="title_activity_login">Zaloguj się</string>
+    <string name="label">Turysta</string>
+    <string name="register">Nie masz konta? Zarejestruj się</string>
+    <string name="sign_up">Zarejestruj się</string>
+    <string name="prompt_login_r">login</string>
+    <string name="prompt_email_r">email</string>
+    <string name="prompt_first_name_r">imię</string>
+    <string name="prompt_last_name_r">nazwisko</string>
+    <string name="year_of_birth">rok urodzenia</string>
+    <string name="repeat_password">powtórz hasło</string>
+    <string name="already_member"><![CDATA[Jesteś członkiem? Zaloguj się!]]></string>
+    <string name="action_sign_up">Zarejestruj się</string>
+    <string name="title_sign_up">Zarejestruj się</string>
+    <string name="action_unlog">Wyloguj się</string>
+    <string name="action_manage_account">Zarządzaj kontem</string>
+    <string name="account">Dane konta</string>
 </resources>
