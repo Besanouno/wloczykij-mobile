@@ -34,7 +34,6 @@ public class MapViewFragment extends Fragment {
 
     private MapView mapView;
     private BottomSheetBehavior<View> bottomSheetBehavior;
-    private View bottomSheet;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +50,7 @@ public class MapViewFragment extends Fragment {
             e.printStackTrace();
         }
 
-        bottomSheet = rootView.findViewById(R.id.map_place);
+        View bottomSheet = rootView.findViewById(R.id.map_place);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setHideable(true);
         bottomSheetBehavior.setPeekHeight(160);
@@ -85,20 +84,6 @@ public class MapViewFragment extends Fragment {
                         || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
-
-                bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                    @Override
-                    public void onStateChanged(View bottomSheet, int newState) {
-                        if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                        } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                        } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                        }
-                    }
-
-                    @Override
-                    public void onSlide(View bottomSheet, float slideOffset) {
-                    }
-                });
 
                 return true;
             }

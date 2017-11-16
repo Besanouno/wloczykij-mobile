@@ -10,42 +10,50 @@
     android:paddingTop="56dp"
     tools:context="pl.basistam.turysta.fragments.FriendsFragment">
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginTop="56dp">
 
-        <EditText
-            android:id="@+id/searchField"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#eef3"
-            android:enabled="true"
-            android:hint="Szukaj"
-            android:inputType="text"
-            android:maxLines="1" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
         <ImageButton
-            android:id="@+id/searchButton"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="40dp"
+            android:layout_height="60dp"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@color/white"
-            android:src="@drawable/ic_search" />
+            android:background="@color/transparent"
+            android:src="@drawable/ic_arrow_forward"
+            android:id="@+id/btn_search" />
 
-    </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="5dp"
+            android:layout_toStartOf="@+id/btn_search">
+
+            <EditText
+                android:id="@+id/searchField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Szukaj podróżników"
+                android:inputType="text"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/friends_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"></ListView>
+        android:background="@color/transparent" />
 
     <Button
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="10dp"
         android:text="Gotowe" />
 </LinearLayout>
