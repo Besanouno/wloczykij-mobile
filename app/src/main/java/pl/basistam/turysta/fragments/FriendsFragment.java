@@ -20,6 +20,7 @@ import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import pl.basistam.turysta.R;
@@ -43,6 +44,53 @@ public class FriendsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         initSearchButton(view);
         initBackButton(view);
+        initFriendList(view);
+    }
+
+    private void initFriendList(final View view) {
+        final ListView friendsList = view.findViewById(R.id.friends_list);
+        AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
+        accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
+                new AccountManagerCallback<Bundle>() {
+                    @Override
+                    public void run(AccountManagerFuture<Bundle> future) {
+                        try {
+                            Bundle bundle = future.getResult();
+                            final String authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+
+                            new AsyncTask<Void, Void, List<UserSimpleDetails>>() {
+
+                                @Override
+                                protected List<UserSimpleDetails> doInBackground(Void... params) {
+                                    try {
+                                        return UserService.getInstance()
+                                                .userService()
+                                                .getFriends("Bearer " + authToken)
+                                                .execute()
+                                                .body();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return Collections.emptyList();
+                                }
+
+                                @Override
+                                protected void onPostExecute(List<UserSimpleDetails> friends) {
+                                    if (!friends.isEmpty()) {
+                                        view.findViewById(R.id.lblFriends).setVisibility(View.VISIBLE);
+                                    }
+                                    List<FriendItem> content = new ArrayList<>(friends.size());
+                                    for (UserSimpleDetails u : friends) {
+                                        content.add(new FriendItem(u.getFirstName() + " " + u.getLastName() + " (" + u.getLogin() + ")", false));
+                                    }
+                                    friendsList.setAdapter(new FriendsAdapter(getActivity(), content));
+                                }
+                            }.execute();
+                        } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, null);
     }
 
     private void initBackButton(final View view) {
@@ -89,28 +137,12 @@ public class FriendsFragment extends Fragment {
 
                                     @Override
                                     protected void onPostExecute(Page<UserSimpleDetails> userDetails) {
-                                /*final List<HashMap<String, String>> items = new ArrayList<>(userDetails.getContent().size());
-                                for (UserSimpleDetails u : userDetails.getContent()) {
-                                    HashMap<String, String> entry = new HashMap<>();
-                                    entry.put("login", u.getLogin());
-                                    entry.put("name", u.getFirstName() + " " + u.getLastName());
-                                    items.add(entry);
-                                }
-                                String[] from = {"login", "name"};
-                                int[] to = {R.id.flag, R.id.txt};*/
-
                                         List<FriendItem> content = new ArrayList<>(userDetails.getSize());
                                         for (UserSimpleDetails u : userDetails.getContent()) {
                                             content.add(new FriendItem(u.getFirstName() + " " + u.getLastName() + " (" + u.getLogin() + ")", false));
                                         }
                                         ArrayAdapter<FriendItem> arrayAdapter = new FriendsAdapter(getActivity(), content);
                                         lvFriends.setAdapter(arrayAdapter);
-                                        /*ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
-                                                getActivity().getBaseContext(),
-                                                R.layout.friend_item,
-                                                content
-                                        );
-                                        lvFriends.setAdapter(arrayAdapter);*/
                                     }
                                 }.execute();
                             }

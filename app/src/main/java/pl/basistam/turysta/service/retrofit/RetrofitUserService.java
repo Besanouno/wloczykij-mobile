@@ -1,5 +1,7 @@
 package pl.basistam.turysta.service.retrofit;
 
+import java.util.List;
+
 import pl.basistam.turysta.dto.Page;
 import pl.basistam.turysta.dto.UserInput;
 import pl.basistam.turysta.dto.UserSimpleDetails;
@@ -24,6 +26,9 @@ public interface RetrofitUserService {
             @Query("size") final int size);
 
     @Headers("Content-Type: application/json")
-    @POST("user")
+    @POST("users")
     Call<Void> signUp(@Body UserInput userInput);
+
+    @GET("users/self/friends")
+    Call<List<UserSimpleDetails>> getFriends(@Header("Authorization") final String authorization);
 }
