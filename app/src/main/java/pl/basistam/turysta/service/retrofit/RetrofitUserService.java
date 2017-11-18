@@ -36,4 +36,8 @@ public interface RetrofitUserService {
 
     @PUT("users/self/relations")
     Call<Void> updateRelations(@Header("Authorization") final String authorization, @Body List<Relation> relations);
+
+    @Headers("Content-Type: application/json")
+    @PUT("users/self")
+    Call<Void> update(@Header("Authorization") final String authorization, @Body UserInput userInput);
 }

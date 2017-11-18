@@ -44,34 +44,34 @@ public class UserFragment extends Fragment {
         AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
         accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
                 new AccountManagerCallback<Bundle>() {
-            @Override
-            public void run(final AccountManagerFuture<Bundle> future) {
-                new AsyncTask<Void, Void, UserDetails>() {
                     @Override
-                    protected UserDetails doInBackground(Void... params) {
-                        try {
-                            final String authToken = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
-                            return UserService.getInstance()
-                                    .userService()
-                                    .getUserDetails("Bearer " + authToken)
-                                    .execute()
-                                    .body();
-                        } catch (OperationCanceledException | IOException | AuthenticatorException e) {
-                            e.printStackTrace();
-                            return null;
-                        }
-                    }
+                    public void run(final AccountManagerFuture<Bundle> future) {
+                        new AsyncTask<Void, Void, UserDetails>() {
+                            @Override
+                            protected UserDetails doInBackground(Void... params) {
+                                try {
+                                    final String authToken = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+                                    return UserService.getInstance()
+                                            .userService()
+                                            .getUserDetails("Bearer " + authToken)
+                                            .execute()
+                                            .body();
+                                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                                    e.printStackTrace();
+                                    return null;
+                                }
+                            }
 
-                    @Override
-                    protected void onPostExecute(UserDetails userDetails) {
-                        edtFirstName.setText(userDetails.getFirstName());
-                        edtLastName.setText(userDetails.getLastName());
-                        edtCity.setText(userDetails.getCity());
-                        edtYearOfBirth.setText(Integer.toString(userDetails.getYearOfBirth()));
+                            @Override
+                            protected void onPostExecute(UserDetails userDetails) {
+                                edtFirstName.setText(userDetails.getFirstName());
+                                edtLastName.setText(userDetails.getLastName());
+                                edtCity.setText(userDetails.getCity());
+                                edtYearOfBirth.setText(Integer.toString(userDetails.getYearOfBirth()));
+                            }
+                        }.execute();
                     }
-                }.execute();
-            }
-        }, null);
+                }, null);
 
         final FloatingActionButton btnEdit = view.findViewById(R.id.btn_edit);
         final FloatingActionButton btnSave = view.findViewById(R.id.btn_save);
@@ -98,11 +98,37 @@ public class UserFragment extends Fragment {
                 edtCity.setEnabled(false);
                 edtYearOfBirth.setEnabled(false);
 
-                UserInput inputJson = new UserInput();
+                final UserInput inputJson = new UserInput();
                 inputJson.setFirstName(edtFirstName.getText().toString());
                 inputJson.setLastName(edtLastName.getText().toString());
                 inputJson.setCity(edtCity.getText().toString());
                 inputJson.setYearOfBirth(Integer.parseInt(edtYearOfBirth.getText().toString()));
+                AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
+                accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
+                        new AccountManagerCallback<Bundle>() {
+                            @Override
+                            public void run(AccountManagerFuture<Bundle> future) {
+                                try {
+                                    final String authToken = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+                                    new AsyncTask<Void, Void, Void>() {
+                                        @Override
+                                        protected Void doInBackground(Void... params) {
+                                            try {
+                                                UserService.getInstance()
+                                                        .userService()
+                                                        .update("Bearer " + authToken, inputJson)
+                                                        .execute();
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                            return null;
+                                        }
+                                    }.execute();
+                                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, null);
             }
         });
 
