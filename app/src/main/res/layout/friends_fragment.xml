@@ -44,11 +44,10 @@
     <ExpandableListView
         android:id="@+id/mainList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="wrap_content">
     </ExpandableListView>
 
-    <TextView
+<!--    <TextView
         android:id="@+id/lblFriends"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -63,7 +62,7 @@
         android:id="@+id/friends_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/transparent" />
+        android:background="@color/transparent" />-->
 
     <Button
         android:id="@+id/btn_save"

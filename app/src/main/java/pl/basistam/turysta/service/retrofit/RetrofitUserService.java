@@ -21,7 +21,7 @@ public interface RetrofitUserService {
     Call<UserDetails> getUserDetails(@Header("Authorization") final String authorization);
 
     @GET("users")
-    Call<Page<UserSimpleDetails>> getUserSimpleDetailsByPattern(
+    Call<Page<Relation>> getUserSimpleDetailsByPattern(
             @Header("Authorization") final String authorization,
             @Query("pattern") final String pattern,
             @Query("page") final int page,
@@ -31,9 +31,9 @@ public interface RetrofitUserService {
     @POST("users")
     Call<Void> signUp(@Body UserInput userInput);
 
-    @GET("users/self/friends")
-    Call<List<UserSimpleDetails>> getFriends(@Header("Authorization") final String authorization);
+    @GET("users/self/relations")
+    Call<List<Relation>> getRelations(@Header("Authorization") final String authorization);
 
-    @PUT("users/self/friends")
-    Call<Void> updateFriends(@Header("Authorization") final String authorization, @Body List<Relation> relations);
+    @PUT("users/self/relations")
+    Call<Void> updateRelations(@Header("Authorization") final String authorization, @Body List<Relation> relations);
 }

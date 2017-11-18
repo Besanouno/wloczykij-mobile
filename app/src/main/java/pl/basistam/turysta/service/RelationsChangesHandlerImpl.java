@@ -21,6 +21,14 @@ public class RelationsChangesHandlerImpl implements RelationsChangesHandler {
     }
 
     @Override
+    public void adjustRelationToChanges(Relation relation) {
+        int index = relationChanges.indexOf(relation);
+        if (index != -1) {
+            relation.setFriend(relationChanges.get(index).isFriend());
+        }
+    }
+
+    @Override
     public List<Relation> getAndClearAllChanges() {
         List<Relation> result = new ArrayList<>(this.relationChanges);
         this.relationChanges.clear();
