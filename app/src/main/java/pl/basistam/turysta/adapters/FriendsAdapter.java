@@ -11,25 +11,29 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pl.basistam.turysta.R;
-import pl.basistam.turysta.items.FriendItem;
+import pl.basistam.turysta.dto.Relation;
+import pl.basistam.turysta.service.interfaces.RelationsChangesHandler;
 
-public class FriendsAdapter extends ArrayAdapter<FriendItem> {
+public class FriendsAdapter extends ArrayAdapter<Relation> {
 
-    private final List<FriendItem> friends;
+    private final List<Relation> friends;
+    private final RelationsChangesHandler relationsChangesHandler;
     private final Activity context;
 
-    public FriendsAdapter(Activity context, List<FriendItem> friends) {
+    public FriendsAdapter(Activity context, List<Relation> friends, RelationsChangesHandler relationsChangesHandler) {
         super(context, R.layout.friend_item, friends);
         this.friends = friends;
         this.context = context;
+        this.relationsChangesHandler = relationsChangesHandler;
     }
 
-    static class ViewHolder {
-        protected TextView text;
-        protected CheckBox checkBox;
+    private static class ViewHolder {
+        TextView text;
+        CheckBox checkBox;
     }
 
     @NonNull
@@ -39,15 +43,21 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
         if (convertView == null) {
             LayoutInflater inflater = context.getLayoutInflater();
             view = inflater.inflate(R.layout.friend_item, null);
+
             final ViewHolder viewHolder = new ViewHolder();
             viewHolder.text = view.findViewById(R.id.label);
             viewHolder.checkBox = view.findViewById(R.id.check);
             viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    FriendItem element = (FriendItem) viewHolder.checkBox.getTag();
+                    Relation element = (Relation) viewHolder.checkBox.getTag();
                     element.setFriend(buttonView.isChecked());
+                }
+            });
+            viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    relationsChangesHandler.registerChange((Relation) viewHolder.checkBox.getTag());
                 }
             });
             view.setTag(viewHolder);
@@ -57,7 +67,7 @@ public class FriendsAdapter extends ArrayAdapter<FriendItem> {
             ((ViewHolder) view.getTag()).checkBox.setTag(friends.get(position));
         }
         ViewHolder viewHolder = (ViewHolder) view.getTag();
-        viewHolder.text.setText(friends.get(position).getName());
+        viewHolder.text.setText(friends.get(position).getFullName());
         viewHolder.checkBox.setChecked(friends.get(position).isFriend());
         return view;
     }

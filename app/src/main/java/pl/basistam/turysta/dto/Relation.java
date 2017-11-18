@@ -1,11 +1,11 @@
-package pl.basistam.turysta.items;
+package pl.basistam.turysta.dto;
 
-public class FriendItem {
+public class Relation {
     private String name;
     private String login;
     private boolean friend;
 
-    public FriendItem(String name, String login, boolean friend) {
+    public Relation(String name, String login, boolean friend) {
         this.name = name;
         this.login = login;
         this.friend = friend;
@@ -34,5 +34,14 @@ public class FriendItem {
 
     public String getFullName() {
         return this.name + " (" + this.login + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Relation)) {
+            return false;
+        }
+        Relation another = (Relation) obj;
+        return login.equals(another.login);
     }
 }

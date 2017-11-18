@@ -39,9 +39,14 @@
                 android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
-
-
     </RelativeLayout>
+
+    <ExpandableListView
+        android:id="@+id/mainList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ExpandableListView>
 
     <TextView
         android:id="@+id/lblFriends"

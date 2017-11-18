@@ -132,7 +132,7 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
 
                 @Override
                 protected Intent doInBackground(String... params) {
-                    String authToken = null;
+                    String authToken;
                     Bundle data = new Bundle();
                     try {
                         authToken = ServerAuthenticateImpl.getInstance()

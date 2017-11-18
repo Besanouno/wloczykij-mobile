@@ -13,7 +13,6 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -30,12 +29,17 @@ import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.components.utils.KeyboardUtils;
 import pl.basistam.turysta.dto.Page;
 import pl.basistam.turysta.dto.UserSimpleDetails;
-import pl.basistam.turysta.items.FriendItem;
+import pl.basistam.turysta.dto.Relation;
+import pl.basistam.turysta.service.RelationsChangesHandlerImpl;
 import pl.basistam.turysta.service.UserService;
+import pl.basistam.turysta.service.interfaces.RelationsChangesHandler;
+import retrofit2.Response;
 
 public class FriendsFragment extends Fragment {
 
     private boolean searchingMode = false;
+    private FriendsAdapter arrayAdapter;
+    private final RelationsChangesHandler relationsChangesHandler = new RelationsChangesHandlerImpl();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,49 +55,53 @@ public class FriendsFragment extends Fragment {
     }
 
     private void initFriendList(final View view) {
-        final ListView friendsList = view.findViewById(R.id.friends_list);
         AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
-        accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
-                new AccountManagerCallback<Bundle>() {
-                    @Override
-                    public void run(AccountManagerFuture<Bundle> future) {
-                        try {
-                            Bundle bundle = future.getResult();
-                            final String authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+        accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true, prepareFriendList(view), null);
+    }
 
-                            new AsyncTask<Void, Void, List<UserSimpleDetails>>() {
+    private AccountManagerCallback<Bundle> prepareFriendList(final View view) {
+        final ListView friendsList = view.findViewById(R.id.friends_list);
 
-                                @Override
-                                protected List<UserSimpleDetails> doInBackground(Void... params) {
-                                    try {
-                                        return UserService.getInstance()
-                                                .userService()
-                                                .getFriends("Bearer " + authToken)
-                                                .execute()
-                                                .body();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    return Collections.emptyList();
-                                }
+        return new AccountManagerCallback<Bundle>() {
+            @Override
+            public void run(AccountManagerFuture<Bundle> future) {
+                try {
+                    Bundle bundle = future.getResult();
+                    final String authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
 
-                                @Override
-                                protected void onPostExecute(List<UserSimpleDetails> friends) {
-                                    if (!friends.isEmpty()) {
-                                        view.findViewById(R.id.lblFriends).setVisibility(View.VISIBLE);
-                                    }
-                                    List<FriendItem> content = new ArrayList<>(friends.size());
-                                    for (UserSimpleDetails u : friends) {
-                                        content.add(new FriendItem(u.getFirstName() + " " + u.getLastName(), u.getLogin(), true));
-                                    }
-                                    friendsList.setAdapter(new FriendsAdapter(getActivity(), content));
-                                }
-                            }.execute();
-                        } catch (OperationCanceledException | IOException | AuthenticatorException e) {
-                            e.printStackTrace();
+                    new AsyncTask<Void, Void, List<UserSimpleDetails>>() {
+
+                        @Override
+                        protected List<UserSimpleDetails> doInBackground(Void... params) {
+                            try {
+                                return UserService.getInstance()
+                                        .userService()
+                                        .getFriends("Bearer " + authToken)
+                                        .execute()
+                                        .body();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return Collections.emptyList();
                         }
-                    }
-                }, null);
+
+                        @Override
+                        protected void onPostExecute(List<UserSimpleDetails> friends) {
+                            if (!friends.isEmpty()) {
+                                view.findViewById(R.id.lblFriends).setVisibility(View.VISIBLE);
+                            }
+                            List<Relation> content = new ArrayList<>(friends.size());
+                            for (UserSimpleDetails u : friends) {
+                                content.add(new Relation(u.getFirstName() + " " + u.getLastName(), u.getLogin(), true));
+                            }
+                            friendsList.setAdapter(new FriendsAdapter(getActivity(), content, relationsChangesHandler));
+                        }
+                    }.execute();
+                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
     }
 
     private void initBackButton(final View view) {
@@ -106,10 +114,38 @@ public class FriendsFragment extends Fragment {
                 if (searchingMode) {
                     edtSearch.setText("");
                     searchingMode = false;
-                } else {
+                    final List<Relation> changes = relationsChangesHandler.getAndClearAllChanges();
+                    if (!changes.isEmpty()) {
+                        AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
+                        accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
+                                new AccountManagerCallback<Bundle>() {
+                                    @Override
+                                    public void run(final AccountManagerFuture<Bundle> future) {
+
+                                        new AsyncTask<Void, Void, Void>() {
+                                            @Override
+                                            protected Void doInBackground(Void... params) {
+                                                try {
+                                                    Bundle bundle = future.getResult();
+                                                    final String authtoken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+                                                    Response<Void> status = UserService.getInstance()
+                                                            .userService()
+                                                            .updateFriends("Bearer " + authtoken, changes)
+                                                            .execute();
+                                                    System.out.println(status);
+                                                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                return null;
+                                            }
+                                        }.execute();
+                                    }
+                                }, null);
+                    }
+                }
                     KeyboardUtils.hide(getActivity().getBaseContext(), view);
                     getFragmentManager().popBackStack();
-                }
+
             }
         });
     }
@@ -120,6 +156,7 @@ public class FriendsFragment extends Fragment {
         final EditText edtSearchField = view.findViewById(R.id.searchField);
 
         searchingMode = true;
+        view.findViewById(R.id.lblFriends).setVisibility(View.GONE);
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,11 +186,11 @@ public class FriendsFragment extends Fragment {
 
                                     @Override
                                     protected void onPostExecute(Page<UserSimpleDetails> userDetails) {
-                                        List<FriendItem> content = new ArrayList<>(userDetails.getSize());
+                                        List<Relation> content = new ArrayList<>(userDetails.getSize());
                                         for (UserSimpleDetails u : userDetails.getContent()) {
-                                            content.add(new FriendItem(u.getFirstName() + " " + u.getLastName() + " (" + u.getLogin() + ")", false));
+                                            content.add(new Relation(u.getFirstName() + " " + u.getLastName(), u.getLogin(), false));
                                         }
-                                        ArrayAdapter<FriendItem> arrayAdapter = new FriendsAdapter(getActivity(), content);
+                                        arrayAdapter = new FriendsAdapter(getActivity(), content, relationsChangesHandler);
                                         lvFriends.setAdapter(arrayAdapter);
                                     }
                                 }.execute();
