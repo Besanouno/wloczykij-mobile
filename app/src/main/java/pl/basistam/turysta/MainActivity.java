@@ -7,25 +7,20 @@ import android.accounts.AccountManagerFuture;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import pl.basistam.turysta.auth.AccountGeneral;
 import pl.basistam.turysta.auth.LoggedUser;
@@ -33,9 +28,6 @@ import pl.basistam.turysta.components.utils.KeyboardUtils;
 import pl.basistam.turysta.fragments.EventFragment;
 import pl.basistam.turysta.fragments.MapViewFragment;
 import pl.basistam.turysta.fragments.UserFragment;
-import pl.basistam.turysta.service.UserService;
-
-import static pl.basistam.turysta.LoginActivity.ARG_ACCOUNT_TYPE;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -129,22 +121,9 @@ public class MainActivity extends AppCompatActivity
     private void checkIfLoggedIn() {
         AccountManager accountManager = AccountManager.get(this);
         Account[] accounts = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (accounts.length != 0) {
+        if (accounts.length > 0) {
             prepareHeader(accounts[0].name);
-            final AccountManagerFuture<Bundle> future = accountManager.getAuthToken(accounts[0], AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, this, null, null);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Bundle bnd = future.getResult();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
         }
-        navigationView.invalidate();
     }
 
     private void showAccountPicker(final String authTokenType) {
@@ -156,7 +135,6 @@ public class MainActivity extends AppCompatActivity
             items[i] = availableAccounts[i].name;
         }
         items[itemsNumber - 1] = "Dodaj konto";
-        // Account picker
         AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle("Wybierz konto")
                 .setAdapter(new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_list_item_1, items), new DialogInterface.OnClickListener() {
@@ -165,7 +143,6 @@ public class MainActivity extends AppCompatActivity
                         if (which == itemsNumber - 1) {
                             signIn();
                         } else {
-                            getExistingAccountAuthToken(availableAccounts[which], authTokenType);
                             prepareHeader(availableAccounts[which].name);
                         }
                     }
@@ -176,26 +153,8 @@ public class MainActivity extends AppCompatActivity
     private void prepareHeader(String name) {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         final View header = navigationView.getHeaderView(0);
-        ((TextView) header.findViewById(R.id.name)).setText(name);
+        ((TextView) header.findViewById(R.id.tv_name)).setText(name);
         LoggedUser.getInstance().setAccount(getAccountByLogin(name));
-    }
-
-    private void getExistingAccountAuthToken(Account account, String authTokenType) {
-        final AccountManagerFuture<Bundle> future = AccountManager
-                .get(this)
-                .getAuthToken(account, authTokenType, null, this, null, null);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Bundle bnd = future.getResult();
-                    final String authtoken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
 
     private void signIn() {

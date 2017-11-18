@@ -14,7 +14,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 
 import java.io.IOException;
@@ -22,9 +21,8 @@ import java.io.IOException;
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.auth.AccountGeneral;
 import pl.basistam.turysta.auth.LoggedUser;
-import pl.basistam.turysta.exceptions.ServerConnectionException;
-import pl.basistam.turysta.json.UserInputJson;
-import pl.basistam.turysta.model.UserDetails;
+import pl.basistam.turysta.dto.UserInput;
+import pl.basistam.turysta.dto.UserDetails;
 import pl.basistam.turysta.service.UserService;
 
 public class UserFragment extends Fragment {
@@ -32,44 +30,48 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.user_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_user, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        final EditText edtFirstName = view.findViewById(R.id.first_name);
-        final EditText edtLastName = view.findViewById(R.id.last_name);
-        final EditText edtCity = view.findViewById(R.id.city);
-        final EditText edtYearOfBirth = view.findViewById(R.id.year_of_birth);
+
+        final EditText edtFirstName = view.findViewById(R.id.edt_first_name);
+        final EditText edtLastName = view.findViewById(R.id.edt_last_name);
+        final EditText edtCity = view.findViewById(R.id.edt_city);
+        final EditText edtYearOfBirth = view.findViewById(R.id.edt_year_of_birth);
 
         AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
-        accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true, new AccountManagerCallback<Bundle>() {
-            @Override
-            public void run(final AccountManagerFuture<Bundle> future) {
-                new AsyncTask<Void, Void, UserDetails>() {
+        accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
+                new AccountManagerCallback<Bundle>() {
                     @Override
-                    protected UserDetails doInBackground(Void... params) {
-                        try {
-                            Bundle bundle = future.getResult();
-                            final String authtoken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                            UserService userService = new UserService();
-                            return userService.obtainUserDetails(authtoken);
-                        } catch (OperationCanceledException | IOException | AuthenticatorException | ServerConnectionException e) {
-                            e.printStackTrace();
-                            return null;
-                        }
-                    }
+                    public void run(final AccountManagerFuture<Bundle> future) {
+                        new AsyncTask<Void, Void, UserDetails>() {
+                            @Override
+                            protected UserDetails doInBackground(Void... params) {
+                                try {
+                                    final String authToken = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+                                    return UserService.getInstance()
+                                            .userService()
+                                            .getUserDetails("Bearer " + authToken)
+                                            .execute()
+                                            .body();
+                                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                                    e.printStackTrace();
+                                    return null;
+                                }
+                            }
 
-                    @Override
-                    protected void onPostExecute(UserDetails userDetails) {
-                        edtFirstName.setText(userDetails.getFirstName());
-                        edtLastName.setText(userDetails.getLastName());
-                        edtCity.setText(userDetails.getCity());
-                        edtYearOfBirth.setText(Integer.toString(userDetails.getYearOfBirth()));
+                            @Override
+                            protected void onPostExecute(UserDetails userDetails) {
+                                edtFirstName.setText(userDetails.getFirstName());
+                                edtLastName.setText(userDetails.getLastName());
+                                edtCity.setText(userDetails.getCity());
+                                edtYearOfBirth.setText(Integer.toString(userDetails.getYearOfBirth()));
+                            }
+                        }.execute();
                     }
-                }.execute();
-            }
-        }, null);
+                }, null);
 
         final FloatingActionButton btnEdit = view.findViewById(R.id.btn_edit);
         final FloatingActionButton btnSave = view.findViewById(R.id.btn_save);
@@ -96,11 +98,49 @@ public class UserFragment extends Fragment {
                 edtCity.setEnabled(false);
                 edtYearOfBirth.setEnabled(false);
 
-                UserInputJson inputJson = new UserInputJson();
+                final UserInput inputJson = new UserInput();
                 inputJson.setFirstName(edtFirstName.getText().toString());
                 inputJson.setLastName(edtLastName.getText().toString());
                 inputJson.setCity(edtCity.getText().toString());
                 inputJson.setYearOfBirth(Integer.parseInt(edtYearOfBirth.getText().toString()));
+                AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
+                accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
+                        new AccountManagerCallback<Bundle>() {
+                            @Override
+                            public void run(AccountManagerFuture<Bundle> future) {
+                                try {
+                                    final String authToken = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+                                    new AsyncTask<Void, Void, Void>() {
+                                        @Override
+                                        protected Void doInBackground(Void... params) {
+                                            try {
+                                                UserService.getInstance()
+                                                        .userService()
+                                                        .update("Bearer " + authToken, inputJson)
+                                                        .execute();
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                            return null;
+                                        }
+                                    }.execute();
+                                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, null);
+            }
+        });
+
+        final FloatingActionButton btnFriends = view.findViewById(R.id.btn_relations);
+        btnFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RelationsFragment relationsFragment = new RelationsFragment();
+                getActivity().getFragmentManager().beginTransaction()
+                        .replace(R.id.content, relationsFragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
     }

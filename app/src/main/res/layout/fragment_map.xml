@@ -15,7 +15,7 @@
             android:layout_height="match_parent" />
 
         <ImageButton
-            android:id="@+id/zoom_in"
+            android:id="@+id/ib_zoom_in"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentBottom="true"
@@ -26,7 +26,7 @@
             android:src="@drawable/ic_zoom_in" />
 
         <ImageButton
-            android:id="@+id/zoom_out"
+            android:id="@+id/ib_zoom_out"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentBottom="true"
@@ -51,7 +51,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/place_name"
+                android:id="@+id/tv_place_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="6dp"
@@ -61,7 +61,7 @@
                 android:textSize="22sp" />
 
             <TextView
-                android:id="@+id/height_name"
+                android:id="@+id/tv_height_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="6dp"
@@ -71,7 +71,7 @@
                 android:textSize="19sp" />
 
             <ScrollView
-                android:id="@+id/route_scroll_view"
+                android:id="@+id/sv_route"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

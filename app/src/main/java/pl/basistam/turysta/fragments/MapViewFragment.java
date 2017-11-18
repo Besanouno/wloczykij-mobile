@@ -4,14 +4,10 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -21,7 +17,6 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Marker;
 
-import pl.basistam.turysta.MainActivity;
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.actions.UpdatePlaceDetailsAction;
 import pl.basistam.turysta.components.buttons.ZoomButtons;
@@ -34,11 +29,10 @@ public class MapViewFragment extends Fragment {
 
     private MapView mapView;
     private BottomSheetBehavior<View> bottomSheetBehavior;
-    private View bottomSheet;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.map_fragment, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
         mapView = rootView.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
@@ -51,7 +45,7 @@ public class MapViewFragment extends Fragment {
             e.printStackTrace();
         }
 
-        bottomSheet = rootView.findViewById(R.id.map_place);
+        View bottomSheet = rootView.findViewById(R.id.map_place);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setHideable(true);
         bottomSheetBehavior.setPeekHeight(160);
@@ -74,8 +68,8 @@ public class MapViewFragment extends Fragment {
             public boolean onMarkerClick(Marker marker) {
                 new UpdatePlaceDetailsAction(
                         new PlaceDetailsField(
-                                (TextView) view.findViewById(R.id.place_name),
-                                (TextView) view.findViewById(R.id.height_name),
+                                (TextView) view.findViewById(R.id.tv_place_name),
+                                (TextView) view.findViewById(R.id.tv_height_name),
                                 map
                                 ),
                         AppDatabase.getInstance(getActivity().getBaseContext()).placeDao())
@@ -86,20 +80,6 @@ public class MapViewFragment extends Fragment {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
 
-                bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                    @Override
-                    public void onStateChanged(View bottomSheet, int newState) {
-                        if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                        } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                        } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                        }
-                    }
-
-                    @Override
-                    public void onSlide(View bottomSheet, float slideOffset) {
-                    }
-                });
-
                 return true;
             }
         });
@@ -109,8 +89,8 @@ public class MapViewFragment extends Fragment {
         View view = getView();
         if (view != null) {
             new ZoomButtons(map,
-                    (ImageButton) getView().findViewById(R.id.zoom_in),
-                    (ImageButton) getView().findViewById(R.id.zoom_out)).initializeListeners();
+                    (ImageButton) getView().findViewById(R.id.ib_zoom_in),
+                    (ImageButton) getView().findViewById(R.id.ib_zoom_out)).initializeListeners();
         }
     }
 

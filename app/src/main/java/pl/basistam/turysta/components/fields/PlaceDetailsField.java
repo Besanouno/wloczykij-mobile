@@ -1,10 +1,5 @@
 package pl.basistam.turysta.components.fields;
 
-
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.AppCompatTextView;
-import android.view.View;
-import android.widget.GridLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;

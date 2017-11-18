@@ -9,33 +9,27 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import pl.basistam.turysta.auth.AccountGeneral;
 import pl.basistam.turysta.auth.ServerAuthenticateImpl;
 import pl.basistam.turysta.exceptions.ServerConnectionException;
-import pl.basistam.turysta.json.UserInputJson;
+import pl.basistam.turysta.dto.UserInput;
 
-import static pl.basistam.turysta.LoginActivity.ARG_ACCOUNT_TYPE;
 import static pl.basistam.turysta.LoginActivity.KEY_ERROR_MESSAGE;
 
 public class SignUpActivity extends AccountAuthenticatorActivity /*implements LoaderCallbacks<Cursor> */{
-
-    private String accountType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
-
-        findViewById(R.id.already_member).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.tv_already_member).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 setResult(RESULT_CANCELED);
                 finish();
             }
         });
-        findViewById(R.id.sign_up_button).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.btn_signup).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 createAccount();
@@ -45,20 +39,30 @@ public class SignUpActivity extends AccountAuthenticatorActivity /*implements Lo
 
     private void createAccount() {
 
-        final String login = ((TextView) findViewById(R.id.login)).getText().toString().trim();
-        final String email = ((TextView) findViewById(R.id.email)).getText().toString().trim();
-        final String password = ((TextView) findViewById(R.id.password)).getText().toString().trim();
-        final String city = ((TextView) findViewById(R.id.city)).getText().toString().trim();
-        final String yearOfBirth = ((TextView) findViewById(R.id.year_of_birth)).getText().toString().trim();
-        final String firstName = ((TextView) findViewById(R.id.first_name)).getText().toString().trim();
-        final String lastName = ((TextView) findViewById(R.id.last_name)).getText().toString().trim();
+        TextView edtLogin = findViewById(R.id.edt_login);
+        final String login = edtLogin.getText().toString().trim();
+        final String email = ((TextView) findViewById(R.id.edt_email)).getText().toString().trim();
+        TextView edtPassword = findViewById(R.id.edt_password);
+        final String password = edtPassword.getText().toString().trim();
+        TextView edtRepassword = findViewById(R.id.edt_repeat_password);
+        final String repassword = edtRepassword.getText().toString().trim();
+        final String city = ((TextView) findViewById(R.id.edt_city)).getText().toString().trim();
+        final String yearOfBirth = ((TextView) findViewById(R.id.edt_year_of_birth)).getText().toString().trim();
+        final String firstName = ((TextView) findViewById(R.id.edt_first_name)).getText().toString().trim();
+        final String lastName = ((TextView) findViewById(R.id.edt_last_name)).getText().toString().trim();
 
+        if (login.isEmpty()) {
+            edtLogin.setText("Login nie może być pusty!");
+        } else  if (!password.equals(repassword)) {
+            edtPassword.setText("Hasła nie pasują");
+            edtRepassword.setText("Hasła nie pasują");
+        }
         new AsyncTask<String, Void, Intent>() {
             @Override
             protected Intent doInBackground(String... params) {
                 Bundle data = new Bundle();
                 try {
-                    UserInputJson user = new UserInputJson();
+                    UserInput user = new UserInput();
                     user.setLogin(login);
                     user.setEmail(email);
                     user.setPassword(password);
@@ -68,7 +72,7 @@ public class SignUpActivity extends AccountAuthenticatorActivity /*implements Lo
                     user.setYearOfBirth(Integer.parseInt(yearOfBirth));
 
                     ServerAuthenticateImpl.getInstance()
-                            .signUp(user, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+                            .signUp(user);
                 } catch (ServerConnectionException e) {
                     data.putString(KEY_ERROR_MESSAGE, e.getMessage());
                 }

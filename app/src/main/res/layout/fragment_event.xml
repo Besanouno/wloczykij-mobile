@@ -12,12 +12,11 @@
     tools:context="pl.basistam.turysta.fragments.EventFragment">
 
     <ScrollView
-        android:id="@+id/login_form"
+        android:id="@+id/sv_login"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -27,8 +26,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="56dp">
 
-                <AutoCompleteTextView
-                    android:id="@+id/name"
+                <EditText
+                    android:id="@+id/tv_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_event_name"
@@ -41,8 +40,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <AutoCompleteTextView
-                    android:id="@+id/start"
+                <EditText
+                    android:id="@+id/tv_start"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_start_date"
@@ -55,8 +54,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <AutoCompleteTextView
-                    android:id="@+id/end"
+                <EditText
+                    android:id="@+id/edt_end"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_end_date"
@@ -69,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/place_of_meeting"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -84,8 +83,8 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <AutoCompleteTextView
-                    android:id="@+id/participants_limit"
+                <EditText
+                    android:id="@+id/edt_participants_limit"
                     android:layout_width="185dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_participants_limit"
@@ -93,7 +92,7 @@
                     android:maxLines="1" />
 
                 <CheckBox
-                    android:id="@+id/checkBox2"
+                    android:id="@+id/chb_public_access"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -122,14 +121,14 @@
                 </LinearLayout>
             </ScrollView>
             <ImageButton
-                android:id="@+id/add_participant"
+                android:id="@+id/ib_add_participant"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_add_user"
                 android:background="@drawable/green_background_with_shadow"/>
 
             <Button
-                android:id="@+id/event_save_button"
+                android:id="@+id/btn_save_event"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

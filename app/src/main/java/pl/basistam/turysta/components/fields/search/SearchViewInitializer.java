@@ -40,13 +40,13 @@ class SearchViewInitializer extends AsyncTask<Void, Void, List<Place>> {
         for (Place p : places) {
             HashMap<String, String> entry = new HashMap<>();
             entry.put("name", p.getName());
-            entry.put("icon", Integer.toString(R.drawable.ic_peak));
+            entry.put("height", Double.toString(p.getHeight()));
             items.add(entry);
         }
-        String[] from = {"icon", "name"};
-        int[] to = {R.id.flag, R.id.txt};
+        String[] from = {"height", "name"};
+        int[] to = {R.id.tv_height, R.id.tv_name};
 
-        SimpleAdapter adapter = new SimpleAdapter(context, items, R.layout.search_field_item, from, to);
+        SimpleAdapter adapter = new SimpleAdapter(context, items, R.layout.item_search_place, from, to);
         searchView.setAdapter(adapter);
     }
 }

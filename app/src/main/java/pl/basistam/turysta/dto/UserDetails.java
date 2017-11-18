@@ -1,4 +1,4 @@
-package pl.basistam.turysta.model;
+package pl.basistam.turysta.dto;
 
 import java.io.Serializable;
 import java.util.Date;
