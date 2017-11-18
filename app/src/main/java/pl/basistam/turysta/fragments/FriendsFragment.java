@@ -34,6 +34,9 @@ import pl.basistam.turysta.items.FriendItem;
 import pl.basistam.turysta.service.UserService;
 
 public class FriendsFragment extends Fragment {
+
+    private boolean searchingMode = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -81,7 +84,7 @@ public class FriendsFragment extends Fragment {
                                     }
                                     List<FriendItem> content = new ArrayList<>(friends.size());
                                     for (UserSimpleDetails u : friends) {
-                                        content.add(new FriendItem(u.getFirstName() + " " + u.getLastName() + " (" + u.getLogin() + ")", false));
+                                        content.add(new FriendItem(u.getFirstName() + " " + u.getLastName(), u.getLogin(), true));
                                     }
                                     friendsList.setAdapter(new FriendsAdapter(getActivity(), content));
                                 }
@@ -95,11 +98,18 @@ public class FriendsFragment extends Fragment {
 
     private void initBackButton(final View view) {
         final Button button = view.findViewById(R.id.btn_save);
+        final EditText edtSearch = view.findViewById(R.id.searchField);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                KeyboardUtils.hide(getActivity().getBaseContext(), view);
-                getFragmentManager().popBackStack();
+                if (searchingMode) {
+                    edtSearch.setText("");
+                    searchingMode = false;
+                } else {
+                    KeyboardUtils.hide(getActivity().getBaseContext(), view);
+                    getFragmentManager().popBackStack();
+                }
             }
         });
     }
@@ -108,6 +118,8 @@ public class FriendsFragment extends Fragment {
         AppCompatImageButton btnSearch = view.findViewById(R.id.btn_search);
         final ListView lvFriends = view.findViewById(R.id.friends_list);
         final EditText edtSearchField = view.findViewById(R.id.searchField);
+
+        searchingMode = true;
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
