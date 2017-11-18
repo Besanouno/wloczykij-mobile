@@ -37,7 +37,7 @@ import pl.basistam.turysta.service.RelationsChangesHandlerImpl;
 import pl.basistam.turysta.service.UserService;
 import pl.basistam.turysta.service.interfaces.RelationsChangesHandler;
 
-public class FriendsFragment extends Fragment {
+public class RelationsFragment extends Fragment {
 
     private final RelationsChangesHandler relationsChangesHandler = new RelationsChangesHandlerImpl();
     SparseArray<Group> groups = new SparseArray<Group>();
@@ -118,9 +118,9 @@ public class FriendsFragment extends Fragment {
     }
 
     private void initFriendList(final View view) {
-        AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
         final ExpandableListView expandableListView = view.findViewById(R.id.elv_relations);
 
+        AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
         accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
                 new AccountManagerCallback<Bundle>() {
                     @Override

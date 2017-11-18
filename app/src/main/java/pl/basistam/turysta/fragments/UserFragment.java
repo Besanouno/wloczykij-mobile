@@ -136,9 +136,9 @@ public class UserFragment extends Fragment {
         btnFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FriendsFragment friendsFragment = new FriendsFragment();
+                RelationsFragment relationsFragment = new RelationsFragment();
                 getActivity().getFragmentManager().beginTransaction()
-                        .replace(R.id.content, friendsFragment)
+                        .replace(R.id.content, relationsFragment)
                         .addToBackStack(null)
                         .commit();
             }

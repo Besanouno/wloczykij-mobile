@@ -1,6 +1,7 @@
 package pl.basistam.turysta.adapters;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.dto.Group;
 import pl.basistam.turysta.dto.Relation;
+import pl.basistam.turysta.fragments.PersonFragment;
 import pl.basistam.turysta.service.interfaces.RelationsChangesHandler;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
@@ -94,6 +96,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     }
                 }
         );
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PersonFragment fragment = new PersonFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("login", children.getLogin());
+                fragment.setArguments(bundle);
+                activity.getFragmentManager().beginTransaction()
+                        .add(R.id.content, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
         return convertView;
     }
 

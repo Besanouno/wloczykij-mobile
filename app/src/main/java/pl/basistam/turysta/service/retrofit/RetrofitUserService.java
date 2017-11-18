@@ -14,11 +14,15 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface RetrofitUserService {
     @GET("users/self")
     Call<UserDetails> getUserDetails(@Header("Authorization") final String authorization);
+
+    @GET("users/{id}")
+    Call<UserDetails> getPersonDetails(@Header("Authorization") final String authorization, @Path("id") final String login);
 
     @GET("users")
     Call<Page<Relation>> getUserSimpleDetailsByPattern(
