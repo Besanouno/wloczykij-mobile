@@ -18,7 +18,6 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.friends_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_relation, container, false);
     }
 
     @Override
@@ -59,8 +58,8 @@ public class FriendsFragment extends Fragment {
     }
 
     private void initExpandableListView(View view) {
-        final ExpandableListView expandableListView = view.findViewById(R.id.mainList);
-        final EditText edtSearchField = view.findViewById(R.id.searchField);
+        final ExpandableListView expandableListView = view.findViewById(R.id.elv_relations);
+        final EditText edtSearchField = view.findViewById(R.id.edt_search);
 
         expandableListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -120,7 +119,7 @@ public class FriendsFragment extends Fragment {
 
     private void initFriendList(final View view) {
         AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
-        final ExpandableListView expandableListView = view.findViewById(R.id.mainList);
+        final ExpandableListView expandableListView = view.findViewById(R.id.elv_relations);
 
         accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
                 new AccountManagerCallback<Bundle>() {
@@ -209,8 +208,8 @@ public class FriendsFragment extends Fragment {
 
     private void initSearchButton(View view) {
         AppCompatImageButton btnSearch = view.findViewById(R.id.btn_search);
-        final ExpandableListView expandableListView = view.findViewById(R.id.mainList);
-        final EditText edtSearchField = view.findViewById(R.id.searchField);
+        final ExpandableListView expandableListView = view.findViewById(R.id.elv_relations);
+        final EditText edtSearchField = view.findViewById(R.id.edt_search);
         KeyboardUtils.hide(getActivity().getBaseContext(), view);
 
         btnSearch.setOnClickListener(new View.OnClickListener() {

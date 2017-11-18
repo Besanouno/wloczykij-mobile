@@ -7,26 +7,20 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import pl.basistam.turysta.auth.AccountGeneral;
 import pl.basistam.turysta.auth.ServerAuthenticateImpl;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 public class LoginActivity extends AccountAuthenticatorActivity /*implements LoaderCallbacks<Cursor> */{
 
@@ -67,13 +61,13 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
     }
 
     private void initFields() {
-        edtLogin = findViewById(R.id.login);
-        edtRepassword = findViewById(R.id.repeat_password);
-        edtPassword =  findViewById(R.id.password);
+        edtLogin = findViewById(R.id.edt_login);
+        edtRepassword = findViewById(R.id.edt_repeat_password);
+        edtPassword =  findViewById(R.id.edt_password);
         edtPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                if (id == R.id.edt_login || id == EditorInfo.IME_NULL) {
                     attemptLogin();
                     return true;
                 }
@@ -81,7 +75,7 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
             }
         });
 
-        findViewById(R.id.sign_up_button)
+        findViewById(R.id.btn_signup)
                 .setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,9 +83,9 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
             }
         });
 
-        loginFormView = findViewById(R.id.login_form);
-        progressView = findViewById(R.id.login_progress);
-        findViewById(R.id.sign_up).setOnClickListener(new View.OnClickListener() {
+        loginFormView = findViewById(R.id.sv_login);
+        progressView = findViewById(R.id.pb_login);
+        findViewById(R.id.tv_signup).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent signup = new Intent(getBaseContext(), SignUpActivity.class);

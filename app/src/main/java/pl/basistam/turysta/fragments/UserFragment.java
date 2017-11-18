@@ -30,16 +30,16 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.user_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_user, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        final EditText edtFirstName = view.findViewById(R.id.first_name);
-        final EditText edtLastName = view.findViewById(R.id.last_name);
-        final EditText edtCity = view.findViewById(R.id.city);
-        final EditText edtYearOfBirth = view.findViewById(R.id.year_of_birth);
+        final EditText edtFirstName = view.findViewById(R.id.edt_first_name);
+        final EditText edtLastName = view.findViewById(R.id.edt_last_name);
+        final EditText edtCity = view.findViewById(R.id.edt_city);
+        final EditText edtYearOfBirth = view.findViewById(R.id.edt_year_of_birth);
 
         AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
         accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
@@ -132,7 +132,7 @@ public class UserFragment extends Fragment {
             }
         });
 
-        final FloatingActionButton btnFriends = view.findViewById(R.id.btn_friends);
+        final FloatingActionButton btnFriends = view.findViewById(R.id.btn_relations);
         btnFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

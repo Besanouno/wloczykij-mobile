@@ -65,7 +65,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.group_item, null);
+            convertView = inflater.inflate(R.layout.item_relations_group, null);
         }
         Group group = (Group) getGroup(groupPosition);
         TextView textView = (TextView) convertView;
@@ -79,11 +79,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         final Relation children = (Relation) getChild(groupPosition, childPosition);
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.friend_item, null);
+            convertView = inflater.inflate(R.layout.item_relation, null);
         }
-        final TextView textView = convertView.findViewById(R.id.label);
+        final TextView textView = convertView.findViewById(R.id.tv_login);
         textView.setText(children.getFullName());
-        final CheckBox checkBox = convertView.findViewById(R.id.check);
+        final CheckBox checkBox = convertView.findViewById(R.id.chb_friend);
         checkBox.setChecked(children.isFriend());
         checkBox.setOnClickListener(
                 new View.OnClickListener() {

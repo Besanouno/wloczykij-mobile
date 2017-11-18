@@ -31,7 +31,7 @@
             android:layout_toStartOf="@+id/btn_search">
 
             <EditText
-                android:id="@+id/searchField"
+                android:id="@+id/edt_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Szukaj podróżników"
@@ -42,7 +42,7 @@
     </RelativeLayout>
 
     <ExpandableListView
-        android:id="@+id/mainList"
+        android:id="@+id/elv_relations"
         android:layout_width="match_parent"
         android:layout_height="330dp" />
 

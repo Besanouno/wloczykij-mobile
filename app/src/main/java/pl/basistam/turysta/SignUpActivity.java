@@ -13,7 +13,6 @@ import pl.basistam.turysta.auth.ServerAuthenticateImpl;
 import pl.basistam.turysta.exceptions.ServerConnectionException;
 import pl.basistam.turysta.dto.UserInput;
 
-import static pl.basistam.turysta.LoginActivity.ARG_ACCOUNT_TYPE;
 import static pl.basistam.turysta.LoginActivity.KEY_ERROR_MESSAGE;
 
 public class SignUpActivity extends AccountAuthenticatorActivity /*implements LoaderCallbacks<Cursor> */{
@@ -23,14 +22,14 @@ public class SignUpActivity extends AccountAuthenticatorActivity /*implements Lo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        findViewById(R.id.already_member).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.tv_already_member).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 setResult(RESULT_CANCELED);
                 finish();
             }
         });
-        findViewById(R.id.sign_up_button).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.btn_signup).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 createAccount();
@@ -40,17 +39,17 @@ public class SignUpActivity extends AccountAuthenticatorActivity /*implements Lo
 
     private void createAccount() {
 
-        TextView edtLogin = findViewById(R.id.login);
+        TextView edtLogin = findViewById(R.id.edt_login);
         final String login = edtLogin.getText().toString().trim();
-        final String email = ((TextView) findViewById(R.id.email)).getText().toString().trim();
-        TextView edtPassword = findViewById(R.id.password);
+        final String email = ((TextView) findViewById(R.id.edt_email)).getText().toString().trim();
+        TextView edtPassword = findViewById(R.id.edt_password);
         final String password = edtPassword.getText().toString().trim();
-        TextView edtRepassword = findViewById(R.id.repeat_password);
+        TextView edtRepassword = findViewById(R.id.edt_repeat_password);
         final String repassword = edtRepassword.getText().toString().trim();
-        final String city = ((TextView) findViewById(R.id.city)).getText().toString().trim();
-        final String yearOfBirth = ((TextView) findViewById(R.id.year_of_birth)).getText().toString().trim();
-        final String firstName = ((TextView) findViewById(R.id.first_name)).getText().toString().trim();
-        final String lastName = ((TextView) findViewById(R.id.last_name)).getText().toString().trim();
+        final String city = ((TextView) findViewById(R.id.edt_city)).getText().toString().trim();
+        final String yearOfBirth = ((TextView) findViewById(R.id.edt_year_of_birth)).getText().toString().trim();
+        final String firstName = ((TextView) findViewById(R.id.edt_first_name)).getText().toString().trim();
+        final String lastName = ((TextView) findViewById(R.id.edt_last_name)).getText().toString().trim();
 
         if (login.isEmpty()) {
             edtLogin.setText("Login nie może być pusty!");

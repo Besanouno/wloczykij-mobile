@@ -11,12 +11,11 @@
     tools:context="pl.basistam.turysta.SignUpActivity">
 
     <ScrollView
-        android:id="@+id/login_form"
+        android:id="@+id/sv_login"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -26,7 +25,7 @@
                 android:layout_height="match_parent">
 
                 <EditText
-                    android:id="@+id/login"
+                    android:id="@+id/edt_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_login_r"
@@ -40,7 +39,7 @@
                 android:layout_height="match_parent">
 
                 <EditText
-                    android:id="@+id/email"
+                    android:id="@+id/edt_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email_r"
@@ -54,11 +53,11 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/edt_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/login"
+                    android:imeActionId="@+id/edt_login"
                     android:inputType="textPassword"
                     android:maxLines="1" />
 
@@ -69,11 +68,11 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/repeat_password"
+                    android:id="@+id/edt_repeat_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/repeat_password"
-                    android:imeActionId="@+id/login"
+                    android:imeActionId="@+id/edt_login"
                     android:inputType="textPassword"
                     android:maxLines="1" />
 
@@ -84,7 +83,7 @@
                 android:layout_height="match_parent">
 
                 <EditText
-                    android:id="@+id/first_name"
+                    android:id="@+id/edt_first_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_first_name_r"
@@ -98,7 +97,7 @@
                 android:layout_height="match_parent">
 
                 <EditText
-                    android:id="@+id/last_name"
+                    android:id="@+id/edt_last_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_last_name_r"
@@ -112,7 +111,7 @@
                 android:layout_height="match_parent">
 
                 <EditText
-                    android:id="@+id/city"
+                    android:id="@+id/edt_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="miasto"
@@ -126,7 +125,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/year_of_birth"
+                    android:id="@+id/edt_year_of_birth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/year_of_birth"
@@ -136,7 +135,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/sign_up_button"
+                android:id="@+id/btn_signup"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -151,7 +150,7 @@
                 android:gravity="center_horizontal">
 
                 <TextView
-                    android:id="@+id/already_member"
+                    android:id="@+id/tv_already_member"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

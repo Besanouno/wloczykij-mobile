@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity
     private void prepareHeader(String name) {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         final View header = navigationView.getHeaderView(0);
-        ((TextView) header.findViewById(R.id.name)).setText(name);
+        ((TextView) header.findViewById(R.id.tv_name)).setText(name);
         LoggedUser.getInstance().setAccount(getAccountByLogin(name));
     }
 
