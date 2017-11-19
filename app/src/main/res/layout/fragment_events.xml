@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="56dp">
+        android:layout_marginTop="56dp"> <!-- marcin jest slaby -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,7 +37,9 @@
                     <ListView
                         android:id="@+id/lv_upcoming_events"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:divider="@android:color/transparent"
+                        android:dividerHeight="10dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -46,6 +48,12 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
+                    <ListView
+                        android:id="@+id/lv_invitations"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="@android:color/transparent"
+                        android:dividerHeight="10dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -54,8 +62,22 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
+                    <ListView
+                        android:id="@+id/lv_archival_events"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="@android:color/transparent"
+                        android:dividerHeight="10dp" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btn_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_zoom_in"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="20dp"
+            />
     </TabHost>
 </RelativeLayout>

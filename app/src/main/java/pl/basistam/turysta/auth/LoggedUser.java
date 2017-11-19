@@ -56,7 +56,7 @@ public class LoggedUser {
                         try {
                             bundle = future.getResult();
                             final String authtoken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                            task.execute(authtoken);
+                            task.execute("Bearer " + authtoken);
                         } catch (OperationCanceledException | IOException | AuthenticatorException e) {
                             e.printStackTrace();
                         }

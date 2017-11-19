@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import pl.basistam.turysta.R;
-import pl.basistam.turysta.adapters.ExpandableListAdapter;
+import pl.basistam.turysta.adapters.RelationsAdapter;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.components.utils.KeyboardUtils;
 import pl.basistam.turysta.dto.FoundPeopleGroup;
@@ -35,7 +35,7 @@ public class RelationsFragment extends Fragment {
 
     private final RelationsChangesHandler relationsChangesHandler = new RelationsChangesHandlerImpl();
     SparseArray<Group> groups = new SparseArray<Group>();
-    ExpandableListAdapter adapter;
+    RelationsAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,7 +76,7 @@ public class RelationsFragment extends Fragment {
                                         String authtoken = params[0];
                                         return UserService.getInstance()
                                                 .userService()
-                                                .getUserSimpleDetailsByPattern("Bearer " + authtoken, pattern, group.getAndIncrementLastPage(), 15)
+                                                .getUserSimpleDetailsByPattern(authtoken, pattern, group.getAndIncrementLastPage(), 15)
                                                 .execute()
                                                 .body();
                                     } catch (IOException e) {
@@ -121,7 +121,7 @@ public class RelationsFragment extends Fragment {
                             String authToken = params[0];
                             return UserService.getInstance()
                                     .userService()
-                                    .getRelations("Bearer " + authToken)
+                                    .getRelations(authToken)
                                     .execute()
                                     .body();
                         } catch (IOException e) {
@@ -139,7 +139,7 @@ public class RelationsFragment extends Fragment {
                         Group group = new Group("Twoi znajomi");
                         group.setChildren(content);
                         groups.append(0, group);
-                        adapter = new ExpandableListAdapter(groups, getActivity(), relationsChangesHandler);
+                        adapter = new RelationsAdapter(groups, getActivity(), relationsChangesHandler);
                         expandableListView.setAdapter(adapter);
                         expandableListView.expandGroup(0);
                     }
@@ -162,7 +162,7 @@ public class RelationsFragment extends Fragment {
                                         String authtoken = params[0];
                                         UserService.getInstance()
                                                 .userService()
-                                                .updateRelations("Bearer " + authtoken, changes)
+                                                .updateRelations(authtoken, changes)
                                                 .execute();
                                     } catch (IOException e) {
                                         e.printStackTrace();
@@ -197,7 +197,7 @@ public class RelationsFragment extends Fragment {
                                     final String authtoken = params[0];
                                     return UserService.getInstance()
                                             .userService()
-                                            .getUserSimpleDetailsByPattern("Bearer " + authtoken, pattern, 0, 15)
+                                            .getUserSimpleDetailsByPattern(authtoken, pattern, 0, 15)
                                             .execute()
                                             .body();
                                 } catch (IOException e) {
@@ -219,7 +219,7 @@ public class RelationsFragment extends Fragment {
                                 group.setLastPage(users.getNumber());
                                 group.setTotalNumber(users.getTotalElements());
                                 groups.append(1, group);
-                                adapter = new ExpandableListAdapter(groups, getActivity(), relationsChangesHandler);
+                                adapter = new RelationsAdapter(groups, getActivity(), relationsChangesHandler);
                                 expandableListView.setAdapter(adapter);
                                 expandableListView.expandGroup(1);
                             }

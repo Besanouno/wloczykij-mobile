@@ -16,13 +16,13 @@ import pl.basistam.turysta.dto.Relation;
 import pl.basistam.turysta.fragments.PersonFragment;
 import pl.basistam.turysta.service.interfaces.RelationsChangesHandler;
 
-public class ExpandableListAdapter extends BaseExpandableListAdapter {
+public class RelationsAdapter extends BaseExpandableListAdapter {
     private final SparseArray<Group> groups;
     private LayoutInflater inflater;
     private Activity activity;
     private final RelationsChangesHandler relationsChangesHandler;
 
-    public ExpandableListAdapter(SparseArray<Group> groups, Activity activity, RelationsChangesHandler relationsChangesHandler) {
+    public RelationsAdapter(SparseArray<Group> groups, Activity activity, RelationsChangesHandler relationsChangesHandler) {
         this.groups = groups;
         this.activity = activity;
         this.inflater = activity.getLayoutInflater();

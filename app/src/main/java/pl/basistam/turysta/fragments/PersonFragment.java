@@ -42,47 +42,34 @@ public class PersonFragment extends Fragment {
         final TextView tvCity = view.findViewById(R.id.tv_city);
         final TextView tvRegistered = view.findViewById(R.id.tv_registered);
 
-        AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
-        accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
-                new AccountManagerCallback<Bundle>() {
+        LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
+                new AsyncTask<String, Void, UserDetails>() {
                     @Override
-                    public void run(AccountManagerFuture<Bundle> future) {
+                    protected UserDetails doInBackground(String... params) {
                         try {
-                            Bundle bundle = future.getResult();
-                            final String authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-
-                            new AsyncTask<Void, Void, UserDetails>() {
-                                @Override
-                                protected UserDetails doInBackground(Void... params) {
-                                    try {
-                                        return UserService.getInstance()
-                                                .userService()
-                                                .getPersonDetails("Bearer " + authToken, login)
-                                                .execute()
-                                                .body();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    return null;
-                                }
-
-                                @Override
-                                protected void onPostExecute(UserDetails userDetails) {
-                                    tvLogin.setText(userDetails.getLogin());
-                                    tvFirstName.setText(userDetails.getFirstName());
-                                    tvLastName.setText(userDetails.getLastName());
-                                    tvEmail.setText(userDetails.getEmail());
-                                    tvYearOfBirth.setText(Integer.toString(userDetails.getYearOfBirth()));
-                                    tvCity.setText(userDetails.getCity());
-                                    tvRegistered.setText(Converter.dateToString(userDetails.getCreationDate()));
-                                }
-                            }.execute();
-
-                        } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                            String authToken = params[0];
+                            return UserService.getInstance()
+                                    .userService()
+                                    .getPersonDetails(authToken, login)
+                                    .execute()
+                                    .body();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        return null;
                     }
-                }, null);
+
+                    @Override
+                    protected void onPostExecute(UserDetails userDetails) {
+                        tvLogin.setText(userDetails.getLogin());
+                        tvFirstName.setText(userDetails.getFirstName());
+                        tvLastName.setText(userDetails.getLastName());
+                        tvEmail.setText(userDetails.getEmail());
+                        tvYearOfBirth.setText(Integer.toString(userDetails.getYearOfBirth()));
+                        tvCity.setText(userDetails.getCity());
+                        tvRegistered.setText(Converter.dateToString(userDetails.getCreationDate()));
+                    }
+                });
     }
 
 }

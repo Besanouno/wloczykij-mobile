@@ -41,38 +41,31 @@ public class UserFragment extends Fragment {
         final EditText edtCity = view.findViewById(R.id.edt_city);
         final EditText edtYearOfBirth = view.findViewById(R.id.edt_year_of_birth);
 
-        AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
-        accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
-                new AccountManagerCallback<Bundle>() {
+        LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
+                new AsyncTask<String, Void, UserDetails>() {
                     @Override
-                    public void run(final AccountManagerFuture<Bundle> future) {
-                        new AsyncTask<Void, Void, UserDetails>() {
-                            @Override
-                            protected UserDetails doInBackground(Void... params) {
-                                try {
-                                    final String authToken = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
-                                    return UserService.getInstance()
-                                            .userService()
-                                            .getUserDetails("Bearer " + authToken)
-                                            .execute()
-                                            .body();
-                                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
-                                    e.printStackTrace();
-                                    return null;
-                                }
-                            }
-
-                            @Override
-                            protected void onPostExecute(UserDetails userDetails) {
-                                edtFirstName.setText(userDetails.getFirstName());
-                                edtLastName.setText(userDetails.getLastName());
-                                edtCity.setText(userDetails.getCity());
-                                edtYearOfBirth.setText(Integer.toString(userDetails.getYearOfBirth()));
-                            }
-                        }.execute();
+                    protected UserDetails doInBackground(String... params) {
+                        try {
+                            final String authToken = params[0];
+                            return UserService.getInstance()
+                                    .userService()
+                                    .getUserDetails(authToken)
+                                    .execute()
+                                    .body();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return null;
+                        }
                     }
-                }, null);
 
+                    @Override
+                    protected void onPostExecute(UserDetails userDetails) {
+                        edtFirstName.setText(userDetails.getFirstName());
+                        edtLastName.setText(userDetails.getLastName());
+                        edtCity.setText(userDetails.getCity());
+                        edtYearOfBirth.setText(Integer.toString(userDetails.getYearOfBirth()));
+                    }
+                });
         final FloatingActionButton btnEdit = view.findViewById(R.id.btn_edit);
         final FloatingActionButton btnSave = view.findViewById(R.id.btn_save);
 
@@ -103,32 +96,22 @@ public class UserFragment extends Fragment {
                 inputJson.setLastName(edtLastName.getText().toString());
                 inputJson.setCity(edtCity.getText().toString());
                 inputJson.setYearOfBirth(Integer.parseInt(edtYearOfBirth.getText().toString()));
-                AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
-                accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
-                        new AccountManagerCallback<Bundle>() {
+                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
+                        new AsyncTask<String, Void, Void>() {
                             @Override
-                            public void run(AccountManagerFuture<Bundle> future) {
+                            protected Void doInBackground(String... params) {
                                 try {
-                                    final String authToken = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
-                                    new AsyncTask<Void, Void, Void>() {
-                                        @Override
-                                        protected Void doInBackground(Void... params) {
-                                            try {
-                                                UserService.getInstance()
-                                                        .userService()
-                                                        .update("Bearer " + authToken, inputJson)
-                                                        .execute();
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
-                                            return null;
-                                        }
-                                    }.execute();
-                                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                                    final String authToken = params[0];
+                                    UserService.getInstance()
+                                            .userService()
+                                            .update(authToken, inputJson)
+                                            .execute();
+                                } catch (IOException e) {
                                     e.printStackTrace();
                                 }
+                                return null;
                             }
-                        }, null);
+                        });
             }
         });
 
