@@ -24,4 +24,8 @@ public class FoundPeopleGroup extends Group {
     public void setLastPage(int lastPage) {
         this.lastPage = lastPage;
     }
+
+    public boolean canDownloadMore() {
+        return totalNumber >= 15 && getChildren().size() < totalNumber;
+    }
 }

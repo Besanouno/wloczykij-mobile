@@ -21,7 +21,7 @@ public class RelationsChangesHandlerImpl implements RelationsChangesHandler {
     }
 
     @Override
-    public void adjustRelationToChanges(Relation relation) {
+    public void adjustRelationToUnsavedChanges(Relation relation) {
         int index = relationChanges.indexOf(relation);
         if (index != -1) {
             relation.setFriend(relationChanges.get(index).isFriend());

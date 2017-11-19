@@ -1,10 +1,5 @@
 package pl.basistam.turysta.fragments;
 
-import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,7 +21,6 @@ import java.util.List;
 
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.adapters.ExpandableListAdapter;
-import pl.basistam.turysta.auth.AccountGeneral;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.components.utils.KeyboardUtils;
 import pl.basistam.turysta.dto.FoundPeopleGroup;
@@ -69,102 +63,87 @@ public class RelationsFragment extends Fragment {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 final FoundPeopleGroup group = (FoundPeopleGroup) groups.get(1);
-                if (expandableListView.getAdapter() != null) {
-                    if (expandableListView.getLastVisiblePosition() == expandableListView.getAdapter().getCount() - 1 &&
-                            expandableListView.getChildAt(expandableListView.getChildCount() - 1).getBottom() <= expandableListView.getHeight()
-                            && group != null && group.getTotalNumber() >= 15 && group.getChildren().size() < group.getTotalNumber()) {
-                        AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
-                        accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
-                                new AccountManagerCallback<Bundle>() {
-                                    @Override
-                                    public void run(final AccountManagerFuture<Bundle> future) {
-                                        final String pattern = edtSearchField.getText().toString();
-                                        new AsyncTask<Void, Void, Page<Relation>>() {
-                                            @Override
-                                            protected Page<Relation> doInBackground(Void... params) {
-                                                try {
-                                                    Bundle bundle = future.getResult();
-                                                    final String authtoken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                                                    return UserService.getInstance()
-                                                            .userService()
-                                                            .getUserSimpleDetailsByPattern("Bearer " + authtoken, pattern, group.getAndIncrementLastPage(), 15)
-                                                            .execute()
-                                                            .body();
-                                                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
-                                                    e.printStackTrace();
-                                                    return null;
-                                                }
-                                            }
 
-                                            @Override
-                                            protected void onPostExecute(Page<Relation> users) {
-                                                List<Relation> content = new ArrayList<>(users.getSize());
-                                                for (Relation u : users.getContent()) {
-                                                    Relation relation = new Relation(u.getName(), u.getLogin(), u.isFriend());
-                                                    relationsChangesHandler.adjustRelationToChanges(relation);
-                                                    content.add(relation);
-                                                }
-                                                group.getChildren().addAll(content);
-                                                group.setLastPage(users.getNumber());
-                                                adapter.notifyDataSetChanged();
-                                            }
-                                        }.execute();
+                if (isEndOfListReached() && group != null && group.canDownloadMore()) {
+
+                    final String pattern = edtSearchField.getText().toString();
+
+                    LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
+                            new AsyncTask<String, Void, Page<Relation>>() {
+                                @Override
+                                protected Page<Relation> doInBackground(String... params) {
+                                    try {
+                                        String authtoken = params[0];
+                                        return UserService.getInstance()
+                                                .userService()
+                                                .getUserSimpleDetailsByPattern("Bearer " + authtoken, pattern, group.getAndIncrementLastPage(), 15)
+                                                .execute()
+                                                .body();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        return null;
                                     }
-                                }, null);
-                    }
+                                }
+
+                                @Override
+                                protected void onPostExecute(Page<Relation> users) {
+                                    List<Relation> content = new ArrayList<>(users.getSize());
+                                    for (Relation u : users.getContent()) {
+                                        Relation relation = new Relation(u.getName(), u.getLogin(), u.isFriend());
+                                        relationsChangesHandler.adjustRelationToUnsavedChanges(relation);
+                                        content.add(relation);
+                                    }
+                                    group.getChildren().addAll(content);
+                                    group.setLastPage(users.getNumber());
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
+                    );
                 }
+            }
+
+            private boolean isEndOfListReached() {
+                return expandableListView.getAdapter() != null &&
+                        expandableListView.getLastVisiblePosition() == expandableListView.getAdapter().getCount() - 1 &&
+                        expandableListView.getChildAt(expandableListView.getChildCount() - 1).getBottom() <= expandableListView.getHeight();
             }
         });
     }
 
     private void initFriendList(final View view) {
         final ExpandableListView expandableListView = view.findViewById(R.id.elv_relations);
+        LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
+                new AsyncTask<String, Void, List<Relation>>() {
 
-        AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
-        accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
-                new AccountManagerCallback<Bundle>() {
                     @Override
-                    public void run(AccountManagerFuture<Bundle> future) {
+                    protected List<Relation> doInBackground(String... params) {
                         try {
-                            Bundle bundle = future.getResult();
-                            final String authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-
-                            new AsyncTask<Void, Void, List<Relation>>() {
-
-                                @Override
-                                protected List<Relation> doInBackground(Void... params) {
-                                    try {
-                                        return UserService.getInstance()
-                                                .userService()
-                                                .getRelations("Bearer " + authToken)
-                                                .execute()
-                                                .body();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    return Collections.emptyList();
-                                }
-
-                                @Override
-                                protected void onPostExecute(List<Relation> relations) {
-                                    List<Relation> content = new ArrayList<>(relations.size());
-                                    for (Relation r : relations) {
-                                        content.add(new Relation(r.getName(), r.getLogin(), true));
-                                    }
-                                    Group group = new Group("Twoi znajomi");
-                                    group.setChildren(content);
-                                    groups.append(0, group);
-                                    adapter = new ExpandableListAdapter(groups, getActivity(), relationsChangesHandler);
-                                    expandableListView.setAdapter(adapter);
-                                    expandableListView.expandGroup(0);
-                                }
-                            }.execute();
-                        } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                            String authToken = params[0];
+                            return UserService.getInstance()
+                                    .userService()
+                                    .getRelations("Bearer " + authToken)
+                                    .execute()
+                                    .body();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        return Collections.emptyList();
                     }
-                }, null);
 
+                    @Override
+                    protected void onPostExecute(List<Relation> relations) {
+                        List<Relation> content = new ArrayList<>(relations.size());
+                        for (Relation r : relations) {
+                            content.add(new Relation(r.getName(), r.getLogin(), true));
+                        }
+                        Group group = new Group("Twoi znajomi");
+                        group.setChildren(content);
+                        groups.append(0, group);
+                        adapter = new ExpandableListAdapter(groups, getActivity(), relationsChangesHandler);
+                        expandableListView.setAdapter(adapter);
+                        expandableListView.expandGroup(0);
+                    }
+                });
     }
 
     private void initBackButton(final View view) {
@@ -175,29 +154,22 @@ public class RelationsFragment extends Fragment {
             public void onClick(View v) {
                 final List<Relation> changes = relationsChangesHandler.getAndClearAllChanges();
                 if (!changes.isEmpty()) {
-                    AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
-                    accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
-                            new AccountManagerCallback<Bundle>() {
+                    LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
+                            new AsyncTask<String, Void, Object>() {
                                 @Override
-                                public void run(final AccountManagerFuture<Bundle> future) {
-                                    new AsyncTask<Void, Void, Void>() {
-                                        @Override
-                                        protected Void doInBackground(Void... params) {
-                                            try {
-                                                Bundle bundle = future.getResult();
-                                                final String authtoken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                                                UserService.getInstance()
-                                                        .userService()
-                                                        .updateRelations("Bearer " + authtoken, changes)
-                                                        .execute();
-                                            } catch (OperationCanceledException | IOException | AuthenticatorException e) {
-                                                e.printStackTrace();
-                                            }
-                                            return null;
-                                        }
-                                    }.execute();
+                                protected Void doInBackground(String... params) {
+                                    try {
+                                        String authtoken = params[0];
+                                        UserService.getInstance()
+                                                .userService()
+                                                .updateRelations("Bearer " + authtoken, changes)
+                                                .execute();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return null;
                                 }
-                            }, null);
+                            });
                 }
                 KeyboardUtils.hide(getActivity().getBaseContext(), view);
                 getFragmentManager().popBackStack();
@@ -215,49 +187,43 @@ public class RelationsFragment extends Fragment {
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AccountManager accountManager = AccountManager.get(getActivity().getBaseContext());
-                accountManager.getAuthToken(LoggedUser.getInstance().getAccount(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, true,
-                        new AccountManagerCallback<Bundle>() {
-                            @Override
-                            public void run(final AccountManagerFuture<Bundle> future) {
-                                final String pattern = edtSearchField.getText().toString();
-                                new AsyncTask<Void, Void, Page<Relation>>() {
-                                    @Override
-                                    protected Page<Relation> doInBackground(Void... params) {
-                                        try {
-                                            Bundle bundle = future.getResult();
-                                            final String authtoken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                                            return UserService.getInstance()
-                                                    .userService()
-                                                    .getUserSimpleDetailsByPattern("Bearer " + authtoken, pattern, 0, 15)
-                                                    .execute()
-                                                    .body();
-                                        } catch (OperationCanceledException | IOException | AuthenticatorException e) {
-                                            e.printStackTrace();
-                                            return null;
-                                        }
-                                    }
+                final String pattern = edtSearchField.getText().toString();
+                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
+                        new AsyncTask<String, Void, Page<Relation>>() {
 
-                                    @Override
-                                    protected void onPostExecute(Page<Relation> users) {
-                                        List<Relation> content = new ArrayList<>(users.getSize());
-                                        for (Relation u : users.getContent()) {
-                                            Relation relation = new Relation(u.getName(), u.getLogin(), u.isFriend());
-                                            relationsChangesHandler.adjustRelationToChanges(relation);
-                                            content.add(relation);
-                                        }
-                                        FoundPeopleGroup group = new FoundPeopleGroup("Wyszukiwanie");
-                                        group.setChildren(content);
-                                        group.setLastPage(users.getNumber());
-                                        group.setTotalNumber(users.getTotalElements());
-                                        groups.append(1, group);
-                                        adapter = new ExpandableListAdapter(groups, getActivity(), relationsChangesHandler);
-                                        expandableListView.setAdapter(adapter);
-                                        expandableListView.expandGroup(1);
-                                    }
-                                }.execute();
+                            @Override
+                            protected Page<Relation> doInBackground(String... params) {
+                                try {
+                                    final String authtoken = params[0];
+                                    return UserService.getInstance()
+                                            .userService()
+                                            .getUserSimpleDetailsByPattern("Bearer " + authtoken, pattern, 0, 15)
+                                            .execute()
+                                            .body();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    return null;
+                                }
                             }
-                        }, null);
+
+                            @Override
+                            protected void onPostExecute(Page<Relation> users) {
+                                List<Relation> content = new ArrayList<>(users.getSize());
+                                for (Relation u : users.getContent()) {
+                                    Relation relation = new Relation(u.getName(), u.getLogin(), u.isFriend());
+                                    relationsChangesHandler.adjustRelationToUnsavedChanges(relation);
+                                    content.add(relation);
+                                }
+                                FoundPeopleGroup group = new FoundPeopleGroup("Wyszukiwanie");
+                                group.setChildren(content);
+                                group.setLastPage(users.getNumber());
+                                group.setTotalNumber(users.getTotalElements());
+                                groups.append(1, group);
+                                adapter = new ExpandableListAdapter(groups, getActivity(), relationsChangesHandler);
+                                expandableListView.setAdapter(adapter);
+                                expandableListView.expandGroup(1);
+                            }
+                        });
             }
         });
 

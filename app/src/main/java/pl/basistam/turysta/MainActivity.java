@@ -26,6 +26,7 @@ import pl.basistam.turysta.auth.AccountGeneral;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.components.utils.KeyboardUtils;
 import pl.basistam.turysta.fragments.EventFragment;
+import pl.basistam.turysta.fragments.EventsFragment;
 import pl.basistam.turysta.fragments.MapViewFragment;
 import pl.basistam.turysta.fragments.UserFragment;
 
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity
 
     private MapViewFragment mapFragment = new MapViewFragment();
     private EventFragment eventFragment = new EventFragment();
+    private EventsFragment eventsFragment = new EventsFragment();
     private UserFragment userFragment = new UserFragment();
 
     @Override
@@ -109,7 +111,7 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().replace(R.id.content, mapFragment).commit();
             searchPanel.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_event) {
-            fragmentManager.beginTransaction().replace(R.id.content, eventFragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content, eventsFragment).commit();
         } else if (id == R.id.nav_manage_account) {
             showAccountPicker(AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
         }

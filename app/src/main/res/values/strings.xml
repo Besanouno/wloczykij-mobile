@@ -50,4 +50,6 @@
     <string name="action_unlog">Wyloguj się</string>
     <string name="action_manage_account">Zarządzaj kontem</string>
     <string name="account">Dane konta</string>
+    <string name="events">Wydarzenia</string>
+    <string name="my_events">Moje wydarzenia</string>
 </resources>
