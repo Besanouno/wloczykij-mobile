@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/tab_upcoming_events"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -40,7 +40,19 @@
                         android:layout_height="match_parent"
                         android:divider="@android:color/transparent"
                         android:dividerHeight="10dp" />
-                </LinearLayout>
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/btn_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_zoom_in"
+                        android:layout_gravity="bottom|end"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        />
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/tab_invitations"
@@ -71,13 +83,5 @@
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/btn_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_zoom_in"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="20dp"
-            />
     </TabHost>
 </RelativeLayout>
