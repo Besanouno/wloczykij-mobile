@@ -13,6 +13,11 @@ public class Converter {
         return df.format(date);
     }
 
+    public static String timeToString(Date date) {
+        DateFormat df = new SimpleDateFormat("HH:mm");
+        return df.format(date);
+    }
+
     public static String dateTimeToString(Date date) {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         return df.format(date);

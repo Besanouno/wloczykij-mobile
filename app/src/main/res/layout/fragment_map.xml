@@ -14,6 +14,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+
+        <ImageButton
+            android:id="@+id/ib_localization"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="210dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/green_background_with_shadow"
+            android:src="@drawable/ic_localization" />
+
         <ImageButton
             android:id="@+id/ib_zoom_in"
             android:layout_width="40dp"
@@ -60,15 +72,32 @@
                 android:textColor="@color/black"
                 android:textSize="22sp" />
 
-            <TextView
-                android:id="@+id/tv_height_name"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="6dp"
-                android:paddingTop="0dp"
-                android:text="Height"
-                android:textColor="@color/black"
-                android:textSize="19sp" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_height_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="6dp"
+                    android:paddingTop="0dp"
+                    android:layout_alignParentStart="true"
+                    android:text="Height"
+                    android:textColor="@color/black"
+                    android:textSize="19sp" />
+
+                <ImageButton
+                    android:id="@+id/ib_start_route"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_flag"
+                    android:background="@color/transparent"
+                    android:paddingBottom="6dp"
+                    android:paddingEnd="6dp"
+                    />
+            </RelativeLayout>
 
             <ScrollView
                 android:id="@+id/sv_route"

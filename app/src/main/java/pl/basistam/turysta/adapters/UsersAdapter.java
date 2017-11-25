@@ -12,21 +12,21 @@ import android.widget.TextView;
 
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.dto.Group;
-import pl.basistam.turysta.dto.Relation;
+import pl.basistam.turysta.dto.UserItem;
 import pl.basistam.turysta.fragments.PersonFragment;
-import pl.basistam.turysta.service.interfaces.RelationsChangesHandler;
+import pl.basistam.turysta.service.interfaces.UsersStatusesChangesHandler;
 
-public class RelationsAdapter extends BaseExpandableListAdapter {
+public class UsersAdapter extends BaseExpandableListAdapter {
     private final SparseArray<Group> groups;
     private LayoutInflater inflater;
     private Activity activity;
-    private final RelationsChangesHandler relationsChangesHandler;
+    private final UsersStatusesChangesHandler usersStatusesChangesHandler;
 
-    public RelationsAdapter(SparseArray<Group> groups, Activity activity, RelationsChangesHandler relationsChangesHandler) {
+    public UsersAdapter(SparseArray<Group> groups, Activity activity, UsersStatusesChangesHandler usersStatusesChangesHandler) {
         this.groups = groups;
         this.activity = activity;
         this.inflater = activity.getLayoutInflater();
-        this.relationsChangesHandler = relationsChangesHandler;
+        this.usersStatusesChangesHandler = usersStatusesChangesHandler;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class RelationsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getGroupId(int groupPosition) {
-        return 0;
+        return groupPosition;
     }
 
     @Override
@@ -79,20 +79,20 @@ public class RelationsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        final Relation children = (Relation) getChild(groupPosition, childPosition);
+        final UserItem children = (UserItem) getChild(groupPosition, childPosition);
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_relation, null);
         }
         final TextView textView = convertView.findViewById(R.id.tv_login);
         textView.setText(children.getFullName());
         final CheckBox checkBox = convertView.findViewById(R.id.chb_friend);
-        checkBox.setChecked(children.isFriend());
+        checkBox.setChecked(children.getStatus());
         checkBox.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        children.setFriend(checkBox.isChecked());
-                        relationsChangesHandler.registerChange(children);
+                        children.setStatus(checkBox.isChecked());
+                        usersStatusesChangesHandler.registerChange(children);
                     }
                 }
         );

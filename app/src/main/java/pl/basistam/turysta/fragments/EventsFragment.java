@@ -3,17 +3,22 @@ package pl.basistam.turysta.fragments;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TabHost;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import pl.basistam.turysta.R;
+import pl.basistam.turysta.dto.EventSimpleDetails;
 import pl.basistam.turysta.fragments.tabs.ArchivalEventsDataSet;
 import pl.basistam.turysta.fragments.tabs.InvitationsDataSet;
 import pl.basistam.turysta.fragments.tabs.TabDataSet;
@@ -83,9 +88,24 @@ public class EventsFragment extends Fragment {
                         .commit();
             }
         });
+
+        ListView lvUpcomingEvents = view.findViewById(R.id.lv_upcoming_events);
+        lvUpcomingEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                EventSimpleDetails item = (EventSimpleDetails) parent.getItemAtPosition(position);
+                FragmentManager fragmentManager = getActivity().getFragmentManager();
+                EventFragment fragment = new EventFragment();
+                Bundle args = new Bundle();
+                args.putString("guid", item.getGuid());
+                fragment.setArguments(args);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
     }
-
-
 }
 
 

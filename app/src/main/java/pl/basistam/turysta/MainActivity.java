@@ -1,5 +1,6 @@
 package pl.basistam.turysta;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -7,9 +8,14 @@ import android.accounts.AccountManagerFuture;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,7 +26,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 import pl.basistam.turysta.auth.AccountGeneral;
 import pl.basistam.turysta.auth.LoggedUser;
@@ -34,9 +46,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private MapViewFragment mapFragment = new MapViewFragment();
-    private EventFragment eventFragment = new EventFragment();
-    private EventsFragment eventsFragment = new EventsFragment();
-    private UserFragment userFragment = new UserFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +76,9 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().add(R.id.content, mapFragment).commit();
+
+
+
     }
 
 
@@ -105,15 +117,15 @@ public class MainActivity extends AppCompatActivity
 
         int id = item.getItemId();
         if (id == R.id.nav_account ) {
-            fragmentManager.beginTransaction().replace(R.id.content, userFragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content, new UserFragment()).commit();
         }
         else if (id == R.id.nav_map) {
             fragmentManager.beginTransaction().replace(R.id.content, mapFragment).commit();
             searchPanel.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_event) {
-            fragmentManager.beginTransaction().replace(R.id.content, eventsFragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content, new EventsFragment()).commit();
         } else if (id == R.id.nav_manage_account) {
-            showAccountPicker(AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+            showAccountPicker();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -128,7 +140,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void showAccountPicker(final String authTokenType) {
+    private void showAccountPicker() {
         final Account availableAccounts[] = AccountManager.get(this).getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
 
         final int itemsNumber = availableAccounts.length + 1;

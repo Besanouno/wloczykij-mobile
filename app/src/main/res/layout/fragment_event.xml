@@ -142,26 +142,12 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Uczestnicy:"
-                android:textSize="18sp"
-                android:textColor="@color/black"
-                android:paddingTop="6dp"/>
-
-            <ScrollView
+            <ExpandableListView
+                android:id="@+id/elv_participants"
+                android:layout_height="100dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="25dp">
+                />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical" >
-
-                </LinearLayout>
-            </ScrollView>
             <ImageButton
                 android:id="@+id/ib_add_participant"
                 android:layout_width="50dp"

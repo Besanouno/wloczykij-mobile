@@ -1,10 +1,5 @@
 package pl.basistam.turysta.fragments;
 
-import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,9 +12,8 @@ import android.widget.TextView;
 import java.io.IOException;
 
 import pl.basistam.turysta.R;
-import pl.basistam.turysta.auth.AccountGeneral;
 import pl.basistam.turysta.auth.LoggedUser;
-import pl.basistam.turysta.dto.UserDetails;
+import pl.basistam.turysta.dto.UserDto;
 import pl.basistam.turysta.service.UserService;
 import pl.basistam.turysta.utils.Converter;
 
@@ -43,9 +37,9 @@ public class PersonFragment extends Fragment {
         final TextView tvRegistered = view.findViewById(R.id.tv_registered);
 
         LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
-                new AsyncTask<String, Void, UserDetails>() {
+                new AsyncTask<String, Void, UserDto>() {
                     @Override
-                    protected UserDetails doInBackground(String... params) {
+                    protected UserDto doInBackground(String... params) {
                         try {
                             String authToken = params[0];
                             return UserService.getInstance()
@@ -60,14 +54,14 @@ public class PersonFragment extends Fragment {
                     }
 
                     @Override
-                    protected void onPostExecute(UserDetails userDetails) {
-                        tvLogin.setText(userDetails.getLogin());
-                        tvFirstName.setText(userDetails.getFirstName());
-                        tvLastName.setText(userDetails.getLastName());
-                        tvEmail.setText(userDetails.getEmail());
-                        tvYearOfBirth.setText(Integer.toString(userDetails.getYearOfBirth()));
-                        tvCity.setText(userDetails.getCity());
-                        tvRegistered.setText(Converter.dateToString(userDetails.getCreationDate()));
+                    protected void onPostExecute(UserDto user) {
+                        tvLogin.setText(user.getLogin());
+                        tvFirstName.setText(user.getFirstName());
+                        tvLastName.setText(user.getLastName());
+                        tvEmail.setText(user.getEmail());
+                        tvYearOfBirth.setText(Integer.toString(user.getYearOfBirth()));
+                        tvCity.setText(user.getCity());
+                        tvRegistered.setText(Converter.dateToString(user.getCreationDate()));
                     }
                 });
     }

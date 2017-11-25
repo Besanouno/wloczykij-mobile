@@ -13,6 +13,7 @@ import java.util.List;
 import pl.basistam.turysta.database.AppDatabase;
 import pl.basistam.turysta.database.model.Place;
 import pl.basistam.turysta.database.type.PlaceType;
+import pl.basistam.turysta.enums.MarkerPriority;
 
 
 public class PlacesInitializer extends AsyncTask<Void, Void, List<Place>> {
@@ -36,6 +37,7 @@ public class PlacesInitializer extends AsyncTask<Void, Void, List<Place>> {
             LatLng coordinates = new LatLng(place.getLatitude(), place.getLongitude());
             map.addMarker(new MarkerOptions()
                     .position(coordinates)
+                    .zIndex(MarkerPriority.ICON.getValue())
                     .icon(getIcon(place.getType()))
                     .title(place.getName()));
         }

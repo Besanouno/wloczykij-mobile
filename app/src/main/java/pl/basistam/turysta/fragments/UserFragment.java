@@ -1,11 +1,6 @@
 package pl.basistam.turysta.fragments;
 
 
-import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,10 +14,10 @@ import android.widget.EditText;
 import java.io.IOException;
 
 import pl.basistam.turysta.R;
-import pl.basistam.turysta.auth.AccountGeneral;
+import pl.basistam.turysta.actions.RelationsManager;
 import pl.basistam.turysta.auth.LoggedUser;
+import pl.basistam.turysta.dto.UserDto;
 import pl.basistam.turysta.dto.UserInput;
-import pl.basistam.turysta.dto.UserDetails;
 import pl.basistam.turysta.service.UserService;
 
 public class UserFragment extends Fragment {
@@ -42,9 +37,9 @@ public class UserFragment extends Fragment {
         final EditText edtYearOfBirth = view.findViewById(R.id.edt_year_of_birth);
 
         LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
-                new AsyncTask<String, Void, UserDetails>() {
+                new AsyncTask<String, Void, UserDto>() {
                     @Override
-                    protected UserDetails doInBackground(String... params) {
+                    protected UserDto doInBackground(String... params) {
                         try {
                             final String authToken = params[0];
                             return UserService.getInstance()
@@ -59,11 +54,11 @@ public class UserFragment extends Fragment {
                     }
 
                     @Override
-                    protected void onPostExecute(UserDetails userDetails) {
-                        edtFirstName.setText(userDetails.getFirstName());
-                        edtLastName.setText(userDetails.getLastName());
-                        edtCity.setText(userDetails.getCity());
-                        edtYearOfBirth.setText(Integer.toString(userDetails.getYearOfBirth()));
+                    protected void onPostExecute(UserDto userDto) {
+                        edtFirstName.setText(userDto.getFirstName());
+                        edtLastName.setText(userDto.getLastName());
+                        edtCity.setText(userDto.getCity());
+                        edtYearOfBirth.setText(Integer.toString(userDto.getYearOfBirth()));
                     }
                 });
         final FloatingActionButton btnEdit = view.findViewById(R.id.btn_edit);
@@ -119,9 +114,9 @@ public class UserFragment extends Fragment {
         btnFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RelationsFragment relationsFragment = new RelationsFragment();
+                UsersFragment usersFragment = UsersFragment.newInstance(new RelationsManager(getActivity().getBaseContext()));
                 getActivity().getFragmentManager().beginTransaction()
-                        .replace(R.id.content, relationsFragment)
+                        .replace(R.id.content, usersFragment)
                         .addToBackStack(null)
                         .commit();
             }

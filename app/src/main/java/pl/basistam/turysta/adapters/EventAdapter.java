@@ -5,14 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.List;
 
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.dto.EventSimpleDetails;
-import pl.basistam.turysta.dto.Relation;
 import pl.basistam.turysta.utils.Converter;
 
 public class EventAdapter extends BaseAdapter {

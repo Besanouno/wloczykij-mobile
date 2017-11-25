@@ -3,9 +3,9 @@ package pl.basistam.turysta.service.retrofit;
 import java.util.List;
 
 import pl.basistam.turysta.dto.Page;
-import pl.basistam.turysta.dto.Relation;
+import pl.basistam.turysta.dto.UserDto;
+import pl.basistam.turysta.dto.UserItem;
 import pl.basistam.turysta.dto.UserInput;
-import pl.basistam.turysta.dto.UserSimpleDetails;
 import pl.basistam.turysta.dto.UserDetails;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -19,13 +19,13 @@ import retrofit2.http.Query;
 
 public interface RetrofitUserService {
     @GET("users/self")
-    Call<UserDetails> getUserDetails(@Header("Authorization") final String authorization);
+    Call<UserDto> getUserDetails(@Header("Authorization") final String authorization);
 
     @GET("users/{id}")
-    Call<UserDetails> getPersonDetails(@Header("Authorization") final String authorization, @Path("id") final String login);
+    Call<UserDto> getPersonDetails(@Header("Authorization") final String authorization, @Path("id") final String login);
 
     @GET("users")
-    Call<Page<Relation>> getUserSimpleDetailsByPattern(
+    Call<Page<UserDto>> getUsersByPattern(
             @Header("Authorization") final String authorization,
             @Query("pattern") final String pattern,
             @Query("page") final int page,
@@ -36,10 +36,10 @@ public interface RetrofitUserService {
     Call<Void> signUp(@Body UserInput userInput);
 
     @GET("users/self/relations")
-    Call<List<Relation>> getRelations(@Header("Authorization") final String authorization);
+    Call<List<UserDto>> getRelations(@Header("Authorization") final String authorization);
 
-    @PUT("users/self/relations")
-    Call<Void> updateRelations(@Header("Authorization") final String authorization, @Body List<Relation> relations);
+    @PUT("users/self/userItems")
+    Call<Void> updateRelations(@Header("Authorization") final String authorization, @Body List<UserItem> userItems);
 
     @Headers("Content-Type: application/json")
     @PUT("users/self")

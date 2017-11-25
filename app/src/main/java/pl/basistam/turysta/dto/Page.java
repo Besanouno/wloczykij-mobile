@@ -1,6 +1,10 @@
 package pl.basistam.turysta.dto;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Converter;
 
 public class Page<T> {
     private List<T> content;
@@ -50,5 +54,24 @@ public class Page<T> {
     }
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public <S> Page<S> map(Converter<? super T, ? extends S> converter) {
+        List<S> resultContent = new ArrayList<>(content.size());
+        for (T t: content) {
+            try {
+                resultContent.add(converter.convert(t));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        Page<S> result = new Page<>();
+        result.setContent(resultContent);
+        result.setNumber(number);
+        result.setNumberOfElements(totalElements);
+        result.setSize(size);
+        result.setTotalElements(totalElements);
+        result.setTotalPages(totalPages);
+        return result;
     }
 }

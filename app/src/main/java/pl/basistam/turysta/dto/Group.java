@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Group {
     private String name;
-    private List<Relation> children;
+    private List<UserItem> children;
 
     public Group(String name) {
         this.name = name;
@@ -21,11 +21,11 @@ public class Group {
         this.name = name;
     }
 
-    public List<Relation> getChildren() {
+    public List<UserItem> getChildren() {
         return children;
     }
 
-    public void setChildren(List<Relation> children) {
+    public void setChildren(List<UserItem> children) {
         this.children = children;
     }
 }

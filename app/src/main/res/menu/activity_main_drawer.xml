@@ -16,8 +16,8 @@
             android:title="@string/my_events" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:icon="@drawable/ic_public_events"
+            android:title="@string/public_events" />
     </group>
 
     <item
