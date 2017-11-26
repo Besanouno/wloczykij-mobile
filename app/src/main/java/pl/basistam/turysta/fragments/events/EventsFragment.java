@@ -1,10 +1,8 @@
-package pl.basistam.turysta.fragments;
+package pl.basistam.turysta.fragments.events;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
@@ -19,10 +17,10 @@ import java.util.Map;
 
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.dto.EventSimpleDetails;
-import pl.basistam.turysta.fragments.tabs.ArchivalEventsDataSet;
-import pl.basistam.turysta.fragments.tabs.InvitationsDataSet;
-import pl.basistam.turysta.fragments.tabs.TabDataSet;
-import pl.basistam.turysta.fragments.tabs.UpcomingEventsDataSet;
+import pl.basistam.turysta.fragments.events.tabs.ArchivalEventsDataSet;
+import pl.basistam.turysta.fragments.events.tabs.InvitationsDataSet;
+import pl.basistam.turysta.fragments.events.tabs.TabDataSet;
+import pl.basistam.turysta.fragments.events.tabs.UpcomingEventsDataSet;
 
 public class EventsFragment extends Fragment {
 
@@ -82,6 +80,7 @@ public class EventsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
+
                 fragmentManager.beginTransaction()
                         .replace(R.id.content, new EventFragment())
                         .addToBackStack(null)
@@ -96,6 +95,41 @@ public class EventsFragment extends Fragment {
                 EventSimpleDetails item = (EventSimpleDetails) parent.getItemAtPosition(position);
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
                 EventFragment fragment = new EventFragment();
+                Bundle args = new Bundle();
+                args.putString("guid", item.getGuid());
+                fragment.setArguments(args);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+
+        ListView lvInvitations = view.findViewById(R.id.lv_invitations);
+        lvInvitations.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                EventSimpleDetails item = (EventSimpleDetails) parent.getItemAtPosition(position);
+                FragmentManager fragmentManager = getActivity().getFragmentManager();
+                InvitationEventFragment fragment = new InvitationEventFragment();
+                Bundle args = new Bundle();
+                args.putString("guid", item.getGuid());
+                fragment.setArguments(args);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+        ListView lvArchivalEvents = view.findViewById(R.id.lv_archival_events);
+        lvArchivalEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                EventSimpleDetails item = (EventSimpleDetails) parent.getItemAtPosition(position);
+                FragmentManager fragmentManager = getActivity().getFragmentManager();
+                ArchivalEventFragment fragment = new ArchivalEventFragment();
                 Bundle args = new Bundle();
                 args.putString("guid", item.getGuid());
                 fragment.setArguments(args);

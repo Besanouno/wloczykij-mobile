@@ -125,7 +125,7 @@ public class UsersFragment extends Fragment {
                         Group group = new Group("Twoi znajomi");
                         group.setChildren(content);
                         groups.append(0, group);
-                        adapter = new UsersAdapter(groups, getActivity(), usersStatusesChangesHandler);
+                        adapter = new UsersAdapter(groups, getActivity(), usersStatusesChangesHandler, true);
                         expandableListView.setAdapter(adapter);
                         expandableListView.expandGroup(0);
                     }
@@ -181,7 +181,7 @@ public class UsersFragment extends Fragment {
                                 group.setLastPage(users.getNumber());
                                 group.setTotalNumber(users.getTotalElements());
                                 groups.append(1, group);
-                                adapter = new UsersAdapter(groups, getActivity(), usersStatusesChangesHandler);
+                                adapter = new UsersAdapter(groups, getActivity(), usersStatusesChangesHandler, true);
                                 expandableListView.setAdapter(adapter);
                                 expandableListView.expandGroup(1);
                             }

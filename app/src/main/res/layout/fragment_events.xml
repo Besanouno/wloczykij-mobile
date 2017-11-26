@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="pl.basistam.turysta.fragments.EventsFragment">
+    tools:context="pl.basistam.turysta.fragments.events.EventsFragment">
 
     <TabHost
         android:id="@+id/tab_host"

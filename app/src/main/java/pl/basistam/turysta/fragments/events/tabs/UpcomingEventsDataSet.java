@@ -1,4 +1,4 @@
-package pl.basistam.turysta.fragments.tabs;
+package pl.basistam.turysta.fragments.events.tabs;
 
 
 import android.app.Activity;
@@ -7,12 +7,13 @@ import java.util.List;
 
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.dto.EventSimpleDetails;
+import pl.basistam.turysta.enums.EventUserStatus;
 import pl.basistam.turysta.service.EventService;
 import retrofit2.Call;
 
-public class ArchivalEventsDataSet extends TabDataSet {
+public class UpcomingEventsDataSet extends TabDataSet {
 
-    public ArchivalEventsDataSet(Activity activity) {
+    public UpcomingEventsDataSet(Activity activity) {
         super(activity);
     }
 
@@ -20,11 +21,11 @@ public class ArchivalEventsDataSet extends TabDataSet {
     protected Call<List<EventSimpleDetails>> prepareRequest(String authToken) {
         return EventService.getInstance()
                 .eventService()
-                .getArchivalEvents(authToken);
+                .getActiveEventsByType(authToken, EventUserStatus.PARTICIPANT.getValue());
     }
 
     @Override
     protected int getListViewId() {
-        return R.id.lv_archival_events;
+        return R.id.lv_upcoming_events;
     }
 }

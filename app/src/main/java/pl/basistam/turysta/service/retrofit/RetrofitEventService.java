@@ -26,9 +26,18 @@ public interface RetrofitEventService {
     @POST("events")
     Call<Void> saveEvent(@Header("Authorization") final String authorization, @Body final EventDto eventDto);
 
+    @PUT("events/{guid}")
+    Call<Void> updateEvent(@Header("Authorization") final String authorization, @Path("guid") final String eventGuid, @Body final EventDto eventDto);
+
     @GET("events/{guid}/full")
     Call<EventFullDto> getFullEvent(@Header("Authorization") final String authToken, @Path("guid") final String eventGuid);
 
     @PUT("events/{guid}/users")
     Call<Void> updateParticipants(@Header("Authorization") final String authtoken, @Path("guid") final String eventGuid, @Body final List<UserItem> changes);
+
+    @POST("events/{guid}/invitations/acceptance")
+    Call<Void> acceptInvitation(@Header("Authorization") final String authtoken, @Path("guid") final String eventGuid);
+
+    @POST("events/{guid}/invitations/rejection")
+    Call<Void> rejectInvitation(@Header("Authorization") final String authtoken, @Path("guid") final String eventGuid);
 }

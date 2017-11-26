@@ -53,4 +53,7 @@
     <string name="events">Wydarzenia</string>
     <string name="my_events">Moje wydarzenia</string>
     <string name="public_events">Wydarzenia publiczne</string>
+    <string name="action_remove_event">Usuń wydarzenie</string>
+    <string name="accept_invitation">Akceptuj zaproszenie</string>
+    <string name="reject_invitation">Odrzuć zaproszenie</string>
 </resources>

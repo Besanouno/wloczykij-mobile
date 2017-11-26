@@ -19,11 +19,9 @@ public class EventUsersGroupsListener implements ExpandableListView.OnGroupExpan
 
     @Override
     public void onGroupExpand(int groupPosition) {
-        final int MAX_VISIBLE_CHILDREN = 3;
         final int PERSON_ITEM_HEIGHT = 80;
         int children = groups.get(groupPosition).getChildren().size();
-        int visibleChildren = children > MAX_VISIBLE_CHILDREN ? MAX_VISIBLE_CHILDREN : children;
-        int expandedHeight = PERSON_ITEM_HEIGHT * visibleChildren;
+        int expandedHeight = PERSON_ITEM_HEIGHT * children;
         expandedHeights[groupPosition] = expandedHeight;
         elvParticipants.getLayoutParams().height += expandedHeight;
     }

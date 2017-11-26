@@ -21,12 +21,14 @@ public class UsersAdapter extends BaseExpandableListAdapter {
     private LayoutInflater inflater;
     private Activity activity;
     private final UsersStatusesChangesHandler usersStatusesChangesHandler;
+    private boolean isAdmin;
 
-    public UsersAdapter(SparseArray<Group> groups, Activity activity, UsersStatusesChangesHandler usersStatusesChangesHandler) {
+    public UsersAdapter(SparseArray<Group> groups, Activity activity, UsersStatusesChangesHandler usersStatusesChangesHandler, boolean isAdmin) {
         this.groups = groups;
         this.activity = activity;
         this.inflater = activity.getLayoutInflater();
         this.usersStatusesChangesHandler = usersStatusesChangesHandler;
+        this.isAdmin = isAdmin;
     }
 
     @Override
@@ -86,16 +88,20 @@ public class UsersAdapter extends BaseExpandableListAdapter {
         final TextView textView = convertView.findViewById(R.id.tv_login);
         textView.setText(children.getFullName());
         final CheckBox checkBox = convertView.findViewById(R.id.chb_friend);
-        checkBox.setChecked(children.getStatus());
-        checkBox.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        children.setStatus(checkBox.isChecked());
-                        usersStatusesChangesHandler.registerChange(children);
+        if (isAdmin) {
+            checkBox.setChecked(children.getStatus());
+            checkBox.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            children.setStatus(checkBox.isChecked());
+                            usersStatusesChangesHandler.registerChange(children);
+                        }
                     }
-                }
-        );
+            );
+        } else {
+            checkBox.setVisibility(View.GONE);
+        }
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -28,20 +27,12 @@ public class LocationHandler {
         this.map = map;
     }
 
-    private boolean isLocationPermitted() {
-        return ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;    }
-
     public void turnOnUpdates() {
         if (!verifyPermissions() || isUpdated) {
             return;
         }
         isUpdated = true;
         locationManager.requestLocationUpdates(getMostAccuracyProvider(), 0, 0, new LocationListenerImpl(map, activity));
-    }
-
-    private void requireLocationPermissions() {
-        ActivityCompat.requestPermissions(activity, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
     }
 
     public void localize() {
@@ -56,6 +47,14 @@ public class LocationHandler {
         turnOnUpdates();
     }
 
+    private boolean isLocationPermitted() {
+        return ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;    }
+
+    private void requireLocationPermissions() {
+        ActivityCompat.requestPermissions(activity, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+    }
+
     private String getMostAccuracyProvider() {
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
@@ -66,7 +65,7 @@ public class LocationHandler {
         return locationManager.getLastKnownLocation(getMostAccuracyProvider());
     }
 
-    public boolean verifyPermissions() {
+    private boolean verifyPermissions() {
         if (!isLocationPermitted()) {
             requireLocationPermissions();
             return false;

@@ -1,4 +1,4 @@
-package pl.basistam.turysta.fragments.tabs;
+package pl.basistam.turysta.fragments.events.tabs;
 
 import android.app.Activity;
 import android.os.AsyncTask;
