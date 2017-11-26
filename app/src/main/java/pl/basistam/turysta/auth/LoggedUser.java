@@ -12,8 +12,6 @@ import android.os.Bundle;
 
 import java.io.IOException;
 
-import pl.basistam.turysta.service.UserService;
-
 public class LoggedUser {
 
     private static LoggedUser loggedUser;
@@ -30,7 +28,6 @@ public class LoggedUser {
     }
 
     private Account account;
-    private String email;
 
     public Account getAccount() {
         return account;
@@ -39,11 +36,8 @@ public class LoggedUser {
         this.account = account;
     }
 
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
+    public String getLogin() {
+        return account.name;
     }
 
     public <T> void sendAuthorizedRequest(Context context, final AsyncTask<String, Void, T> task) {

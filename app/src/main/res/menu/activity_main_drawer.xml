@@ -11,11 +11,11 @@
             android:icon="@drawable/ic_menu_map"
             android:title="@string/map_menu_item" />
         <item
-            android:id="@+id/nav_event"
+            android:id="@+id/nav_events"
             android:icon="@drawable/ic_event"
             android:title="@string/my_events" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_public_events"
             android:icon="@drawable/ic_public_events"
             android:title="@string/public_events" />
     </group>

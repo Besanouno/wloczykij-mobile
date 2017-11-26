@@ -16,11 +16,11 @@ import pl.basistam.turysta.service.EventService;
 import pl.basistam.turysta.service.UserService;
 import retrofit2.Converter;
 
-public class InvitationsManager extends UsersFragmentManager {
+public class EventManager extends UsersFragmentManager {
     private String eventGuid;
     private List<String> participantsLogins;
 
-    public InvitationsManager(Context context, String eventGuid, List<String> participantsLogins) {
+    public EventManager(Context context, String eventGuid, List<String> participantsLogins) {
         super(context);
         this.eventGuid = eventGuid;
         this.participantsLogins = participantsLogins;

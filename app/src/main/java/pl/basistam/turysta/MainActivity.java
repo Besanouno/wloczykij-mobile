@@ -28,6 +28,7 @@ import pl.basistam.turysta.components.utils.KeyboardUtils;
 import pl.basistam.turysta.fragments.events.EventsFragment;
 import pl.basistam.turysta.fragments.MapViewFragment;
 import pl.basistam.turysta.fragments.UserFragment;
+import pl.basistam.turysta.fragments.events.PublicEventsFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -109,10 +110,12 @@ public class MainActivity extends AppCompatActivity
         else if (id == R.id.nav_map) {
             fragmentManager.beginTransaction().replace(R.id.content, mapFragment).commit();
             searchPanel.setVisibility(View.VISIBLE);
-        } else if (id == R.id.nav_event) {
+        } else if (id == R.id.nav_events) {
             fragmentManager.beginTransaction().replace(R.id.content, new EventsFragment()).commit();
         } else if (id == R.id.nav_manage_account) {
             showAccountPicker();
+        } else if (id == R.id.nav_public_events) {
+            fragmentManager.beginTransaction().replace(R.id.content, new PublicEventsFragment()).commit();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

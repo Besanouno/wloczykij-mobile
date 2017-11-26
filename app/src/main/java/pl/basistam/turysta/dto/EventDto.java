@@ -8,6 +8,7 @@ public class EventDto {
     private String description;
     private Integer participantsLimit;
     private String placeOfMeeting;
+    private String initiator;
     private Date startDate;
     private Date endDate;
     private boolean publicAccess;
@@ -66,5 +67,13 @@ public class EventDto {
 
     public void setPublicAccess(boolean publicAccess) {
         this.publicAccess = publicAccess;
+    }
+
+    public String getInitiator() {
+        return initiator;
+    }
+
+    public void setInitiator(String initiator) {
+        this.initiator = initiator;
     }
 }

@@ -80,9 +80,8 @@ public class EventsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
-
                 fragmentManager.beginTransaction()
-                        .replace(R.id.content, new EventFragment())
+                        .replace(R.id.content, new UpcomingEventFragment())
                         .addToBackStack(null)
                         .commit();
             }
@@ -94,7 +93,7 @@ public class EventsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EventSimpleDetails item = (EventSimpleDetails) parent.getItemAtPosition(position);
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
-                EventFragment fragment = new EventFragment();
+                UpcomingEventFragment fragment = new UpcomingEventFragment();
                 Bundle args = new Bundle();
                 args.putString("guid", item.getGuid());
                 fragment.setArguments(args);

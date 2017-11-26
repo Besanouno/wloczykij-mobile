@@ -23,6 +23,10 @@ public class EventAdapter extends BaseAdapter {
         this.inflater = activity.getLayoutInflater();
     }
 
+    public void addAll(List<EventSimpleDetails> c) {
+        events.addAll(c);
+    }
+
     @Override
     public int getCount() {
         return events.size();
