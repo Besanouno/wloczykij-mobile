@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.basistam.turysta.R;
-import pl.basistam.turysta.actions.EventManager;
+import pl.basistam.turysta.actions.EventUsersDataSet;
 import pl.basistam.turysta.auth.LoggedUser;
-import pl.basistam.turysta.dto.EventFullDto;
-import pl.basistam.turysta.dto.UserItem;
-import pl.basistam.turysta.fragments.UsersFragment;
+import pl.basistam.turysta.dto.EventDto;
+import pl.basistam.turysta.dto.EventUserDto;
+import pl.basistam.turysta.fragments.OldUsersFragment;
 import pl.basistam.turysta.service.EventService;
 import pl.basistam.turysta.service.retrofit.RetrofitEventService;
 import retrofit2.Call;
@@ -81,7 +81,7 @@ public class UpcomingEventFragment extends AbstractEventFragment {
     }
 
     private void initBtnFriends(View view) {
-        final ImageButton btnFriends = view.findViewById(R.id.ib_add_participant);
+        /*final ImageButton btnFriends = view.findViewById(R.id.ib_add_participant);
         btnFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,21 +90,19 @@ public class UpcomingEventFragment extends AbstractEventFragment {
 
             private void prepareUsersView() {
                 List<String> allUsers = new ArrayList<>();
-                for (UserItem userItem : groups.get(0).getChildren()) {
-                    if (userItem.getStatus())
-                        allUsers.add(userItem.getLogin());
+                for (EventUserDto e: groups.get(0).getChildren()) {
+                    allUsers.add(e.getLogin());
                 }
-                for (UserItem userItem : groups.get(1).getChildren()) {
-                    if (userItem.getStatus())
-                        allUsers.add(userItem.getLogin());
+                for (EventUserDto e : groups.get(1).getChildren()) {
+                    allUsers.add(e.getLogin());
                 }
-                UsersFragment usersFragment = UsersFragment.newInstance(new EventManager(getActivity().getBaseContext(), eventGuid, allUsers));
+                OldUsersFragment usersFragment = OldUsersFragment.newInstance(new EventUsersDataSet(getActivity().getBaseContext(), eventGuid, allUsers));
                 getActivity().getFragmentManager().beginTransaction()
                         .replace(R.id.content, usersFragment)
                         .addToBackStack(null)
                         .commit();
             }
-        });
+        });*/
     }
 
     private void initBtnSave(View view) {
@@ -112,7 +110,7 @@ public class UpcomingEventFragment extends AbstractEventFragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final EventFullDto eventDto = prepareEventDto();
+                final EventDto eventDto = prepareEventDto();
                 if (eventDto == null) return;
 
                 LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
@@ -133,7 +131,7 @@ public class UpcomingEventFragment extends AbstractEventFragment {
         });
     }
 
-    private void saveEvent(String authToken, EventFullDto eventDto) {
+    private void saveEvent(String authToken, EventDto eventDto) {
         try {
             RetrofitEventService eventService = EventService.getInstance()
                     .eventService();

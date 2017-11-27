@@ -1,14 +1,14 @@
 package pl.basistam.turysta.dto;
 
-public class UserItem {
+public class RelationItem {
     private String name;
     private String login;
-    private boolean status;
+    private boolean related;
 
-    public UserItem(String name, String login, boolean status) {
+    public RelationItem(String name, String login, boolean related) {
         this.name = name;
         this.login = login;
-        this.status = status;
+        this.related = related;
     }
 
     public String getName() {
@@ -25,11 +25,11 @@ public class UserItem {
         this.login = login;
     }
 
-    public boolean getStatus() {
-        return status;
+    public boolean isRelated() {
+        return related;
     }
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setRelated(boolean related) {
+        this.related = related;
     }
 
     public String getFullName() {
@@ -38,10 +38,10 @@ public class UserItem {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof UserItem)) {
+        if (!(obj instanceof RelationItem)) {
             return false;
         }
-        UserItem another = (UserItem) obj;
+        RelationItem another = (RelationItem) obj;
         return login.equals(another.login);
     }
 }

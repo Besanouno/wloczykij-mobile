@@ -56,4 +56,6 @@
     <string name="action_remove_event">Usuń wydarzenie</string>
     <string name="accept_invitation">Akceptuj zaproszenie</string>
     <string name="reject_invitation">Odrzuć zaproszenie</string>
+    <string name="find_tourists">Szukaj podróżników</string>
+    <string name="save">Zapisz</string>
 </resources>

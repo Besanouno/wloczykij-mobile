@@ -10,8 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import pl.basistam.turysta.auth.ServerAuthenticateImpl;
+import pl.basistam.turysta.dto.UserInputDto;
 import pl.basistam.turysta.exceptions.ServerConnectionException;
-import pl.basistam.turysta.dto.UserInput;
 
 import static pl.basistam.turysta.LoginActivity.KEY_ERROR_MESSAGE;
 
@@ -62,7 +62,7 @@ public class SignUpActivity extends AccountAuthenticatorActivity /*implements Lo
             protected Intent doInBackground(String... params) {
                 Bundle data = new Bundle();
                 try {
-                    UserInput user = new UserInput();
+                    UserInputDto user = new UserInputDto();
                     user.setLogin(login);
                     user.setEmail(email);
                     user.setPassword(password);

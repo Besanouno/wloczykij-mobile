@@ -1,11 +1,11 @@
 package pl.basistam.turysta.dto;
 
-public class FoundPeopleGroup extends Group {
+public class FoundRelationsGroup extends RelationsGroup {
 
     private int totalNumber = 0;
     private int lastPage = 0;
 
-    public FoundPeopleGroup(String name) {
+    public FoundRelationsGroup(String name) {
         super(name);
     }
 

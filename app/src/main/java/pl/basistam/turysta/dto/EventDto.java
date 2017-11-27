@@ -2,6 +2,7 @@ package pl.basistam.turysta.dto;
 
 
 import java.util.Date;
+import java.util.List;
 
 public class EventDto {
     private String name;
@@ -12,6 +13,7 @@ public class EventDto {
     private Date startDate;
     private Date endDate;
     private boolean publicAccess;
+    private List<EventUserDto> participants;
 
     public String getName() {
         return name;
@@ -75,5 +77,13 @@ public class EventDto {
 
     public void setInitiator(String initiator) {
         this.initiator = initiator;
+    }
+
+    public List<EventUserDto> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<EventUserDto> participants) {
+        this.participants = participants;
     }
 }

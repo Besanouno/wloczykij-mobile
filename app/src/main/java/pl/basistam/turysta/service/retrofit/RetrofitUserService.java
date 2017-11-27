@@ -3,10 +3,9 @@ package pl.basistam.turysta.service.retrofit;
 import java.util.List;
 
 import pl.basistam.turysta.dto.Page;
+import pl.basistam.turysta.dto.RelationItem;
 import pl.basistam.turysta.dto.UserDto;
-import pl.basistam.turysta.dto.UserItem;
-import pl.basistam.turysta.dto.UserInput;
-import pl.basistam.turysta.dto.UserDetails;
+import pl.basistam.turysta.dto.UserInputDto;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -33,15 +32,15 @@ public interface RetrofitUserService {
 
     @Headers("Content-Type: application/json")
     @POST("users")
-    Call<Void> signUp(@Body UserInput userInput);
+    Call<Void> signUp(@Body UserInputDto userInput);
 
     @GET("users/self/relations")
     Call<List<UserDto>> getRelations(@Header("Authorization") final String authorization);
 
-    @PUT("users/self/userItems")
-    Call<Void> updateRelations(@Header("Authorization") final String authorization, @Body List<UserItem> userItems);
+    @PUT("users/self/relations")
+    Call<Void> updateRelations(@Header("Authorization") final String authorization, @Body List<RelationItem> relationItems);
 
     @Headers("Content-Type: application/json")
     @PUT("users/self")
-    Call<Void> update(@Header("Authorization") final String authorization, @Body UserInput userInput);
+    Call<Void> update(@Header("Authorization") final String authorization, @Body UserInputDto userInput);
 }

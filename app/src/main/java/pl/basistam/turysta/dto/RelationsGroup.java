@@ -4,11 +4,11 @@ package pl.basistam.turysta.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Group {
+public class RelationsGroup {
     private String name;
-    private List<UserItem> children;
+    private List<RelationItem> children;
 
-    public Group(String name) {
+    public RelationsGroup(String name) {
         this.name = name;
         this.children = new ArrayList<>();
     }
@@ -21,11 +21,11 @@ public class Group {
         this.name = name;
     }
 
-    public List<UserItem> getChildren() {
+    public List<RelationItem> getChildren() {
         return children;
     }
 
-    public void setChildren(List<UserItem> children) {
+    public void setChildren(List<RelationItem> children) {
         this.children = children;
     }
 }

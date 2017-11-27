@@ -11,10 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.basistam.turysta.R;
-import pl.basistam.turysta.actions.EventManager;
 import pl.basistam.turysta.actions.NewEventManager;
-import pl.basistam.turysta.dto.UserItem;
-import pl.basistam.turysta.fragments.UsersFragment;
+import pl.basistam.turysta.dto.EventUserDto;
+import pl.basistam.turysta.fragments.OldUsersFragment;
 
 public class NewEventFragment extends AbstractEventFragment {
 
@@ -32,7 +31,7 @@ public class NewEventFragment extends AbstractEventFragment {
     }
 
     private void initBtnFriends(View view) {
-        final ImageButton btnFriends = view.findViewById(R.id.ib_add_participant);
+        /*final ImageButton btnFriends = view.findViewById(R.id.ib_add_participant);
         btnFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,22 +40,20 @@ public class NewEventFragment extends AbstractEventFragment {
 
             private void prepareUsersView() {
                 List<String> allUsers = new ArrayList<>();
-                for (UserItem userItem : groups.get(0).getChildren()) {
-                    if (userItem.getStatus())
+                for (EventUserDto userItem : groups.get(0).getChildren()) {
                         allUsers.add(userItem.getLogin());
                 }
-                for (UserItem userItem : groups.get(1).getChildren()) {
-                    if (userItem.getStatus())
+                for (EventUserDto userItem : groups.get(1).getChildren()) {
                         allUsers.add(userItem.getLogin());
                 }
                 usersFragmentManager = new NewEventManager(getActivity().getBaseContext(), eventGuid, allUsers);
-                UsersFragment usersFragment = UsersFragment.newInstance(usersFragmentManager);
+                OldUsersFragment usersFragment = OldUsersFragment.newInstance(usersFragmentManager);
                 getActivity().getFragmentManager()
                         .beginTransaction()
                         .add(R.id.content, usersFragment)
                         .commit();
             }
-        });
+        });*/
     }
 
     private void hideRemoveButton(View view) {

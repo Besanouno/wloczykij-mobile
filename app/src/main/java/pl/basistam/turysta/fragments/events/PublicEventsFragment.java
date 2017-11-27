@@ -1,6 +1,7 @@
 package pl.basistam.turysta.fragments.events;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import pl.basistam.turysta.adapters.EventAdapter;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.EventSimpleDetails;
 import pl.basistam.turysta.dto.Page;
+import pl.basistam.turysta.fragments.events.enums.GuestType;
 import pl.basistam.turysta.service.EventService;
 
 public class PublicEventsFragment extends Fragment {
@@ -44,7 +46,17 @@ public class PublicEventsFragment extends Fragment {
         lvPublicEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                EventSimpleDetails item = (EventSimpleDetails) parent.getItemAtPosition(position);
+                FragmentManager fragmentManager = getActivity().getFragmentManager();
+                GuestEventFragment fragment = new GuestEventFragment();
+                Bundle args = new Bundle();
+                args.putString("guid", item.getGuid());
+                args.putSerializable("type", GuestType.VISITOR);
+                fragment.setArguments(args);
+                fragmentManager.beginTransaction()
+                        .add(R.id.content, fragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
         updateListView();

@@ -4,18 +4,18 @@ import android.content.Context;
 
 import java.util.List;
 
-import pl.basistam.turysta.dto.UserItem;
+import pl.basistam.turysta.dto.RelationItem;
 
-public class NewEventManager extends EventManager {
+public class NewEventManager extends EventUsersDataSet {
 
-    private List<UserItem> changes;
+    private List<RelationItem> changes;
 
     public NewEventManager(Context context, String eventGuid, List<String> participantsLogins) {
         super(context, eventGuid, participantsLogins);
     }
-
+/*
     @Override
-    public void postExecute(List<UserItem> changes) {
+    public void postExecute(List<RelationItem> changes) {
         this.changes = changes;
-    }
+    }*/
 }

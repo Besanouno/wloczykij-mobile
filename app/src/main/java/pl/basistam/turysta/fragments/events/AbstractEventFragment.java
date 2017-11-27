@@ -16,24 +16,25 @@ import android.widget.ExpandableListView;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 import pl.basistam.turysta.R;
-import pl.basistam.turysta.adapters.UsersAdapter;
+import pl.basistam.turysta.adapters.RelationsAdapter;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.EventDto;
-import pl.basistam.turysta.dto.EventFullDto;
-import pl.basistam.turysta.dto.FoundPeopleGroup;
-import pl.basistam.turysta.dto.Group;
-import pl.basistam.turysta.dto.UserItem;
+import pl.basistam.turysta.dto.FoundRelationsGroup;
+import pl.basistam.turysta.dto.RelationsGroup;
+import pl.basistam.turysta.enums.EventUserStatus;
 import pl.basistam.turysta.listeners.EventUsersGroupsListener;
 import pl.basistam.turysta.service.EventService;
-import pl.basistam.turysta.service.UsersStatusesChangesHandlerImpl;
-import pl.basistam.turysta.service.interfaces.UsersStatusesChangesHandler;
+import pl.basistam.turysta.service.RelationsChangesHandlerImpl;
+import pl.basistam.turysta.service.interfaces.RelationsChangesHandler;
 import pl.basistam.turysta.utils.Converter;
+import pl.basistam.turysta.dto.EventUserDto;
 
 public abstract class AbstractEventFragment extends Fragment {
-    SparseArray<Group> groups = new SparseArray<>();
-    private final UsersStatusesChangesHandler usersStatusesChangesHandler = new UsersStatusesChangesHandlerImpl();
+    SparseArray<RelationsGroup> groups = new SparseArray<>();
+    private final RelationsChangesHandler relationsChangesHandler = new RelationsChangesHandlerImpl();
 
     protected String eventGuid = null;
     private EditText edtPlaceOfMeeting;
@@ -45,7 +46,7 @@ public abstract class AbstractEventFragment extends Fragment {
     private CheckBox chbPublicAccess;
     private EditText edtParticipantsLimit;
     private ExpandableListView elvParticipants;
-    private UsersAdapter usersAdapter;
+    private RelationsAdapter usersAdapter;
 
     private boolean admin;
 
@@ -69,13 +70,13 @@ public abstract class AbstractEventFragment extends Fragment {
     }
 
     protected void initAdapter(boolean isAdmin) {
-        Group participantsGroup = new FoundPeopleGroup("Uczestnicy");
+        RelationsGroup participantsGroup = new FoundRelationsGroup("Uczestnicy");
         groups.append(0, participantsGroup);
 
-        Group invitedGroup = new FoundPeopleGroup("Zaproszeni");
+        RelationsGroup invitedGroup = new FoundRelationsGroup("Zaproszeni");
         groups.append(1, invitedGroup);
 
-        usersAdapter = new UsersAdapter(groups, getActivity(), usersStatusesChangesHandler, isAdmin);
+        //usersAdapter = new RelationsAdapter(groups, getActivity(), relationsChangesHandler, isAdmin);
         elvParticipants.setAdapter(usersAdapter);
     }
 
@@ -96,14 +97,14 @@ public abstract class AbstractEventFragment extends Fragment {
             return;
         LoggedUser.getInstance().sendAuthorizedRequest(
                 getActivity().getBaseContext(),
-                new AsyncTask<String, Void, EventFullDto>() {
+                new AsyncTask<String, Void, EventDto>() {
                     @Override
-                    protected EventFullDto doInBackground(String... params) {
+                    protected EventDto doInBackground(String... params) {
                         String authToken = params[0];
                         try {
                             return EventService.getInstance()
                                     .eventService()
-                                    .getFullEvent(authToken, eventGuid)
+                                    .getEvent(authToken, eventGuid)
                                     .execute()
                                     .body();
                         } catch (IOException e) {
@@ -113,14 +114,14 @@ public abstract class AbstractEventFragment extends Fragment {
                     }
 
                     @Override
-                    protected void onPostExecute(EventFullDto event) {
+                    protected void onPostExecute(EventDto event) {
                         admin = LoggedUser.getInstance().getLogin().equals(event.getInitiator());
                         reloadDataOnForm(event);
                     }
                 });
     }
 
-    private void reloadDataOnForm(EventFullDto event) {
+    private void reloadDataOnForm(EventDto event) {
         edtName.setText(event.getName());
         edtParticipantsLimit.setText(Integer.toString(event.getParticipantsLimit()));
         edtPlaceOfMeeting.setText(event.getPlaceOfMeeting());
@@ -131,16 +132,26 @@ public abstract class AbstractEventFragment extends Fragment {
             edtEndHour.setText(Converter.timeToString(event.getEndDate()));
         }
         chbPublicAccess.setChecked(event.isPublicAccess());
-        groups.get(0).getChildren().addAll(event.getParticipants());
-        groups.get(0).setName("Uczestnicy (" + event.getParticipants().size() + ")");
-        groups.get(1).getChildren().addAll(event.getInvited());
-        groups.get(1).setName("Zaproszeni (" + event.getInvited().size() + ")");
+
+        List<EventUserDto> participants = new ArrayList<>();
+        List<EventUserDto> invited = new ArrayList<>();
+        for (EventUserDto e: event.getParticipants()) {
+            if (EventUserStatus.INVITED.getValue().equals(e.getStatus())) {
+                invited.add(e);
+            } else if (EventUserStatus.PARTICIPANT.getValue().equals(e.getStatus())) {
+                participants.add(e);
+            }
+        }
+     /*   groups.get(0).getChildren().addAll(participants);
+        groups.get(0).setName("Uczestnicy (" + participants.size() + ")");
+        groups.get(1).getChildren().addAll(invited);
+        groups.get(1).setName("Zaproszeni (" + invited.size() + ")");*/
         usersAdapter.notifyDataSetChanged();
     }
 
 
-    protected EventFullDto prepareEventDto() {
-        EventFullDto eventDto = new EventFullDto();
+    protected EventDto prepareEventDto() {
+        EventDto eventDto = new EventDto();
         eventDto.setName(edtName.getText().toString());
         eventDto.setPlaceOfMeeting(edtPlaceOfMeeting.getText().toString());
         String startDateTime = edtStartDate.getText().toString() + " " + edtStartHour.getText().toString();
@@ -163,8 +174,8 @@ public abstract class AbstractEventFragment extends Fragment {
         }
         eventDto.setParticipantsLimit(Integer.parseInt(edtParticipantsLimit.getText().toString()));
         eventDto.setPublicAccess(Boolean.getBoolean(chbPublicAccess.getText().toString()));
-        ArrayList<UserItem> participants = new ArrayList<>();
-        participants.addAll(groups.get(0).getChildren());
+        ArrayList<EventUserDto> participants = new ArrayList<>();
+//        participants.addAll(groups.get(0).getChildren());
         eventDto.setParticipants(participants);
         return eventDto;
     }

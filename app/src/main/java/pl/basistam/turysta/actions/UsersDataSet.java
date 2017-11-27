@@ -10,19 +10,14 @@ import java.util.List;
 
 import pl.basistam.turysta.dto.Page;
 import pl.basistam.turysta.dto.UserDto;
-import pl.basistam.turysta.dto.UserItem;
 import pl.basistam.turysta.service.UserService;
 
 
-public abstract class UsersFragmentManager implements Serializable {
-    public abstract List<UserItem> getFriends(String authToken);
-    public abstract Page<UserItem> getAllUsers(String authToken, String pattern, int page, int size);
-    public abstract void postExecute(List<UserItem> changes);
-
+public abstract class UsersDataSet implements Serializable {
 
     protected final Context context;
 
-    public UsersFragmentManager(Context context) {
+    public UsersDataSet(Context context) {
         this.context = context;
     }
 

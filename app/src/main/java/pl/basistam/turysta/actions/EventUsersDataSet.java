@@ -1,62 +1,59 @@
 package pl.basistam.turysta.actions;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.basistam.turysta.auth.LoggedUser;
+import pl.basistam.turysta.dto.EventUserDto;
 import pl.basistam.turysta.dto.Page;
+import pl.basistam.turysta.dto.RelationItem;
 import pl.basistam.turysta.dto.UserDto;
-import pl.basistam.turysta.dto.UserItem;
-import pl.basistam.turysta.service.EventService;
-import pl.basistam.turysta.service.UserService;
 import retrofit2.Converter;
 
-public class EventManager extends UsersFragmentManager {
+public class EventUsersDataSet extends UsersDataSet {
+
     private String eventGuid;
     private List<String> participantsLogins;
 
-    public EventManager(Context context, String eventGuid, List<String> participantsLogins) {
+    public EventUsersDataSet(Context context, String eventGuid, List<String> participantsLogins) {
         super(context);
         this.eventGuid = eventGuid;
         this.participantsLogins = participantsLogins;
     }
 
-    @Override
-    public List<UserItem> getFriends(String authToken) {
+    public List<EventUserDto> getFriends(String authToken) {
         List<UserDto> friends = downloadFriends(authToken);
         return convertFriendsToUserItems(friends);
     }
 
-    private List<UserItem> convertFriendsToUserItems(List<UserDto> friends) {
-        ArrayList<UserItem> result = new ArrayList<>(friends.size());
+    private List<EventUserDto> convertFriendsToUserItems(List<UserDto> friends) {
+        ArrayList<EventUserDto> result = new ArrayList<>(friends.size());
         for (UserDto u: friends) {
-            result.add(new UserItem(u.getFirstName() + " " + u.getLastName(), u.getLogin(), participantsLogins.contains(u.getLogin())));
+//            result.add(new EventUserDto(u.getFirstName() + " " + u.getLastName(), u.getLogin()));
         }
         return result;
     }
 
-    @Override
-    public Page<UserItem> getAllUsers(String authToken, String pattern, int page, int size) {
+    public Page<EventUserDto> getAllUsers(String authToken, String pattern, int page, int size) {
         Page<UserDto> users = downloadUsersByPattern(authToken, pattern, page, size);
-        return convertUsersPageToUserItemsPage(users);
+        //return convertUsersPageToUserItemsPage(users);
+        return null;
     }
 
-    private Page<UserItem> convertUsersPageToUserItemsPage(Page<UserDto> page) {
-        return page.map(new Converter<UserDto, UserItem>() {
+    private Page<RelationItem> convertUsersPageToUserItemsPage(Page<UserDto> page) {
+        return page.map(new Converter<UserDto, RelationItem>() {
             @Override
-            public UserItem convert(@NonNull UserDto u) throws IOException {
-                return new UserItem(u.getFirstName() + " " + u.getLastName(), u.getLogin(), participantsLogins.contains(u.getLogin()));
+            public RelationItem convert(@NonNull UserDto u) throws IOException {
+                return new RelationItem(u.getFirstName() + " " + u.getLastName(), u.getLogin(), participantsLogins.contains(u.getLogin()));
             }
         });
     }
 
-    @Override
-    public void postExecute(final List<UserItem> changes) {
+    /*@Override
+    public void postExecute(final List<RelationItem> changes) {
         if (!changes.isEmpty()) {
             LoggedUser.getInstance().sendAuthorizedRequest(context,
                     new AsyncTask<String, Void, Object>() {
@@ -75,5 +72,5 @@ public class EventManager extends UsersFragmentManager {
                         }
                     });
         }
-    }
+    }*/
 }

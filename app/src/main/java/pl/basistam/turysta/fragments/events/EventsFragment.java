@@ -111,7 +111,7 @@ public class EventsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EventSimpleDetails item = (EventSimpleDetails) parent.getItemAtPosition(position);
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
-                InvitationEventFragment fragment = new InvitationEventFragment();
+                GuestEventFragment fragment = new GuestEventFragment();
                 Bundle args = new Bundle();
                 args.putString("guid", item.getGuid());
                 fragment.setArguments(args);

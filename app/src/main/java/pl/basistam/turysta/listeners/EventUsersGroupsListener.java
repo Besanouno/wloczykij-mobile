@@ -3,15 +3,15 @@ package pl.basistam.turysta.listeners;
 import android.util.SparseArray;
 import android.widget.ExpandableListView;
 
-import pl.basistam.turysta.dto.Group;
+import pl.basistam.turysta.dto.RelationsGroup;
 
 public class EventUsersGroupsListener implements ExpandableListView.OnGroupExpandListener, ExpandableListView.OnGroupCollapseListener {
 
     private ExpandableListView elvParticipants;
     private int[] expandedHeights;
-    private SparseArray<Group> groups;
+    private SparseArray<RelationsGroup> groups;
 
-    public EventUsersGroupsListener(ExpandableListView elvParticipants, SparseArray<Group> groups) {
+    public EventUsersGroupsListener(ExpandableListView elvParticipants, SparseArray<RelationsGroup> groups) {
         this.elvParticipants = elvParticipants;
         this.groups = groups;
         this.expandedHeights = new int[groups.size()];

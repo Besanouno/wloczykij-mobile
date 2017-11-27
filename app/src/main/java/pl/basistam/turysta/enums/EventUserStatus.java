@@ -1,12 +1,14 @@
 package pl.basistam.turysta.enums;
 
 public enum EventUserStatus {
+    ADMIN("ADMIN"),
     INVITED("INVITED"),
     BLOCKED("BLOCKED"),
     PARTICIPANT("PARTICIPANT"),
     WAITING("WAITING"),
     REJECTED("REJECTED"),
-    ARCHIVED("ARCHIVED");
+    ARCHIVED("ARCHIVED"),
+    NONE("NONE");
 
     private final String value;
 
