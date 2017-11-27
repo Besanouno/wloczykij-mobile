@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.AppCompatImageButton;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -80,7 +81,7 @@ public class RelationsFragment extends Fragment {
                         relationsGroup.setChildren(content);
                         groups.append(RELATIONS_GROUP_INDEX, relationsGroup);
                         expandableListView.setAdapter(adapter);
-                        expandableListView.expandGroup(0);
+                        expandableListView.expandGroup(RELATIONS_GROUP_INDEX);
                     }
                 });
     }
@@ -115,7 +116,8 @@ public class RelationsFragment extends Fragment {
                                 group.setTotalNumber(users.getTotalElements());
                                 groups.append(FOUND_USERS_GROUP_INDEX, group);
                                 adapter.notifyDataSetChanged();
-                                elvFoundUsers.expandGroup(1);
+                                elvFoundUsers.collapseGroup(RELATIONS_GROUP_INDEX);
+                                elvFoundUsers.expandGroup(FOUND_USERS_GROUP_INDEX);
                             }
                         });
             }
@@ -148,6 +150,11 @@ public class RelationsFragment extends Fragment {
                                         .updateRelations(authtoken, changes)
                                         .execute();
                                 KeyboardUtils.hide(getActivity().getBaseContext(), getView());
+                                View view = getView();
+                                if (view != null) {
+                                    Snackbar.make(getView(), "Pomyślnie zaktualizowano listę znajomych", Snackbar.LENGTH_LONG)
+                                            .setAction("Action", null).show();
+                                }
                                 getFragmentManager().popBackStack();
                             } catch (IOException e) {
                                 e.printStackTrace();
