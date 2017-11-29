@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="56dp"
-    tools:context="pl.basistam.turysta.fragments.OldUsersFragment">
+    android:background="#f6f6f6">
 
 
     <RelativeLayout

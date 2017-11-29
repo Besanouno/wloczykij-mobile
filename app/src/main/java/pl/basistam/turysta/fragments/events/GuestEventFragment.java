@@ -1,12 +1,15 @@
 package pl.basistam.turysta.fragments.events;
 
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatImageButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import java.io.IOException;
 
@@ -15,7 +18,7 @@ import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.fragments.events.enums.GuestType;
 import pl.basistam.turysta.service.EventService;
 
-public class GuestEventFragment extends AbstractEventFragment {
+public class GuestEventFragment extends EventFragment {
 
     private GuestType guestType;
 
@@ -26,13 +29,15 @@ public class GuestEventFragment extends AbstractEventFragment {
             this.eventGuid = getArguments().getString("guid");
             this.guestType = (GuestType) getArguments().getSerializable("type");
         }
-        return inflater.inflate(R.layout.fragment_user_event, container, false);
+        return inflater.inflate(R.layout.fragment_guest_event, container, false);
     }
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         initView(view);
         if (guestType == GuestType.INVITED) {
+            view.findViewById(R.id.rl_invitation_layout).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.rl_application_layout).setVisibility(View.GONE);
             initAcceptAction(view);
             initRejectAction(view);
         } else {
@@ -41,9 +46,9 @@ public class GuestEventFragment extends AbstractEventFragment {
     }
 
     private void initApplicationButton(View view) {
-        view.findViewById(R.id.btn_reject).setVisibility(View.GONE);
-        Button btnAccept = view.findViewById(R.id.btn_accept);
-        btnAccept.setText("ZGŁOŚ SIĘ!");
+        view.findViewById(R.id.rl_invitation_layout).setVisibility(View.GONE);
+        view.findViewById(R.id.rl_application_layout).setVisibility(View.VISIBLE);
+        AppCompatImageButton btnAccept = view.findViewById(R.id.ib_accept);
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +82,7 @@ public class GuestEventFragment extends AbstractEventFragment {
     }
 
     private void initRejectAction(View view) {
-        Button btnReject = view.findViewById(R.id.btn_reject);
+        AppCompatImageButton btnReject = view.findViewById(R.id.ib_reject);
         btnReject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,7 +116,7 @@ public class GuestEventFragment extends AbstractEventFragment {
     }
 
     private void initAcceptAction(View view) {
-        Button btnAccept = view.findViewById(R.id.btn_accept);
+        AppCompatImageButton btnAccept = view.findViewById(R.id.ib_accept);
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

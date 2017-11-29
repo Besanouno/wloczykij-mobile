@@ -19,7 +19,7 @@ import retrofit2.http.Query;
 
 public interface RetrofitEventService {
     @GET("events")
-    Call<List<EventSimpleDetails>> getActiveEventsByType(@Header("Authorization") final String authorization, @Query("statusCode") final String statusCode);
+    Call<List<EventSimpleDetails>> getActiveEventsByType(@Header("Authorization") final String authorization, @Query("statusCodes") final String[] statusCodes);
 
     @GET("events/archive")
     Call<List<EventSimpleDetails>> getArchivalEvents(@Header("Authorization") final String authorization);
@@ -51,4 +51,6 @@ public interface RetrofitEventService {
     @GET("events/public")
     Call<Page<EventSimpleDetails>> getPublicEvents(@Header("Authorization") final String authtoken, @Query("page") int page, @Query("size") int size);
 
+    @DELETE("events/{guid}/users/self")
+    Call<Void> leave(@Header("Authorization") String authToken, @Path("guid") String eventGuid);
 }

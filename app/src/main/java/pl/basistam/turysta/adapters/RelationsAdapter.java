@@ -11,11 +11,9 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import pl.basistam.turysta.R;
-import pl.basistam.turysta.dto.EventUserDto;
 import pl.basistam.turysta.dto.RelationItem;
 import pl.basistam.turysta.dto.RelationsGroup;
-import pl.basistam.turysta.enums.EventUserStatus;
-import pl.basistam.turysta.fragments.PersonFragment;
+import pl.basistam.turysta.fragments.UserPreviewFragment;
 import pl.basistam.turysta.service.interfaces.RelationsChangesHandler;
 
 public class RelationsAdapter extends BaseExpandableListAdapter {
@@ -109,7 +107,7 @@ public class RelationsAdapter extends BaseExpandableListAdapter {
     }
 
     private void showUserDetails(RelationItem child) {
-        PersonFragment fragment = new PersonFragment();
+        UserPreviewFragment fragment = new UserPreviewFragment();
         Bundle bundle = new Bundle();
         bundle.putString("login", child.getLogin());
         fragment.setArguments(bundle);

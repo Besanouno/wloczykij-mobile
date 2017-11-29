@@ -1,6 +1,8 @@
 package pl.basistam.turysta.adapters;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -10,30 +12,38 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import java.io.Serializable;
+
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.dto.EventUserDto;
-import pl.basistam.turysta.dto.RelationsGroup;
+import pl.basistam.turysta.dto.EventUsersGroup;
 import pl.basistam.turysta.enums.EventUserStatus;
 import pl.basistam.turysta.fragments.UserPreviewFragment;
-import pl.basistam.turysta.service.interfaces.RelationsChangesHandler;
+import pl.basistam.turysta.service.ParticipantsChangesHandler;
 
-public class UsersAdapter extends BaseExpandableListAdapter {
-    private final SparseArray<RelationsGroup> groups;
-    private LayoutInflater inflater;
-    private Activity activity;
-    private final RelationsChangesHandler relationsChangesHandler;
+import static android.view.View.GONE;
+
+public class EventUsersAdapter extends BaseExpandableListAdapter implements Serializable {
+    private final SparseArray<EventUsersGroup> groups;
+    private final LayoutInflater inflater;
+    private final Activity activity;
     private boolean isAdmin;
+    private final ParticipantsChangesHandler participantsChangesHandler;
 
-    public UsersAdapter(
-            SparseArray<RelationsGroup> groups,
+    public EventUsersAdapter(
+            SparseArray<EventUsersGroup> groups,
             Activity activity,
-            RelationsChangesHandler relationsChangesHandler,
-            boolean isAdmin) {
+            boolean isAdmin,
+            ParticipantsChangesHandler participantsChangesHandler) {
         this.groups = groups;
         this.activity = activity;
         this.inflater = activity.getLayoutInflater();
-        this.relationsChangesHandler = relationsChangesHandler;
         this.isAdmin = isAdmin;
+        this.participantsChangesHandler = participantsChangesHandler;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.isAdmin = admin;
     }
 
     @Override
@@ -76,7 +86,7 @@ public class UsersAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_relations_group, null);
         }
-        RelationsGroup relationsGroup = (RelationsGroup) getGroup(groupPosition);
+        EventUsersGroup relationsGroup = (EventUsersGroup) getGroup(groupPosition);
         TextView textView = (TextView) convertView;
         textView.setText(relationsGroup.getName());
         textView.setTextSize(20f);
@@ -85,19 +95,45 @@ public class UsersAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View view, ViewGroup parent) {
         final EventUserDto child = (EventUserDto) getChild(groupPosition, childPosition);
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.item_relation, null);
+        if (view == null) {
+            view = inflater.inflate(R.layout.item_relation, null);
         }
-        setCheckBoxIfAdmin(convertView, child);
-        final TextView textView = convertView.findViewById(R.id.tv_login);
-        textView.setText(child.getName());
+        final CheckBox checkBox = view.findViewById(R.id.chb_friend);
+        if (isAdmin) {
+            String status = child.getStatus();
+            if (status.equals(EventUserStatus.ADMIN.name())) {
+                checkBox.setVisibility(GONE);
+            } else if (status.equals(EventUserStatus.PARTICIPANT.name())) {
+                checkBox.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#006507")));
+                checkBox.setChecked(true);
+            } else if (status.equals(EventUserStatus.INVITED.name())) {
+                checkBox.setChecked(true);
+                checkBox.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#00a70b")));
+            } else {
+                checkBox.setChecked(false);
+                checkBox.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#00a70b")));
+            }
+            checkBox.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            participantsChangesHandler.registerChange(child);
+                        }
+                    }
+            );
+        } else {
+            checkBox.setVisibility(GONE);
+        }
+
+        final TextView textView = view.findViewById(R.id.tv_login);
+        textView.setText(child.getName() + " (" + child.getLogin() + ")");
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {showUserDetails(child); }
         });
-        return convertView;
+        return view;
     }
 
     private void showUserDetails(EventUserDto child) {
@@ -109,29 +145,6 @@ public class UsersAdapter extends BaseExpandableListAdapter {
                 .add(R.id.content, fragment)
                 .addToBackStack(null)
                 .commit();
-    }
-
-    private void setCheckBoxIfAdmin(View view, final EventUserDto item) {
-        final CheckBox checkBox = view.findViewById(R.id.chb_friend);
-        /*if (isAdmin) {
-            checkBox.setChecked(involved(item));
-            checkBox.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            item.setStatus(EventUserStatus.INVITED.getValue());
-                            relationsChangesHandler.registerChange(item);
-                        }
-                    }
-            );
-        } else {
-            checkBox.setVisibility(View.GONE);
-        }*/
-    }
-
-    private boolean involved(EventUserDto user) {
-        return EventUserStatus.PARTICIPANT.getValue().equals(user.getStatus())
-                || EventUserStatus.INVITED.getValue().equals(user.getStatus());
     }
 
     @Override

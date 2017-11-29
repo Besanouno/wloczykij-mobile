@@ -16,7 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pl.basistam.turysta.R;
+import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.EventSimpleDetails;
+import pl.basistam.turysta.fragments.events.enums.GuestType;
 import pl.basistam.turysta.fragments.events.tabs.ArchivalEventsDataSet;
 import pl.basistam.turysta.fragments.events.tabs.InvitationsDataSet;
 import pl.basistam.turysta.fragments.events.tabs.TabDataSet;
@@ -80,8 +82,12 @@ public class EventsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
+                UpcomingEventFragment fragment = new UpcomingEventFragment();
+                Bundle args = new Bundle();
+                args.putBoolean("isAdmin", true);
+                fragment.setArguments(args);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.content, new UpcomingEventFragment())
+                        .replace(R.id.content, fragment)
                         .addToBackStack(null)
                         .commit();
             }
@@ -96,6 +102,7 @@ public class EventsFragment extends Fragment {
                 UpcomingEventFragment fragment = new UpcomingEventFragment();
                 Bundle args = new Bundle();
                 args.putString("guid", item.getGuid());
+                args.putBoolean("isAdmin", LoggedUser.getInstance().getLogin().equals(item.getInitiator()));
                 fragment.setArguments(args);
                 fragmentManager.beginTransaction()
                         .replace(R.id.content, fragment)
@@ -114,6 +121,7 @@ public class EventsFragment extends Fragment {
                 GuestEventFragment fragment = new GuestEventFragment();
                 Bundle args = new Bundle();
                 args.putString("guid", item.getGuid());
+                args.putSerializable("type", GuestType.INVITED);
                 fragment.setArguments(args);
                 fragmentManager.beginTransaction()
                         .replace(R.id.content, fragment)

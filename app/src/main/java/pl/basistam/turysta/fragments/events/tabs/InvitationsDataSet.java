@@ -21,7 +21,7 @@ public class InvitationsDataSet extends TabDataSet {
     protected Call<List<EventSimpleDetails>> prepareRequest(String authToken) {
         return EventService.getInstance()
                 .eventService()
-                .getActiveEventsByType(authToken, EventUserStatus.INVITED.getValue());
+                .getActiveEventsByType(authToken, new String[]{EventUserStatus.INVITED.getValue()});
     }
 
     @Override

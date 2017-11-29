@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/white"
-    tools:context="pl.basistam.turysta.fragments.events.AbstractEventFragment">
+    tools:context="pl.basistam.turysta.fragments.events.EventFragment">
 
     <ScrollView
         android:id="@+id/sv_login"
@@ -148,31 +148,50 @@
                 android:layout_width="match_parent"
                 />
 
-            <ImageButton
-                android:id="@+id/ib_add_participant"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_add_user"
-                android:background="@drawable/green_background_with_shadow"/>
-
-            <Button
-                android:id="@+id/btn_save"
-                style="?android:textAppearanceSmall"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_save_event"
-                android:textStyle="bold" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btn_remove"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textColor="@color/red"
-                android:text="@string/action_remove_event"
-                android:textStyle="bold" />
+                <ImageButton
+                    android:id="@+id/ib_leave"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="end"
+                    android:background="@drawable/red_background_with_shadow"
+                    android:src="@drawable/ic_exit"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/ib_save"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:background="@drawable/green_background_with_shadow"
+                    android:src="@drawable/ic_save" />
+
+                <ImageButton
+                    android:id="@+id/ib_remove"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="end"
+                    android:background="@drawable/red_background_with_shadow"
+                    android:src="@drawable/ic_remove"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/ib_add_participant"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="start"
+                    android:background="@drawable/green_background_with_shadow"
+                    android:src="@drawable/ic_add_user" />
+            </RelativeLayout>
 
         </LinearLayout>
     </ScrollView>

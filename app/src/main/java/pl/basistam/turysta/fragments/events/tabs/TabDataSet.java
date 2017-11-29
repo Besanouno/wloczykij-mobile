@@ -12,6 +12,7 @@ import pl.basistam.turysta.adapters.EventAdapter;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.EventSimpleDetails;
 import retrofit2.Call;
+import retrofit2.Response;
 
 public abstract class TabDataSet {
     private final Activity activity;

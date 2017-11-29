@@ -17,7 +17,6 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import pl.basistam.turysta.R;

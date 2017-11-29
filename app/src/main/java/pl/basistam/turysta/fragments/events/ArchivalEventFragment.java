@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import pl.basistam.turysta.R;
 
-public class ArchivalEventFragment extends AbstractEventFragment {
+public class ArchivalEventFragment extends EventFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -19,7 +19,7 @@ public class ArchivalEventFragment extends AbstractEventFragment {
                 this.eventGuid = guid;
             }
         }
-        return inflater.inflate(R.layout.fragment_user_event, container, false);
+        return inflater.inflate(R.layout.fragment_guest_event, container, false);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ArchivalEventFragment extends AbstractEventFragment {
     }
 
     private void hideAcceptAndRejectButtons(View view) {
-        view.findViewById(R.id.btn_accept).setVisibility(View.GONE);
-        view.findViewById(R.id.btn_reject).setVisibility(View.GONE);
+        view.findViewById(R.id.ib_accept).setVisibility(View.GONE);
+        view.findViewById(R.id.ib_reject).setVisibility(View.GONE);
     }
 }

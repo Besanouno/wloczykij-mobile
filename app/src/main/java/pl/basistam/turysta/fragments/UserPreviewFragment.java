@@ -17,7 +17,7 @@ import pl.basistam.turysta.dto.UserDto;
 import pl.basistam.turysta.service.UserService;
 import pl.basistam.turysta.utils.Converter;
 
-public class PersonFragment extends Fragment {
+public class UserPreviewFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

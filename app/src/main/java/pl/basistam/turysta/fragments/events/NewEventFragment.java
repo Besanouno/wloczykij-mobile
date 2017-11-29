@@ -5,28 +5,20 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import pl.basistam.turysta.R;
-import pl.basistam.turysta.actions.NewEventManager;
-import pl.basistam.turysta.dto.EventUserDto;
-import pl.basistam.turysta.fragments.OldUsersFragment;
 
-public class NewEventFragment extends AbstractEventFragment {
+public class NewEventFragment extends EventFragment {
 
-    private NewEventManager usersFragmentManager;
+//    private NewEventManager usersFragmentManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_admin_event, container, false);
+        return inflater.inflate(R.layout.fragment_event, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        hideRemoveButton(view);
         initBtnFriends(view);
     }
 
@@ -54,9 +46,5 @@ public class NewEventFragment extends AbstractEventFragment {
                         .commit();
             }
         });*/
-    }
-
-    private void hideRemoveButton(View view) {
-        view.findViewById(R.id.btn_remove).setVisibility(View.GONE);
     }
 }

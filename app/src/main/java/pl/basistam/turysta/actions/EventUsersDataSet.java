@@ -11,17 +11,16 @@ import pl.basistam.turysta.dto.EventUserDto;
 import pl.basistam.turysta.dto.Page;
 import pl.basistam.turysta.dto.RelationItem;
 import pl.basistam.turysta.dto.UserDto;
+import pl.basistam.turysta.enums.EventUserStatus;
 import retrofit2.Converter;
 
 public class EventUsersDataSet extends UsersDataSet {
 
-    private String eventGuid;
-    private List<String> participantsLogins;
+    private List<EventUserDto> participants;
 
-    public EventUsersDataSet(Context context, String eventGuid, List<String> participantsLogins) {
+    public EventUsersDataSet(Context context, List<EventUserDto> participants) {
         super(context);
-        this.eventGuid = eventGuid;
-        this.participantsLogins = participantsLogins;
+        this.participants = participants;
     }
 
     public List<EventUserDto> getFriends(String authToken) {
@@ -32,45 +31,35 @@ public class EventUsersDataSet extends UsersDataSet {
     private List<EventUserDto> convertFriendsToUserItems(List<UserDto> friends) {
         ArrayList<EventUserDto> result = new ArrayList<>(friends.size());
         for (UserDto u: friends) {
-//            result.add(new EventUserDto(u.getFirstName() + " " + u.getLastName(), u.getLogin()));
+            result.add(convertUserDtoToEventUserDto(u));
         }
         return result;
     }
 
-    public Page<EventUserDto> getAllUsers(String authToken, String pattern, int page, int size) {
-        Page<UserDto> users = downloadUsersByPattern(authToken, pattern, page, size);
-        //return convertUsersPageToUserItemsPage(users);
-        return null;
+    private String getStatus(String login) {
+        for (EventUserDto e: participants) {
+            if (e.getLogin().equals(login)) {
+                return e.getStatus();
+            }
+        }
+        return EventUserStatus.NONE.name();
     }
 
-    private Page<RelationItem> convertUsersPageToUserItemsPage(Page<UserDto> page) {
-        return page.map(new Converter<UserDto, RelationItem>() {
+    public Page<EventUserDto> getAllUsers(String authToken, String pattern, int page, int size) {
+        Page<UserDto> users = downloadUsersByPattern(authToken, pattern, page, size);
+        return convertUsersPageToUserItemsPage(users);
+    }
+
+    private Page<EventUserDto> convertUsersPageToUserItemsPage(Page<UserDto> page) {
+        return page.map(new Converter<UserDto, EventUserDto>() {
             @Override
-            public RelationItem convert(@NonNull UserDto u) throws IOException {
-                return new RelationItem(u.getFirstName() + " " + u.getLastName(), u.getLogin(), participantsLogins.contains(u.getLogin()));
+            public EventUserDto convert(@NonNull UserDto u) throws IOException {
+                return convertUserDtoToEventUserDto(u);
             }
         });
     }
 
-    /*@Override
-    public void postExecute(final List<RelationItem> changes) {
-        if (!changes.isEmpty()) {
-            LoggedUser.getInstance().sendAuthorizedRequest(context,
-                    new AsyncTask<String, Void, Object>() {
-                        @Override
-                        protected Void doInBackground(String... params) {
-                            try {
-                                String authtoken = params[0];
-                                EventService.getInstance()
-                                        .eventService()
-                                        .updateParticipants(authtoken, eventGuid, changes)
-                                        .execute();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            return null;
-                        }
-                    });
-        }
-    }*/
+    private EventUserDto convertUserDtoToEventUserDto(UserDto u) {
+        return new EventUserDto(u.getLogin(), u.getFirstName() + " " + u.getLastName(),  getStatus(u.getLogin()));
+    }
 }
