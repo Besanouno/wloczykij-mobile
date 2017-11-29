@@ -8,21 +8,19 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import pl.basistam.turysta.R;
-import pl.basistam.turysta.actions.EventUsersDataSet;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.EventDto;
 import pl.basistam.turysta.dto.EventUserDto;
 import pl.basistam.turysta.enums.EventUserStatus;
 import pl.basistam.turysta.fragments.EventUsersFragment;
 import pl.basistam.turysta.service.EventService;
-import pl.basistam.turysta.service.EventUsersCallback;
+import pl.basistam.turysta.service.Callback;
 
 public class UpcomingEventFragment extends EventFragment {
 
@@ -137,14 +135,14 @@ public class UpcomingEventFragment extends EventFragment {
             }
 
             private void prepareUsersView() {
-                EventUsersFragment fragment = EventUsersFragment.create(participantsChangesHandler, new EventUsersCallback() {
+                EventUsersFragment fragment = EventUsersFragment.create(eventUsers, new Callback() {
                     @Override
                     public void run() {
                         groups.get(PARTICIPANTS_GROUP_INDEX).getChildren().clear();
                         groups.get(INVITED_GROUP_INDEX).getChildren().clear();
                         List<EventUserDto> participants = new ArrayList<>();
                         List<EventUserDto> invited = new ArrayList<>();
-                        for (EventUserDto e : participantsChangesHandler.getParticipants()) {
+                        for (EventUserDto e : eventUsers.getParticipants()) {
                             String status = e.getStatus();
                             if (EventUserStatus.PARTICIPANT.name().equals(status)
                                     || EventUserStatus.ADMIN.name().equals(status)) {

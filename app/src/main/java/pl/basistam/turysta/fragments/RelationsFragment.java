@@ -24,10 +24,10 @@ import pl.basistam.turysta.actions.RelationsDataSet;
 import pl.basistam.turysta.adapters.RelationsAdapter;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.components.utils.KeyboardUtils;
-import pl.basistam.turysta.dto.FoundRelationsGroup;
 import pl.basistam.turysta.dto.Page;
 import pl.basistam.turysta.dto.RelationItem;
-import pl.basistam.turysta.dto.RelationsGroup;
+import pl.basistam.turysta.groups.FoundUsersGroup;
+import pl.basistam.turysta.groups.RelationsGroup;
 import pl.basistam.turysta.service.RelationsChangesHandlerImpl;
 import pl.basistam.turysta.service.UserService;
 import pl.basistam.turysta.service.interfaces.RelationsChangesHandler;
@@ -38,7 +38,7 @@ public class RelationsFragment extends Fragment {
     private RelationsAdapter adapter;
     private RelationsChangesHandler relationsChangesHandler;
 
-    private SparseArray<RelationsGroup> groups = new SparseArray<RelationsGroup>();
+    private SparseArray<RelationsGroup> groups = new SparseArray<>();
     private final int RELATIONS_GROUP_INDEX = 0;
     private final int FOUND_USERS_GROUP_INDEX = 1;
 
@@ -76,7 +76,7 @@ public class RelationsFragment extends Fragment {
 
                     @Override
                     protected void onPostExecute(List<RelationItem> content) {
-                        RelationsGroup relationsGroup = new RelationsGroup("Twoi znajomi");
+                        RelationsGroup<RelationItem> relationsGroup = new RelationsGroup<>("Twoi znajomi");
                         relationsGroup.setChildren(content);
                         groups.append(RELATIONS_GROUP_INDEX, relationsGroup);
                         expandableListView.setAdapter(adapter);
@@ -109,7 +109,7 @@ public class RelationsFragment extends Fragment {
                                 for (RelationItem r : users.getContent()) {
                                     relationsChangesHandler.adjustRelationToUnsavedChanges(r);
                                 }
-                                FoundRelationsGroup group = new FoundRelationsGroup("Wyszukiwanie");
+                                FoundUsersGroup<RelationItem> group = new FoundUsersGroup<>("Wyszukiwanie");
                                 group.setChildren(users.getContent());
                                 group.setLastPage(users.getNumber());
                                 group.setTotalNumber(users.getTotalElements());
@@ -176,14 +176,14 @@ public class RelationsFragment extends Fragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                final FoundRelationsGroup group = (FoundRelationsGroup) groups.get(1);
+                final FoundUsersGroup<RelationItem> group = (FoundUsersGroup<RelationItem>) groups.get(1);
                 if (isEndOfListReached() && group != null && group.canDownloadMore()) {
                     final String pattern = edtSearchField.getText().toString();
                     downloadNextPart(group, pattern);
                 }
             }
 
-            private void downloadNextPart(final FoundRelationsGroup group, final String pattern) {
+            private void downloadNextPart(final FoundUsersGroup<RelationItem> group, final String pattern) {
                 LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
                         new AsyncTask<String, Void, Page<RelationItem>>() {
                             @Override

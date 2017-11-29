@@ -22,11 +22,11 @@ import pl.basistam.turysta.adapters.EventUsersAdapter;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.EventDto;
 import pl.basistam.turysta.dto.EventUserDto;
-import pl.basistam.turysta.dto.EventUsersGroup;
 import pl.basistam.turysta.enums.EventUserStatus;
+import pl.basistam.turysta.groups.RelationsGroup;
 import pl.basistam.turysta.listeners.EventUsersGroupsListener;
 import pl.basistam.turysta.service.EventService;
-import pl.basistam.turysta.service.ParticipantsChangesHandler;
+import pl.basistam.turysta.service.EventUsers;
 import pl.basistam.turysta.utils.Converter;
 
 public abstract class EventFragment extends Fragment {
@@ -42,10 +42,10 @@ public abstract class EventFragment extends Fragment {
 
     protected boolean isAdmin = false;
     protected EventUsersAdapter adapter;
-    protected ParticipantsChangesHandler participantsChangesHandler;
+    protected EventUsers eventUsers;
 
     protected String eventGuid = null;
-    protected final SparseArray<EventUsersGroup> groups = new SparseArray<>();
+    protected final SparseArray<RelationsGroup<EventUserDto>> groups = new SparseArray<>();
     protected final int PARTICIPANTS_GROUP_INDEX = 0;
     protected final int INVITED_GROUP_INDEX = 1;
 
@@ -76,13 +76,13 @@ public abstract class EventFragment extends Fragment {
     }
 
     protected void initAdapter() {
-        EventUsersGroup participantsGroup = new EventUsersGroup("Uczestnicy");
+        RelationsGroup<EventUserDto> participantsGroup = new RelationsGroup<>("Uczestnicy");
         groups.append(PARTICIPANTS_GROUP_INDEX, participantsGroup);
 
-        EventUsersGroup invitedGroup = new EventUsersGroup("Zaproszeni");
+        RelationsGroup<EventUserDto> invitedGroup = new RelationsGroup<>("Zaproszeni");
         groups.append(INVITED_GROUP_INDEX, invitedGroup);
 
-        adapter = new EventUsersAdapter(groups, getActivity(), isAdmin, participantsChangesHandler);
+        adapter = new EventUsersAdapter(groups, getActivity(), isAdmin, eventUsers);
         elvParticipants.setAdapter(adapter);
     }
 
@@ -138,7 +138,7 @@ public abstract class EventFragment extends Fragment {
         }
         groups.get(PARTICIPANTS_GROUP_INDEX).getChildren().addAll(participants);
         groups.get(INVITED_GROUP_INDEX).getChildren().addAll(invited);
-        participantsChangesHandler = new ParticipantsChangesHandler(event.getParticipants());
+        eventUsers = new EventUsers(event.getParticipants());
     }
 
     protected void switchAdminMode() {

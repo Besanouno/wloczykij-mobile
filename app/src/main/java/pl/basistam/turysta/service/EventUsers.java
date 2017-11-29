@@ -7,7 +7,7 @@ import java.util.List;
 import pl.basistam.turysta.dto.EventUserDto;
 import pl.basistam.turysta.enums.EventUserStatus;
 
-public class ParticipantsChangesHandler implements Serializable {
+public class EventUsers implements Serializable {
 
     private List<EventUserDtoWithPreviousState> participants = new ArrayList<>();
 
@@ -22,7 +22,7 @@ public class ParticipantsChangesHandler implements Serializable {
         }
     }
 
-    public ParticipantsChangesHandler(List<EventUserDto> participants) {
+    public EventUsers(List<EventUserDto> participants) {
         for (EventUserDto e: participants) {
             this.participants.add(new EventUserDtoWithPreviousState(e));
         }

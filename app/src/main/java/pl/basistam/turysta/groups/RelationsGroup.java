@@ -1,13 +1,13 @@
-package pl.basistam.turysta.dto;
+package pl.basistam.turysta.groups;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventUsersGroup {
+public class RelationsGroup<T> {
     private String name;
-    private List<EventUserDto> children;
+    private List<T> children;
 
-    public EventUsersGroup(String name) {
+    public RelationsGroup(String name) {
         this.name = name;
         this.children = new ArrayList<>();
     }
@@ -20,11 +20,11 @@ public class EventUsersGroup {
         this.name = name;
     }
 
-    public List<EventUserDto> getChildren() {
+    public List<T> getChildren() {
         return children;
     }
 
-    public void setChildren(List<EventUserDto> children) {
+    public void setChildren(List<T> children) {
         this.children = children;
     }
 }

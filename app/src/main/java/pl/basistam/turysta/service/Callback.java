@@ -6,5 +6,5 @@ import java.io.Serializable;
  * Created by marcin on 29.11.17.
  */
 
-public interface EventUsersCallback extends Runnable, Serializable {
+public interface Callback extends Runnable, Serializable {
 }

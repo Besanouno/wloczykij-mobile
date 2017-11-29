@@ -16,30 +16,30 @@ import java.io.Serializable;
 
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.dto.EventUserDto;
-import pl.basistam.turysta.dto.EventUsersGroup;
 import pl.basistam.turysta.enums.EventUserStatus;
 import pl.basistam.turysta.fragments.UserPreviewFragment;
-import pl.basistam.turysta.service.ParticipantsChangesHandler;
+import pl.basistam.turysta.groups.RelationsGroup;
+import pl.basistam.turysta.service.EventUsers;
 
 import static android.view.View.GONE;
 
 public class EventUsersAdapter extends BaseExpandableListAdapter implements Serializable {
-    private final SparseArray<EventUsersGroup> groups;
+    private final SparseArray<RelationsGroup<EventUserDto>> groups;
     private final LayoutInflater inflater;
     private final Activity activity;
     private boolean isAdmin;
-    private final ParticipantsChangesHandler participantsChangesHandler;
+    private final EventUsers eventUsers;
 
     public EventUsersAdapter(
-            SparseArray<EventUsersGroup> groups,
+            SparseArray<RelationsGroup<EventUserDto>> groups,
             Activity activity,
             boolean isAdmin,
-            ParticipantsChangesHandler participantsChangesHandler) {
+            EventUsers eventUsers) {
         this.groups = groups;
         this.activity = activity;
         this.inflater = activity.getLayoutInflater();
         this.isAdmin = isAdmin;
-        this.participantsChangesHandler = participantsChangesHandler;
+        this.eventUsers = eventUsers;
     }
 
     public void setAdmin(boolean admin) {
@@ -86,7 +86,7 @@ public class EventUsersAdapter extends BaseExpandableListAdapter implements Seri
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_relations_group, null);
         }
-        EventUsersGroup relationsGroup = (EventUsersGroup) getGroup(groupPosition);
+        RelationsGroup relationsGroup = (RelationsGroup) getGroup(groupPosition);
         TextView textView = (TextView) convertView;
         textView.setText(relationsGroup.getName());
         textView.setTextSize(20f);
@@ -119,7 +119,7 @@ public class EventUsersAdapter extends BaseExpandableListAdapter implements Seri
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            participantsChangesHandler.registerChange(child);
+                            eventUsers.registerChange(child);
                         }
                     }
             );

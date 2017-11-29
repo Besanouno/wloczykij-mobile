@@ -9,18 +9,17 @@ import java.util.List;
 
 import pl.basistam.turysta.dto.EventUserDto;
 import pl.basistam.turysta.dto.Page;
-import pl.basistam.turysta.dto.RelationItem;
 import pl.basistam.turysta.dto.UserDto;
 import pl.basistam.turysta.enums.EventUserStatus;
 import retrofit2.Converter;
 
 public class EventUsersDataSet extends UsersDataSet {
 
-    private List<EventUserDto> participants;
+    private List<EventUserDto> eventUsers;
 
-    public EventUsersDataSet(Context context, List<EventUserDto> participants) {
+    public EventUsersDataSet(Context context, List<EventUserDto> eventUsers) {
         super(context);
-        this.participants = participants;
+        this.eventUsers = eventUsers;
     }
 
     public List<EventUserDto> getFriends(String authToken) {
@@ -37,7 +36,7 @@ public class EventUsersDataSet extends UsersDataSet {
     }
 
     private String getStatus(String login) {
-        for (EventUserDto e: participants) {
+        for (EventUserDto e: eventUsers) {
             if (e.getLogin().equals(login)) {
                 return e.getStatus();
             }
