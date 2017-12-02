@@ -1,4 +1,4 @@
-package pl.basistam.turysta.fragments;
+package pl.basistam.turysta.fragments.events;
 
 import android.app.Fragment;
 import android.os.AsyncTask;
@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 
+import java.util.Collections;
 import java.util.List;
 
 import pl.basistam.turysta.R;
@@ -21,7 +22,7 @@ import pl.basistam.turysta.actions.EventUsersDataSet;
 import pl.basistam.turysta.adapters.EventUsersAdapter;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.components.utils.KeyboardUtils;
-import pl.basistam.turysta.dto.EventUserDto;
+import pl.basistam.turysta.items.EventUserItem;
 import pl.basistam.turysta.dto.Page;
 import pl.basistam.turysta.groups.FoundUsersGroup;
 import pl.basistam.turysta.groups.RelationsGroup;
@@ -33,7 +34,7 @@ public class EventUsersFragment extends Fragment {
     private EventUsersDataSet dataSet;
     private EventUsersAdapter adapter;
     private EventUsers eventUsers;
-    private SparseArray<RelationsGroup<EventUserDto>> groups = new SparseArray<>();
+    private SparseArray<RelationsGroup<EventUserItem>> groups = new SparseArray<>();
     private Callback callback;
     private final int RELATIONS_GROUP_INDEX = 0;
     private final int FOUND_USERS_GROUP_INDEX = 1;
@@ -54,6 +55,9 @@ public class EventUsersFragment extends Fragment {
                              Bundle savedInstanceState) {
         eventUsers = (EventUsers) getArguments().getSerializable("eventUsers");
         callback = (Callback) getArguments().getSerializable("callback");
+        if (eventUsers == null) {
+            eventUsers = new EventUsers(Collections.<EventUserItem>emptyList());
+        }
         dataSet = new EventUsersDataSet(getActivity().getBaseContext(), eventUsers.getParticipants());
         return inflater.inflate(R.layout.fragment_users, container, false);
     }
@@ -75,22 +79,22 @@ public class EventUsersFragment extends Fragment {
 
     private void initFriends(View view) {
         LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
-                new AsyncTask<String, Void, List<EventUserDto>>() {
+                new AsyncTask<String, Void, List<EventUserItem>>() {
                     @Override
-                    protected List<EventUserDto> doInBackground(String... params) {
+                    protected List<EventUserItem> doInBackground(String... params) {
                         String authToken = params[0];
                         return dataSet.getFriends(authToken);
                     }
 
                     @Override
-                    protected void onPostExecute(List<EventUserDto> friends) {
+                    protected void onPostExecute(List<EventUserItem> friends) {
                         createFriendsGroup(friends);
                     }
                 });
     }
 
-    private void createFriendsGroup(List<EventUserDto> friends) {
-        RelationsGroup<EventUserDto> friendsGroup = new RelationsGroup<>("Twoi znajomi");
+    private void createFriendsGroup(List<EventUserItem> friends) {
+        RelationsGroup<EventUserItem> friendsGroup = new RelationsGroup<>("Twoi znajomi");
         friendsGroup.setChildren(friends);
         groups.append(RELATIONS_GROUP_INDEX, friendsGroup);
         adapter.notifyDataSetChanged();
@@ -113,23 +117,23 @@ public class EventUsersFragment extends Fragment {
 
     private void downloadUsersFirstPart(final String pattern) {
         LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
-                new AsyncTask<String, Void, Page<EventUserDto>>() {
+                new AsyncTask<String, Void, Page<EventUserItem>>() {
 
                     @Override
-                    protected Page<EventUserDto> doInBackground(String... params) {
+                    protected Page<EventUserItem> doInBackground(String... params) {
                         final String authtoken = params[0];
                         return dataSet.getAllUsers(authtoken, pattern, 0, 15);
                     }
 
                     @Override
-                    protected void onPostExecute(Page<EventUserDto> users) {
+                    protected void onPostExecute(Page<EventUserItem> users) {
                         createFoundUsersGroup(users);
                     }
                 });
     }
 
-    private void createFoundUsersGroup(Page<EventUserDto> eventUsers) {
-        FoundUsersGroup<EventUserDto> foundUsersGroup = new FoundUsersGroup<>("Wyszukiwanie");
+    private void createFoundUsersGroup(Page<EventUserItem> eventUsers) {
+        FoundUsersGroup<EventUserItem> foundUsersGroup = new FoundUsersGroup<>("Wyszukiwanie");
         foundUsersGroup.setChildren(eventUsers.getContent());
         foundUsersGroup.setLastPage(eventUsers.getNumber());
         foundUsersGroup.setTotalNumber(eventUsers.getTotalElements());
@@ -161,24 +165,24 @@ public class EventUsersFragment extends Fragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                final FoundUsersGroup<EventUserDto> group = (FoundUsersGroup<EventUserDto>) groups.get(1);
+                final FoundUsersGroup<EventUserItem> group = (FoundUsersGroup<EventUserItem>) groups.get(1);
                 if (isEndOfListReached() && group != null && group.canDownloadMore()) {
                     final String pattern = edtSearchField.getText().toString();
                     downloadNextPart(group, pattern);
                 }
             }
 
-            private void downloadNextPart(final FoundUsersGroup<EventUserDto> group, final String pattern) {
+            private void downloadNextPart(final FoundUsersGroup<EventUserItem> group, final String pattern) {
                 LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
-                        new AsyncTask<String, Void, Page<EventUserDto>>() {
+                        new AsyncTask<String, Void, Page<EventUserItem>>() {
                             @Override
-                            protected Page<EventUserDto> doInBackground(String... params) {
+                            protected Page<EventUserItem> doInBackground(String... params) {
                                 String authToken = params[0];
                                 return dataSet.getAllUsers(authToken, pattern, group.getAndIncrementLastPage(), 15);
                             }
 
                             @Override
-                            protected void onPostExecute(Page<EventUserDto> users) {
+                            protected void onPostExecute(Page<EventUserItem> users) {
                                 group.getChildren().addAll(users.getContent());
                                 group.setLastPage(users.getNumber());
                                 adapter.notifyDataSetChanged();

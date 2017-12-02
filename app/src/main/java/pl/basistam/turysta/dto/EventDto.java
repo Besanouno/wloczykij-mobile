@@ -4,6 +4,8 @@ package pl.basistam.turysta.dto;
 import java.util.Date;
 import java.util.List;
 
+import pl.basistam.turysta.items.EventUserItem;
+
 public class EventDto {
     private String name;
     private String description;
@@ -13,7 +15,7 @@ public class EventDto {
     private Date startDate;
     private Date endDate;
     private boolean publicAccess;
-    private List<EventUserDto> participants;
+    private List<EventUserItem> eventUsers;
 
     public String getName() {
         return name;
@@ -79,11 +81,11 @@ public class EventDto {
         this.initiator = initiator;
     }
 
-    public List<EventUserDto> getParticipants() {
-        return participants;
+    public List<EventUserItem> getEventUsers() {
+        return eventUsers;
     }
 
-    public void setParticipants(List<EventUserDto> participants) {
-        this.participants = participants;
+    public void setEventUsers(List<EventUserItem> eventUsers) {
+        this.eventUsers = eventUsers;
     }
 }

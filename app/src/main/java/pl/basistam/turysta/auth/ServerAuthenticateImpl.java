@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import pl.basistam.turysta.dto.UserInputDto;
 import pl.basistam.turysta.exceptions.ServerConnectionException;
-import pl.basistam.turysta.dto.TokenDetails;
+import pl.basistam.turysta.dto.TokenDto;
 import pl.basistam.turysta.service.AuthService;
 import pl.basistam.turysta.service.UserService;
 import retrofit2.Response;
@@ -31,7 +31,7 @@ public class ServerAuthenticateImpl implements ServerAuthenticate {
     @Override
     public String signIn(String login, String password, String authType) throws ServerConnectionException {
         try {
-            Response<TokenDetails> response = AuthService.getInstance()
+            Response<TokenDto> response = AuthService.getInstance()
                     .authService()
                     .getTokenDetails("password", login, password)
                     .execute();

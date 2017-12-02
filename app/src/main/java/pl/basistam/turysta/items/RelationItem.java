@@ -1,4 +1,4 @@
-package pl.basistam.turysta.dto;
+package pl.basistam.turysta.items;
 
 public class RelationItem {
     private String name;

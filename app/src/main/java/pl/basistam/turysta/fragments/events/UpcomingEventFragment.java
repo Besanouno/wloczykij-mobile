@@ -16,11 +16,12 @@ import java.util.List;
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.EventDto;
-import pl.basistam.turysta.dto.EventUserDto;
+import pl.basistam.turysta.items.EventUserItem;
 import pl.basistam.turysta.enums.EventUserStatus;
-import pl.basistam.turysta.fragments.EventUsersFragment;
 import pl.basistam.turysta.service.EventService;
 import pl.basistam.turysta.service.Callback;
+import pl.basistam.turysta.service.retrofit.RetrofitEventService;
+import retrofit2.Call;
 
 public class UpcomingEventFragment extends EventFragment {
 
@@ -51,7 +52,7 @@ public class UpcomingEventFragment extends EventFragment {
     }
 
     private void initBtnRemove(View view) {
-        final AppCompatImageButton btnRemove = view.findViewById(R.id.ib_leave);
+        final AppCompatImageButton btnRemove = view.findViewById(R.id.ib_remove);
         btnRemove.setVisibility(View.VISIBLE);
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,9 +141,9 @@ public class UpcomingEventFragment extends EventFragment {
                     public void run() {
                         groups.get(PARTICIPANTS_GROUP_INDEX).getChildren().clear();
                         groups.get(INVITED_GROUP_INDEX).getChildren().clear();
-                        List<EventUserDto> participants = new ArrayList<>();
-                        List<EventUserDto> invited = new ArrayList<>();
-                        for (EventUserDto e : eventUsers.getParticipants()) {
+                        List<EventUserItem> participants = new ArrayList<>();
+                        List<EventUserItem> invited = new ArrayList<>();
+                        for (EventUserItem e : eventUsers.getParticipants()) {
                             String status = e.getStatus();
                             if (EventUserStatus.PARTICIPANT.name().equals(status)
                                     || EventUserStatus.ADMIN.name().equals(status)) {
@@ -196,9 +197,12 @@ public class UpcomingEventFragment extends EventFragment {
 
     private void saveEvent(String authToken, EventDto eventDto) {
         try {
-            EventService.getInstance()
-                    .eventService().saveEvent(authToken, eventDto)
-                    .execute();
+            RetrofitEventService eventService = EventService.getInstance()
+                    .eventService();
+            Call<Void> request = (eventGuid == null)
+                    ? eventService.saveEvent(authToken, eventDto)
+                    : eventService.updateEvent(authToken, eventGuid, eventDto);
+            request.execute();
         } catch (IOException e) {
             e.printStackTrace();
         }

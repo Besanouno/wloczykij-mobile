@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.basistam.turysta.dto.EventUserDto;
+import pl.basistam.turysta.items.EventUserItem;
 import pl.basistam.turysta.enums.EventUserStatus;
 
 public class EventUsers implements Serializable {
@@ -13,24 +13,24 @@ public class EventUsers implements Serializable {
 
 
     private class EventUserDtoWithPreviousState {
-        private EventUserDto eventUserDto;
+        private EventUserItem eventUserItem;
         private String previousStatus;
 
-        EventUserDtoWithPreviousState(EventUserDto eventUserDto) {
-            this.eventUserDto = eventUserDto;
-            this.previousStatus = eventUserDto.getStatus();
+        EventUserDtoWithPreviousState(EventUserItem eventUserItem) {
+            this.eventUserItem = eventUserItem;
+            this.previousStatus = eventUserItem.getStatus();
         }
     }
 
-    public EventUsers(List<EventUserDto> participants) {
-        for (EventUserDto e: participants) {
+    public EventUsers(List<EventUserItem> participants) {
+        for (EventUserItem e: participants) {
             this.participants.add(new EventUserDtoWithPreviousState(e));
         }
     }
 
-    public void registerChange(EventUserDto eventUser) {
+    public void registerChange(EventUserItem eventUser) {
         for (EventUserDtoWithPreviousState e: participants) {
-            if (eventUser.getLogin().equals(e.eventUserDto.getLogin())) {
+            if (eventUser.getLogin().equals(e.eventUserItem.getLogin())) {
                 changePresentUserStatus(e);
                 return;
             }
@@ -39,26 +39,30 @@ public class EventUsers implements Serializable {
     }
 
     private void changePresentUserStatus(EventUserDtoWithPreviousState e) {
-        String status = e.eventUserDto.getStatus();
+        String status = e.eventUserItem.getStatus();
         if (EventUserStatus.NONE.name().equals(status)) {
-            e.eventUserDto.setStatus(e.previousStatus);
+            if (EventUserStatus.NONE.name().equals(e.previousStatus)) {
+                e.eventUserItem.setStatus(EventUserStatus.INVITED.name());
+            } else {
+                e.eventUserItem.setStatus(e.previousStatus);
+            }
         } else if (EventUserStatus.PARTICIPANT.name().equals(status)
                 || EventUserStatus.INVITED.name().equals(status)) {
-            e.eventUserDto.setStatus(EventUserStatus.NONE.name());
+            e.eventUserItem.setStatus(EventUserStatus.NONE.name());
         } else if (EventUserStatus.WAITING.name().equals(status)) {
-            e.eventUserDto.setStatus(EventUserStatus.PARTICIPANT.name());
+            e.eventUserItem.setStatus(EventUserStatus.PARTICIPANT.name());
         }
     }
 
-    private void registerNewUser(EventUserDto e) {
+    private void registerNewUser(EventUserItem e) {
         e.setStatus(EventUserStatus.INVITED.name());
         participants.add(new EventUserDtoWithPreviousState(e));
     }
 
-    public List<EventUserDto> getParticipants() {
-        List<EventUserDto> result = new ArrayList<>(participants.size());
+    public List<EventUserItem> getParticipants() {
+        List<EventUserItem> result = new ArrayList<>(participants.size());
         for (EventUserDtoWithPreviousState e: participants) {
-            result.add(e.eventUserDto);
+            result.add(e.eventUserItem);
         }
         return result;    }
 

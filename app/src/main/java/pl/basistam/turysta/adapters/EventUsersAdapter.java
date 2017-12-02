@@ -15,7 +15,7 @@ import android.widget.TextView;
 import java.io.Serializable;
 
 import pl.basistam.turysta.R;
-import pl.basistam.turysta.dto.EventUserDto;
+import pl.basistam.turysta.items.EventUserItem;
 import pl.basistam.turysta.enums.EventUserStatus;
 import pl.basistam.turysta.fragments.UserPreviewFragment;
 import pl.basistam.turysta.groups.RelationsGroup;
@@ -24,14 +24,14 @@ import pl.basistam.turysta.service.EventUsers;
 import static android.view.View.GONE;
 
 public class EventUsersAdapter extends BaseExpandableListAdapter implements Serializable {
-    private final SparseArray<RelationsGroup<EventUserDto>> groups;
+    private final SparseArray<RelationsGroup<EventUserItem>> groups;
     private final LayoutInflater inflater;
     private final Activity activity;
     private boolean isAdmin;
     private final EventUsers eventUsers;
 
     public EventUsersAdapter(
-            SparseArray<RelationsGroup<EventUserDto>> groups,
+            SparseArray<RelationsGroup<EventUserItem>> groups,
             Activity activity,
             boolean isAdmin,
             EventUsers eventUsers) {
@@ -96,7 +96,7 @@ public class EventUsersAdapter extends BaseExpandableListAdapter implements Seri
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View view, ViewGroup parent) {
-        final EventUserDto child = (EventUserDto) getChild(groupPosition, childPosition);
+        final EventUserItem child = (EventUserItem) getChild(groupPosition, childPosition);
         if (view == null) {
             view = inflater.inflate(R.layout.item_relation, null);
         }
@@ -136,7 +136,7 @@ public class EventUsersAdapter extends BaseExpandableListAdapter implements Seri
         return view;
     }
 
-    private void showUserDetails(EventUserDto child) {
+    private void showUserDetails(EventUserItem child) {
         UserPreviewFragment fragment = new UserPreviewFragment();
         Bundle bundle = new Bundle();
         bundle.putString("login", child.getLogin());

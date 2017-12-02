@@ -32,10 +32,10 @@ public class NewEventFragment extends EventFragment {
 
             private void prepareUsersView() {
                 List<String> allUsers = new ArrayList<>();
-                for (EventUserDto userItem : groups.get(0).getChildren()) {
+                for (EventUserItem userItem : groups.get(0).getChildren()) {
                         allUsers.add(userItem.getLogin());
                 }
-                for (EventUserDto userItem : groups.get(1).getChildren()) {
+                for (EventUserItem userItem : groups.get(1).getChildren()) {
                         allUsers.add(userItem.getLogin());
                 }
                 usersFragmentManager = new NewEventManager(getActivity().getBaseContext(), eventGuid, allUsers);

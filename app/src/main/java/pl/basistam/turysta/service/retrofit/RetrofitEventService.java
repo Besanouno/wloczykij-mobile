@@ -6,7 +6,7 @@ import java.util.List;
 import pl.basistam.turysta.dto.EventDto;
 import pl.basistam.turysta.dto.EventSimpleDetails;
 import pl.basistam.turysta.dto.Page;
-import pl.basistam.turysta.dto.RelationItem;
+import pl.basistam.turysta.items.RelationItem;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;

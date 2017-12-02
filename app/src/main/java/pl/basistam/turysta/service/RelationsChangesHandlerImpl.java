@@ -3,8 +3,7 @@ package pl.basistam.turysta.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.basistam.turysta.dto.EventUserDto;
-import pl.basistam.turysta.dto.RelationItem;
+import pl.basistam.turysta.items.RelationItem;
 import pl.basistam.turysta.service.interfaces.RelationsChangesHandler;
 
 public class RelationsChangesHandlerImpl implements RelationsChangesHandler {

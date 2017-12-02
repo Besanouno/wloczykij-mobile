@@ -11,7 +11,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import pl.basistam.turysta.R;
-import pl.basistam.turysta.dto.EventUserDto;
+import pl.basistam.turysta.items.EventUserItem;
 import pl.basistam.turysta.enums.EventUserStatus;
 import pl.basistam.turysta.fragments.UserPreviewFragment;
 import pl.basistam.turysta.groups.RelationsGroup;
@@ -86,7 +86,7 @@ public class UsersAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        final EventUserDto child = (EventUserDto) getChild(groupPosition, childPosition);
+        final EventUserItem child = (EventUserItem) getChild(groupPosition, childPosition);
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_relation, null);
         }
@@ -100,7 +100,7 @@ public class UsersAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
-    private void showUserDetails(EventUserDto child) {
+    private void showUserDetails(EventUserItem child) {
         UserPreviewFragment fragment = new UserPreviewFragment();
         Bundle bundle = new Bundle();
         bundle.putString("login", child.getLogin());
@@ -111,7 +111,7 @@ public class UsersAdapter extends BaseExpandableListAdapter {
                 .commit();
     }
 
-    private void setCheckBoxIfAdmin(View view, final EventUserDto item) {
+    private void setCheckBoxIfAdmin(View view, final EventUserItem item) {
         final CheckBox checkBox = view.findViewById(R.id.chb_friend);
         /*if (isAdmin) {
             checkBox.setChecked(involved(item));
@@ -129,7 +129,7 @@ public class UsersAdapter extends BaseExpandableListAdapter {
         }*/
     }
 
-    private boolean involved(EventUserDto user) {
+    private boolean involved(EventUserItem user) {
         return EventUserStatus.PARTICIPANT.getValue().equals(user.getStatus())
                 || EventUserStatus.INVITED.getValue().equals(user.getStatus());
     }

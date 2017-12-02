@@ -25,7 +25,7 @@ import pl.basistam.turysta.adapters.RelationsAdapter;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.components.utils.KeyboardUtils;
 import pl.basistam.turysta.dto.Page;
-import pl.basistam.turysta.dto.RelationItem;
+import pl.basistam.turysta.items.RelationItem;
 import pl.basistam.turysta.groups.FoundUsersGroup;
 import pl.basistam.turysta.groups.RelationsGroup;
 import pl.basistam.turysta.service.RelationsChangesHandlerImpl;

@@ -3,7 +3,7 @@ package pl.basistam.turysta.service.retrofit;
 import java.util.List;
 
 import pl.basistam.turysta.dto.Page;
-import pl.basistam.turysta.dto.RelationItem;
+import pl.basistam.turysta.items.RelationItem;
 import pl.basistam.turysta.dto.UserDto;
 import pl.basistam.turysta.dto.UserInputDto;
 import retrofit2.Call;

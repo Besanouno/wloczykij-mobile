@@ -1,6 +1,6 @@
 package pl.basistam.turysta.service.retrofit;
 
-import pl.basistam.turysta.dto.TokenDetails;
+import pl.basistam.turysta.dto.TokenDto;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -13,7 +13,7 @@ public interface RetrofitAuthService {
     })
     @POST("oauth/token")
     @FormUrlEncoded
-    Call<TokenDetails> getTokenDetails(
+    Call<TokenDto> getTokenDetails(
             @Field("grant_type") final String grantType,
             @Field("username") final String username,
             @Field("password") final String password

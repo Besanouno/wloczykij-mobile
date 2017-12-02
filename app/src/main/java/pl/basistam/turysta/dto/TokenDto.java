@@ -1,6 +1,6 @@
 package pl.basistam.turysta.dto;
 
-public class TokenDetails {
+public class TokenDto {
     private String accessToken;
     private String tokenType;
     private String refreshToken;

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.basistam.turysta.dto.EventUserDto;
+import pl.basistam.turysta.items.EventUserItem;
 import pl.basistam.turysta.dto.Page;
 import pl.basistam.turysta.dto.UserDto;
 import pl.basistam.turysta.enums.EventUserStatus;
@@ -15,20 +15,20 @@ import retrofit2.Converter;
 
 public class EventUsersDataSet extends UsersDataSet {
 
-    private List<EventUserDto> eventUsers;
+    private List<EventUserItem> eventUsers;
 
-    public EventUsersDataSet(Context context, List<EventUserDto> eventUsers) {
+    public EventUsersDataSet(Context context, List<EventUserItem> eventUsers) {
         super(context);
         this.eventUsers = eventUsers;
     }
 
-    public List<EventUserDto> getFriends(String authToken) {
+    public List<EventUserItem> getFriends(String authToken) {
         List<UserDto> friends = downloadFriends(authToken);
         return convertFriendsToUserItems(friends);
     }
 
-    private List<EventUserDto> convertFriendsToUserItems(List<UserDto> friends) {
-        ArrayList<EventUserDto> result = new ArrayList<>(friends.size());
+    private List<EventUserItem> convertFriendsToUserItems(List<UserDto> friends) {
+        ArrayList<EventUserItem> result = new ArrayList<>(friends.size());
         for (UserDto u: friends) {
             result.add(convertUserDtoToEventUserDto(u));
         }
@@ -36,7 +36,7 @@ public class EventUsersDataSet extends UsersDataSet {
     }
 
     private String getStatus(String login) {
-        for (EventUserDto e: eventUsers) {
+        for (EventUserItem e: eventUsers) {
             if (e.getLogin().equals(login)) {
                 return e.getStatus();
             }
@@ -44,21 +44,21 @@ public class EventUsersDataSet extends UsersDataSet {
         return EventUserStatus.NONE.name();
     }
 
-    public Page<EventUserDto> getAllUsers(String authToken, String pattern, int page, int size) {
+    public Page<EventUserItem> getAllUsers(String authToken, String pattern, int page, int size) {
         Page<UserDto> users = downloadUsersByPattern(authToken, pattern, page, size);
         return convertUsersPageToUserItemsPage(users);
     }
 
-    private Page<EventUserDto> convertUsersPageToUserItemsPage(Page<UserDto> page) {
-        return page.map(new Converter<UserDto, EventUserDto>() {
+    private Page<EventUserItem> convertUsersPageToUserItemsPage(Page<UserDto> page) {
+        return page.map(new Converter<UserDto, EventUserItem>() {
             @Override
-            public EventUserDto convert(@NonNull UserDto u) throws IOException {
+            public EventUserItem convert(@NonNull UserDto u) throws IOException {
                 return convertUserDtoToEventUserDto(u);
             }
         });
     }
 
-    private EventUserDto convertUserDtoToEventUserDto(UserDto u) {
-        return new EventUserDto(u.getLogin(), u.getFirstName() + " " + u.getLastName(),  getStatus(u.getLogin()));
+    private EventUserItem convertUserDtoToEventUserDto(UserDto u) {
+        return new EventUserItem(u.getId(), u.getLogin(), u.getFirstName() + " " + u.getLastName(),  getStatus(u.getLogin()));
     }
 }

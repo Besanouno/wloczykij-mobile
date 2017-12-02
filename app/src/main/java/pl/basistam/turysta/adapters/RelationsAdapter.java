@@ -11,7 +11,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import pl.basistam.turysta.R;
-import pl.basistam.turysta.dto.RelationItem;
+import pl.basistam.turysta.items.RelationItem;
 import pl.basistam.turysta.fragments.UserPreviewFragment;
 import pl.basistam.turysta.groups.RelationsGroup;
 import pl.basistam.turysta.service.interfaces.RelationsChangesHandler;

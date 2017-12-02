@@ -8,10 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.basistam.turysta.dto.Page;
-import pl.basistam.turysta.dto.RelationItem;
+import pl.basistam.turysta.items.RelationItem;
 import pl.basistam.turysta.dto.UserDto;
-import pl.basistam.turysta.dto.EventUserDto;
-import pl.basistam.turysta.enums.RelationStatus;
 import retrofit2.Converter;
 
 public class RelationsDataSet extends UsersDataSet {

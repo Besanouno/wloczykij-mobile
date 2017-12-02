@@ -15,13 +15,14 @@ import android.widget.ExpandableListView;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.adapters.EventUsersAdapter;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.EventDto;
-import pl.basistam.turysta.dto.EventUserDto;
+import pl.basistam.turysta.items.EventUserItem;
 import pl.basistam.turysta.enums.EventUserStatus;
 import pl.basistam.turysta.groups.RelationsGroup;
 import pl.basistam.turysta.listeners.EventUsersGroupsListener;
@@ -45,9 +46,11 @@ public abstract class EventFragment extends Fragment {
     protected EventUsers eventUsers;
 
     protected String eventGuid = null;
-    protected final SparseArray<RelationsGroup<EventUserDto>> groups = new SparseArray<>();
-    protected final int PARTICIPANTS_GROUP_INDEX = 0;
-    protected final int INVITED_GROUP_INDEX = 1;
+    protected final SparseArray<RelationsGroup<EventUserItem>> groups = new SparseArray<>();
+
+    protected static final int PARTICIPANTS_GROUP_INDEX = 0;
+    protected static final int INVITED_GROUP_INDEX = 1;
+    protected static final int WAITING_GROUP_INDEX = 2;
 
     @Override
     public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
@@ -58,9 +61,6 @@ public abstract class EventFragment extends Fragment {
     protected void initView(final View view) {
         loadFormFields(view);
         downloadEventAndFillFields();
-        initAdapter();
-        initElvParticipants();
-        switchAdminMode();
     }
 
     protected void loadFormFields(View view) {
@@ -76,19 +76,27 @@ public abstract class EventFragment extends Fragment {
     }
 
     protected void initAdapter() {
-        RelationsGroup<EventUserDto> participantsGroup = new RelationsGroup<>("Uczestnicy");
+        RelationsGroup<EventUserItem> participantsGroup = new RelationsGroup<>("Uczestnicy");
         groups.append(PARTICIPANTS_GROUP_INDEX, participantsGroup);
 
-        RelationsGroup<EventUserDto> invitedGroup = new RelationsGroup<>("Zaproszeni");
+        RelationsGroup<EventUserItem> invitedGroup = new RelationsGroup<>("Zaproszeni");
         groups.append(INVITED_GROUP_INDEX, invitedGroup);
+
+        if (isAdmin) {
+            RelationsGroup<EventUserItem> waitingGroup = new RelationsGroup<>("Oczekujący");
+            groups.append(WAITING_GROUP_INDEX, waitingGroup);
+        }
 
         adapter = new EventUsersAdapter(groups, getActivity(), isAdmin, eventUsers);
         elvParticipants.setAdapter(adapter);
+        adapter.setAdmin(isAdmin);
     }
 
     protected void downloadEventAndFillFields() {
-        if (eventGuid == null)
+        if (eventGuid == null) {
+            fillEventUsers(Collections.singletonList(new EventUserItem(1L, LoggedUser.getInstance().getLogin(), "", EventUserStatus.ADMIN.name())));
             return;
+        }
         LoggedUser.getInstance().sendAuthorizedRequest(
                 getActivity().getBaseContext(),
                 new AsyncTask<String, Void, EventDto>() {
@@ -125,24 +133,39 @@ public abstract class EventFragment extends Fragment {
             edtEndHour.setText(Converter.timeToString(event.getEndDate()));
         }
         chbPublicAccess.setChecked(event.isPublicAccess());
-        List<EventUserDto> participants = new ArrayList<>();
-        List<EventUserDto> invited = new ArrayList<>();
-        for (EventUserDto e : event.getParticipants()) {
+        fillEventUsers(event.getEventUsers());
+    }
+
+    private void fillEventUsers(List<EventUserItem> eventUserList) {
+        List<EventUserItem> participants = new ArrayList<>();
+        List<EventUserItem> invited = new ArrayList<>();
+        List<EventUserItem> waiting = new ArrayList<>();
+
+        for (EventUserItem e : eventUserList) {
             String status = e.getStatus();
             if (EventUserStatus.PARTICIPANT.name().equals(status)
                     || EventUserStatus.ADMIN.name().equals(status)) {
                 participants.add(e);
             } else if (EventUserStatus.INVITED.name().equals(status)) {
                 invited.add(e);
+            } else if (EventUserStatus.WAITING.name().equals(status)) {
+                waiting.add(e);
             }
         }
+
+        eventUsers = new EventUsers(eventUserList);
+        initAdapter();
+        initElvParticipants();
+        switchAdminMode();
+
         groups.get(PARTICIPANTS_GROUP_INDEX).getChildren().addAll(participants);
         groups.get(INVITED_GROUP_INDEX).getChildren().addAll(invited);
-        eventUsers = new EventUsers(event.getParticipants());
+        if (isAdmin) {
+            groups.get(WAITING_GROUP_INDEX).getChildren().addAll(waiting);
+        }
     }
 
     protected void switchAdminMode() {
-        adapter.setAdmin(isAdmin);
         edtName.setEnabled(isAdmin);
         chbPublicAccess.setEnabled(isAdmin);
         edtEndHour.setEnabled(isAdmin);
@@ -182,10 +205,12 @@ public abstract class EventFragment extends Fragment {
                 return null;
             }
         }
-        eventDto.setParticipantsLimit(Integer.parseInt(edtParticipantsLimit.getText().toString()));
+        if (!edtParticipantsLimit.getText().toString().isEmpty())
+            eventDto.setParticipantsLimit(Integer.parseInt(edtParticipantsLimit.getText().toString()));
         eventDto.setPublicAccess(Boolean.getBoolean(chbPublicAccess.getText().toString()));
-        ArrayList<EventUserDto> participants = new ArrayList<>();
-        eventDto.setParticipants(participants);
+        ArrayList<EventUserItem> participants = new ArrayList<>();
+        participants.addAll(eventUsers.getParticipants());
+        eventDto.setEventUsers(participants);
         return eventDto;
     }
 }

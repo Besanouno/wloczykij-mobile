@@ -1,17 +1,19 @@
-package pl.basistam.turysta.dto;
+package pl.basistam.turysta.items;
 
-public class EventUserDto {
+public class EventUserItem {
+    private Long userId;
     private String login;
     private String name;
     private String status;
 
-    public EventUserDto(String login, String name, String status) {
+    public EventUserItem(Long userId, String login, String name, String status) {
+        this.userId = userId;
         this.login = login;
         this.name = name;
         this.status = status;
     }
 
-    public EventUserDto() {
+    public EventUserItem() {
     }
 
     public String getLogin() {
