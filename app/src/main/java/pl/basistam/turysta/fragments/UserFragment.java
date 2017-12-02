@@ -1,7 +1,9 @@
 package pl.basistam.turysta.fragments;
 
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,7 +22,9 @@ import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.UserDto;
 import pl.basistam.turysta.dto.UserInputDto;
 import pl.basistam.turysta.errors.ErrorMessages;
+import pl.basistam.turysta.service.EventService;
 import pl.basistam.turysta.service.UserService;
+import retrofit2.Response;
 
 public class UserFragment extends Fragment {
 
@@ -109,10 +113,27 @@ public class UserFragment extends Fragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                btnSave.setVisibility(View.GONE);
-                btnEdit.setVisibility(View.VISIBLE);
-                setFieldsEnabled(false);
-                saveUser();
+                AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Zapisz dane")
+                        .setMessage("Na pewno chcesz zapisać dane?")
+                        .setPositiveButton("tak", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                btnSave.setVisibility(View.GONE);
+                                btnEdit.setVisibility(View.VISIBLE);
+                                setFieldsEnabled(false);
+                                saveUser();
+                            }
+                        })
+                        .setNegativeButton("nie", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(R.drawable.ic_ask)
+                        .show();
             }
         });
     }
