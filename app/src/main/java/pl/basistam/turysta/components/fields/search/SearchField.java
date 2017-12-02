@@ -35,6 +35,7 @@ public class SearchField {
 
         searchAutoComplete.setDropDownBackgroundDrawable(context.getDrawable(R.drawable.search_drop_down_background));
         searchAutoComplete.setDropDownVerticalOffset(10);
+        new SearchViewInitializer(context, placeDao, searchAutoComplete).execute();
         searchAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -45,6 +46,5 @@ public class SearchField {
                 KeyboardUtils.hide(context, view);
             }
         });
-        new SearchViewInitializer(context, placeDao, searchAutoComplete).execute();
     }
 }

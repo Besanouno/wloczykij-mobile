@@ -1,5 +1,7 @@
 package pl.basistam.turysta.fragments.events;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +17,7 @@ import java.util.List;
 
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.auth.LoggedUser;
+import pl.basistam.turysta.dto.EventDto;
 import pl.basistam.turysta.enums.EventUserStatus;
 import pl.basistam.turysta.errors.ErrorMessages;
 import pl.basistam.turysta.fragments.events.enums.GuestType;
@@ -68,31 +71,49 @@ public class GuestEventFragment extends EventFragment {
         btnResign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
-                        new AsyncTask<String, Void, Response<Void>>() {
+                AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Wycofaj zgłoszenie")
+                        .setMessage("Na pewno chcesz wycofać zgłoszenie?")
+                        .setPositiveButton("tak", new DialogInterface.OnClickListener() {
                             @Override
-                            protected Response<Void> doInBackground(String... params) {
-                                String authToken = params[0];
-                                return resign(authToken);
-                            }
+                            public void onClick(DialogInterface dialog, int which) {
+                                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
+                                        new AsyncTask<String, Void, Response<Void>>() {
+                                            @Override
+                                            protected Response<Void> doInBackground(String... params) {
+                                                String authToken = params[0];
+                                                return resign(authToken);
+                                            }
 
-                            private Response<Void> resign(String authToken) {
-                                try {
-                                    return EventService.getInstance()
-                                            .eventService()
-                                            .resign(authToken, eventGuid)
-                                            .execute();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                return null;
-                            }
+                                            private Response<Void> resign(String authToken) {
+                                                try {
+                                                    return EventService.getInstance()
+                                                            .eventService()
+                                                            .resign(authToken, eventGuid)
+                                                            .execute();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                return null;
+                                            }
 
+                                            @Override
+                                            protected void onPostExecute(Response<Void> response) {
+                                                informAboutResult(v, response, "Pomyślnie wycofano zgłoszenie");
+                                            }
+                                        });
+                            }
+                        })
+                        .setNegativeButton("nie", new DialogInterface.OnClickListener() {
                             @Override
-                            protected void onPostExecute(Response<Void> response) {
-                                informAboutResult(v, response, "Pomyślnie wycofano zgłoszenie");
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
                             }
-                        });
+                        })
+                        .setIcon(R.drawable.ic_ask)
+                        .show();
+
             }
         });
 
@@ -105,31 +126,49 @@ public class GuestEventFragment extends EventFragment {
         btnApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
-                        new AsyncTask<String, Void, Response<Void>>() {
+                AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Wyślij zgłoszenie")
+                        .setMessage("Na pewno chcesz wysłać zgłoszenie?")
+                        .setPositiveButton("tak", new DialogInterface.OnClickListener() {
                             @Override
-                            protected Response<Void> doInBackground(String... params) {
-                                String authToken = params[0];
-                                return apply(authToken);
-                            }
+                            public void onClick(DialogInterface dialog, int which) {
+                                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
+                                        new AsyncTask<String, Void, Response<Void>>() {
+                                            @Override
+                                            protected Response<Void> doInBackground(String... params) {
+                                                String authToken = params[0];
+                                                return apply(authToken);
+                                            }
 
-                            private Response<Void> apply(String authToken) {
-                                try {
-                                    return EventService.getInstance()
-                                            .eventService()
-                                            .apply(authToken, eventGuid)
-                                            .execute();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                return null;
-                            }
+                                            private Response<Void> apply(String authToken) {
+                                                try {
+                                                    return EventService.getInstance()
+                                                            .eventService()
+                                                            .apply(authToken, eventGuid)
+                                                            .execute();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                return null;
+                                            }
 
+                                            @Override
+                                            protected void onPostExecute(Response<Void> response) {
+                                                informAboutResult(view, response, "Zgłoszenie zostało wysłane!");
+                                            }
+                                        });
+                            }
+                        })
+                        .setNegativeButton("nie", new DialogInterface.OnClickListener() {
                             @Override
-                            protected void onPostExecute(Response<Void> response) {
-                                 informAboutResult(view, response, "Zgłoszenie zostało wysłane!");
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
                             }
-                        });
+                        })
+                        .setIcon(R.drawable.ic_ask)
+                        .show();
+
             }
         });
     }
@@ -139,31 +178,48 @@ public class GuestEventFragment extends EventFragment {
         btnReject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
-                        new AsyncTask<String, Void, Response<Void>>() {
+                AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Odrzuć zaproszenie")
+                        .setMessage("Na pewno chcesz odrzucić zaproszenie?")
+                        .setPositiveButton("tak", new DialogInterface.OnClickListener() {
                             @Override
-                            protected Response<Void> doInBackground(String... params) {
-                                String authToken = params[0];
-                                return rejectInvitation(authToken);
-                            }
+                            public void onClick(DialogInterface dialog, int which) {
+                                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
+                                        new AsyncTask<String, Void, Response<Void>>() {
+                                            @Override
+                                            protected Response<Void> doInBackground(String... params) {
+                                                String authToken = params[0];
+                                                return rejectInvitation(authToken);
+                                            }
 
-                            private Response<Void> rejectInvitation(String authToken) {
-                                try {
-                                    return EventService.getInstance()
-                                            .eventService()
-                                            .rejectInvitation(authToken, eventGuid)
-                                            .execute();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                return null;
-                            }
+                                            private Response<Void> rejectInvitation(String authToken) {
+                                                try {
+                                                    return EventService.getInstance()
+                                                            .eventService()
+                                                            .rejectInvitation(authToken, eventGuid)
+                                                            .execute();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                return null;
+                                            }
 
+                                            @Override
+                                            protected void onPostExecute(Response<Void> response) {
+                                                informAboutResult(view, response, "Zaproszenie zostało odrzucone!");
+                                            }
+                                        });
+                            }
+                        })
+                        .setNegativeButton("nie", new DialogInterface.OnClickListener() {
                             @Override
-                            protected void onPostExecute(Response<Void> response) {
-                                informAboutResult(view, response, "Zaproszenie zostało odrzucone!");
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
                             }
-                        });
+                        })
+                        .setIcon(R.drawable.ic_ask)
+                        .show();
             }
         });
     }
@@ -173,31 +229,48 @@ public class GuestEventFragment extends EventFragment {
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
-                        new AsyncTask<String, Void, Response<Void>>() {
+                AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Zaakceptuj zaproszenie")
+                        .setMessage("Na pewno chcesz zaakceptować zaproszenie?")
+                        .setPositiveButton("tak", new DialogInterface.OnClickListener() {
                             @Override
-                            protected Response<Void> doInBackground(String... params) {
-                                String authToken = params[0];
-                                return acceptInvitation(authToken);
-                            }
+                            public void onClick(DialogInterface dialog, int which) {
+                                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
+                                        new AsyncTask<String, Void, Response<Void>>() {
+                                            @Override
+                                            protected Response<Void> doInBackground(String... params) {
+                                                String authToken = params[0];
+                                                return acceptInvitation(authToken);
+                                            }
 
-                            private Response<Void> acceptInvitation(String authToken) {
-                                try {
-                                    return EventService.getInstance()
-                                            .eventService()
-                                            .acceptInvitation(authToken, eventGuid)
-                                            .execute();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                return null;
-                            }
+                                            private Response<Void> acceptInvitation(String authToken) {
+                                                try {
+                                                    return EventService.getInstance()
+                                                            .eventService()
+                                                            .acceptInvitation(authToken, eventGuid)
+                                                            .execute();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                return null;
+                                            }
 
+                                            @Override
+                                            protected void onPostExecute(Response<Void> response) {
+                                                informAboutResult(view, response, "Zaproszenie zostało zaakceptowane!");
+                                            }
+                                        });
+                            }
+                        })
+                        .setNegativeButton("nie", new DialogInterface.OnClickListener() {
                             @Override
-                            protected void onPostExecute(Response<Void> response) {
-                                informAboutResult(view, response, "Zaproszenie zostało zaakceptowane!");
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
                             }
-                        });
+                        })
+                        .setIcon(R.drawable.ic_ask)
+                        .show();
             }
         });
     }

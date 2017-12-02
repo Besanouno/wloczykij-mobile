@@ -1,6 +1,9 @@
 package pl.basistam.turysta.fragments.events;
 
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.basistam.turysta.MainActivity;
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.EventDto;
@@ -60,20 +64,38 @@ public class UpcomingEventFragment extends EventFragment {
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
-                        new AsyncTask<String, Void, Object>() {
+                AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Usun wydarzenie")
+                        .setMessage("Na pewno chcesz usunąć wydarzenie?")
+                        .setPositiveButton("tak", new DialogInterface.OnClickListener() {
                             @Override
-                            protected Object doInBackground(String... params) {
-                                String authToken = params[0];
-                                removeEvent(authToken);
-                                return null;
-                            }
+                            public void onClick(DialogInterface dialog, int which) {
+                                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
+                                        new AsyncTask<String, Void, Object>() {
+                                            @Override
+                                            protected Object doInBackground(String... params) {
+                                                String authToken = params[0];
+                                                removeEvent(authToken);
+                                                return null;
+                                            }
 
-                            @Override
-                            protected void onPostExecute(Object o) {
-                                getActivity().getFragmentManager().popBackStack();
+                                            @Override
+                                            protected void onPostExecute(Object o) {
+                                                getActivity().getFragmentManager().popBackStack();
+                                            }
+                                        });
                             }
-                        });
+                        })
+                        .setNegativeButton("nie", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(R.drawable.ic_warning_sign)
+                        .show();
+
             }
         });
     }
@@ -96,20 +118,38 @@ public class UpcomingEventFragment extends EventFragment {
         btnLeave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
-                        new AsyncTask<String, Void, Object>() {
+                AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Opuść wydarzenie")
+                        .setMessage("Na pewno chcesz opuścić wydarzenie?")
+                        .setPositiveButton("tak", new DialogInterface.OnClickListener() {
                             @Override
-                            protected Object doInBackground(String... params) {
-                                String authToken = params[0];
-                                leaveEvent(authToken);
-                                return null;
-                            }
+                            public void onClick(DialogInterface dialog, int which) {
+                                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
+                                        new AsyncTask<String, Void, Object>() {
+                                            @Override
+                                            protected Object doInBackground(String... params) {
+                                                String authToken = params[0];
+                                                leaveEvent(authToken);
+                                                return null;
+                                            }
 
-                            @Override
-                            protected void onPostExecute(Object o) {
-                                getActivity().getFragmentManager().popBackStack();
+                                            @Override
+                                            protected void onPostExecute(Object o) {
+                                                getActivity().getFragmentManager().popBackStack();
+                                            }
+                                        });
                             }
-                        });
+                        })
+                        .setNegativeButton("nie", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(R.drawable.ic_warning_sign)
+                        .show();
+
             }
         });
     }
@@ -177,23 +217,40 @@ public class UpcomingEventFragment extends EventFragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final EventDto eventDto = prepareEventDto();
-                if (eventDto == null) return;
-
-                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
-                        new AsyncTask<String, Void, Object>() {
+                AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Zapisz wydarzenie")
+                        .setMessage("Na pewno chcesz zapisać wydarzenie?")
+                        .setPositiveButton("tak", new DialogInterface.OnClickListener() {
                             @Override
-                            protected Object doInBackground(String... params) {
-                                String authToken = params[0];
-                                saveEvent(authToken, eventDto);
-                                return null;
-                            }
+                            public void onClick(DialogInterface dialog, int which) {
+                                final EventDto eventDto = prepareEventDto();
+                                if (eventDto == null) return;
 
-                            @Override
-                            protected void onPostExecute(Object o) {
-                                getActivity().getFragmentManager().popBackStack();
+                                LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
+                                        new AsyncTask<String, Void, Object>() {
+                                            @Override
+                                            protected Object doInBackground(String... params) {
+                                                String authToken = params[0];
+                                                saveEvent(authToken, eventDto);
+                                                return null;
+                                            }
+
+                                            @Override
+                                            protected void onPostExecute(Object o) {
+                                                getActivity().getFragmentManager().popBackStack();
+                                            }
+                                        });
                             }
-                        });
+                        })
+                        .setNegativeButton("nie", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(R.drawable.ic_ask)
+                        .show();
             }
         });
     }
