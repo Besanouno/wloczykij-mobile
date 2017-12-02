@@ -1,6 +1,5 @@
 package pl.basistam.turysta.fragments.events;
 
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,14 +7,15 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 
 import java.io.IOException;
+import java.util.List;
 
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.auth.LoggedUser;
+import pl.basistam.turysta.enums.EventUserStatus;
 import pl.basistam.turysta.fragments.events.enums.GuestType;
+import pl.basistam.turysta.items.EventUserItem;
 import pl.basistam.turysta.service.EventService;
 
 public class GuestEventFragment extends EventFragment {
@@ -48,8 +48,8 @@ public class GuestEventFragment extends EventFragment {
     private void initApplicationButton(View view) {
         view.findViewById(R.id.rl_invitation_layout).setVisibility(View.GONE);
         view.findViewById(R.id.rl_application_layout).setVisibility(View.VISIBLE);
-        AppCompatImageButton btnAccept = view.findViewById(R.id.ib_accept);
-        btnAccept.setOnClickListener(new View.OnClickListener() {
+        AppCompatImageButton btnApply = view.findViewById(R.id.ib_apply);
+        btnApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
@@ -57,11 +57,11 @@ public class GuestEventFragment extends EventFragment {
                             @Override
                             protected Void doInBackground(String... params) {
                                 String authToken = params[0];
-                                acceptInvitation(authToken);
+                                apply(authToken);
                                 return null;
                             }
 
-                            private void acceptInvitation(String authToken) {
+                            private void apply(String authToken) {
                                 try {
                                     EventService.getInstance()
                                             .eventService()

@@ -136,7 +136,7 @@ public abstract class EventFragment extends Fragment {
         fillEventUsers(event.getEventUsers());
     }
 
-    private void fillEventUsers(List<EventUserItem> eventUserList) {
+    protected void fillEventUsers(List<EventUserItem> eventUserList) {
         List<EventUserItem> participants = new ArrayList<>();
         List<EventUserItem> invited = new ArrayList<>();
         List<EventUserItem> waiting = new ArrayList<>();
