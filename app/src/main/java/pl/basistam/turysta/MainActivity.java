@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -105,21 +106,28 @@ public class MainActivity extends AppCompatActivity
 
         int id = item.getItemId();
         if (id == R.id.nav_account ) {
-            fragmentManager.beginTransaction().replace(R.id.content, new UserFragment()).commit();
+            openTab(new UserFragment());
         }
         else if (id == R.id.nav_map) {
             fragmentManager.beginTransaction().replace(R.id.content, mapFragment).commit();
             searchPanel.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_events) {
-            fragmentManager.beginTransaction().replace(R.id.content, new EventsFragment()).commit();
+            openTab(new EventsFragment());
         } else if (id == R.id.nav_manage_account) {
             showAccountPicker();
         } else if (id == R.id.nav_public_events) {
-            fragmentManager.beginTransaction().replace(R.id.content, new PublicEventsFragment()).commit();
+            openTab(new PublicEventsFragment());
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void openTab(Fragment fragment) {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.content, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void checkIfLoggedIn() {

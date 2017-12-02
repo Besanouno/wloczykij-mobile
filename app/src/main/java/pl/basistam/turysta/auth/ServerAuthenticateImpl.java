@@ -4,7 +4,7 @@ package pl.basistam.turysta.auth;
 import java.io.IOException;
 
 import pl.basistam.turysta.dto.UserInputDto;
-import pl.basistam.turysta.exceptions.ServerConnectionException;
+import pl.basistam.turysta.errors.ServerConnectionException;
 import pl.basistam.turysta.dto.TokenDto;
 import pl.basistam.turysta.service.AuthService;
 import pl.basistam.turysta.service.UserService;

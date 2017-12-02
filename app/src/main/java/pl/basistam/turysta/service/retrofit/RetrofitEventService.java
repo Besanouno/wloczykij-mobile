@@ -53,4 +53,7 @@ public interface RetrofitEventService {
 
     @DELETE("events/{guid}/users/self")
     Call<Void> leave(@Header("Authorization") String authToken, @Path("guid") String eventGuid);
+
+    @DELETE("events/{guid}/applications")
+    Call<Void> resign(@Header("Authorization") String authToken, @Path("guid") String eventGuid);
 }

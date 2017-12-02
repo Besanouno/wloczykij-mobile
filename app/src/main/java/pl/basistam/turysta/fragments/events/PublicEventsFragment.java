@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import pl.basistam.turysta.adapters.EventAdapter;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.EventSimpleDetails;
 import pl.basistam.turysta.dto.Page;
+import pl.basistam.turysta.errors.ErrorMessages;
 import pl.basistam.turysta.fragments.events.enums.GuestType;
 import pl.basistam.turysta.service.EventService;
 
@@ -108,10 +110,14 @@ public class PublicEventsFragment extends Fragment {
 
                     @Override
                     protected void onPostExecute(Page<EventSimpleDetails> events) {
-                        eventAdapter.addAll(events.getContent());
-                        eventAdapter.notifyDataSetChanged();
-                        totalNumber = events.getTotalElements();
-                        PublicEventsFragment.this.page++;
+                        if (events != null) {
+                            eventAdapter.addAll(events.getContent());
+                            eventAdapter.notifyDataSetChanged();
+                            totalNumber = events.getTotalElements();
+                            PublicEventsFragment.this.page++;
+                        } else {
+                            Toast.makeText(getActivity().getBaseContext(), ErrorMessages.OFFLINE_MODE, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
     }

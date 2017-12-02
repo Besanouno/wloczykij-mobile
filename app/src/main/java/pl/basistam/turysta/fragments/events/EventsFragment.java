@@ -47,25 +47,10 @@ public class EventsFragment extends Fragment {
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         TabHost host = view.findViewById(R.id.tab_host);
         host.setup();
-
-        //Tab 1
-        TabHost.TabSpec spec = host.newTabSpec(UPCOMING_EVENTS);
-        spec.setContent(R.id.tab_upcoming_events);
-        spec.setIndicator(UPCOMING_EVENTS);
-        host.addTab(spec);
-        tabsDataSets.get(UPCOMING_EVENTS).updateView(view);
-
-        //Tab 2
-        spec = host.newTabSpec(INVITATIONS);
-        spec.setContent(R.id.tab_invitations);
-        spec.setIndicator(INVITATIONS);
-        host.addTab(spec);
-
+        initUpcomingEvents(view, host);
+        initInvitations(view, host);
+        initArchivalEvents(view, host);
         //Tab 3
-        spec = host.newTabSpec(ARCHIVAL_EVENTS);
-        spec.setContent(R.id.tab_archival_events);
-        spec.setIndicator(ARCHIVAL_EVENTS);
-        host.addTab(spec);
 
         host.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
@@ -76,20 +61,44 @@ public class EventsFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void initArchivalEvents(View view, TabHost host) {
+        TabHost.TabSpec spec = host.newTabSpec(ARCHIVAL_EVENTS);
+        spec.setContent(R.id.tab_archival_events);
+        spec.setIndicator(ARCHIVAL_EVENTS);
+        host.addTab(spec);
+
+        ListView lvArchivalEvents = view.findViewById(R.id.lv_archival_events);
+        lvArchivalEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                EventSimpleDetails item = (EventSimpleDetails) parent.getItemAtPosition(position);
+                ArchivalEventFragment fragment = new ArchivalEventFragment();
+                Bundle args = new Bundle();
+                args.putString("guid", item.getGuid());
+                fragment.setArguments(args);
+                showDetailsFragment(fragment);
+            }
+        });
+    }
+
+    private void initUpcomingEvents(View view, TabHost host) {
+        TabHost.TabSpec spec = host.newTabSpec(UPCOMING_EVENTS);
+        spec.setContent(R.id.tab_upcoming_events);
+        spec.setIndicator(UPCOMING_EVENTS);
+        host.addTab(spec);
+        tabsDataSets.get(UPCOMING_EVENTS).updateView(view);
 
         FloatingActionButton btnAdd = view.findViewById(R.id.btn_add);
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager = getActivity().getFragmentManager();
                 UpcomingEventFragment fragment = new UpcomingEventFragment();
                 Bundle args = new Bundle();
                 args.putBoolean("isAdmin", true);
                 fragment.setArguments(args);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.content, fragment)
-                        .addToBackStack(null)
-                        .commit();
+                showDetailsFragment(fragment);
             }
         });
 
@@ -98,54 +107,43 @@ public class EventsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EventSimpleDetails item = (EventSimpleDetails) parent.getItemAtPosition(position);
-                FragmentManager fragmentManager = getActivity().getFragmentManager();
                 UpcomingEventFragment fragment = new UpcomingEventFragment();
                 Bundle args = new Bundle();
                 args.putString("guid", item.getGuid());
                 args.putBoolean("isAdmin", LoggedUser.getInstance().getLogin().equals(item.getInitiator()));
                 fragment.setArguments(args);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.content, fragment)
-                        .addToBackStack(null)
-                        .commit();
+                showDetailsFragment(fragment);
             }
         });
+    }
 
+    private void initInvitations(View view, TabHost host) {
+        TabHost.TabSpec spec = host.newTabSpec(INVITATIONS);
+        spec.setContent(R.id.tab_invitations);
+        spec.setIndicator(INVITATIONS);
+        host.addTab(spec);
 
         ListView lvInvitations = view.findViewById(R.id.lv_invitations);
         lvInvitations.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EventSimpleDetails item = (EventSimpleDetails) parent.getItemAtPosition(position);
-                FragmentManager fragmentManager = getActivity().getFragmentManager();
                 GuestEventFragment fragment = new GuestEventFragment();
                 Bundle args = new Bundle();
                 args.putString("guid", item.getGuid());
                 args.putSerializable("type", GuestType.INVITED);
                 fragment.setArguments(args);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.content, fragment)
-                        .addToBackStack(null)
-                        .commit();
+                showDetailsFragment(fragment);
             }
         });
+    }
 
-        ListView lvArchivalEvents = view.findViewById(R.id.lv_archival_events);
-        lvArchivalEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                EventSimpleDetails item = (EventSimpleDetails) parent.getItemAtPosition(position);
-                FragmentManager fragmentManager = getActivity().getFragmentManager();
-                ArchivalEventFragment fragment = new ArchivalEventFragment();
-                Bundle args = new Bundle();
-                args.putString("guid", item.getGuid());
-                fragment.setArguments(args);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.content, fragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
+    private void showDetailsFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }
 

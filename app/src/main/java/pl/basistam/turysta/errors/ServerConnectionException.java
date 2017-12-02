@@ -1,7 +1,7 @@
-package pl.basistam.turysta.exceptions;
+package pl.basistam.turysta.errors;
 
 
-public class ServerConnectionException extends Exception{
+public class ServerConnectionException extends RuntimeException {
     private final String message;
 
     public ServerConnectionException(String message) {

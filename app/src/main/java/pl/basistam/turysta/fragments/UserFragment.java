@@ -19,6 +19,7 @@ import pl.basistam.turysta.actions.RelationsDataSet;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.UserDto;
 import pl.basistam.turysta.dto.UserInputDto;
+import pl.basistam.turysta.errors.ErrorMessages;
 import pl.basistam.turysta.service.UserService;
 
 public class UserFragment extends Fragment {
@@ -55,7 +56,8 @@ public class UserFragment extends Fragment {
                     @Override
                     protected void onPostExecute(UserDto userDto) {
                         if (userDto == null) {
-                            Toast.makeText(getActivity().getBaseContext(), "Nie udało się pobrać danych z serwera", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity().getBaseContext(), ErrorMessages.OFFLINE_MODE, Toast.LENGTH_LONG).show();
+                            getFragmentManager().popBackStack();
                         } else {
                             updateFormFields(userDto);
                         }

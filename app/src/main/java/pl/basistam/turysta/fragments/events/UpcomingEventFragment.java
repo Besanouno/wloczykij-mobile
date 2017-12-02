@@ -4,10 +4,12 @@ package pl.basistam.turysta.fragments.events;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.AppCompatImageButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.List;
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.EventDto;
+import pl.basistam.turysta.errors.ErrorMessages;
 import pl.basistam.turysta.items.EventUserItem;
 import pl.basistam.turysta.enums.EventUserStatus;
 import pl.basistam.turysta.service.EventService;
@@ -203,8 +206,14 @@ public class UpcomingEventFragment extends EventFragment {
                     ? eventService.saveEvent(authToken, eventDto)
                     : eventService.updateEvent(authToken, eventGuid, eventDto);
             request.execute();
+            View view = getView();
+            if (view != null) {
+                Snackbar.make(getView(), "Pomyślnie zapisano wydarzenie", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
         } catch (IOException e) {
             e.printStackTrace();
+            Toast.makeText(getActivity().getBaseContext(), ErrorMessages.CANNOT_UPDATE_OFFLINE_MODE, Toast.LENGTH_LONG).show();
         }
     }
 }

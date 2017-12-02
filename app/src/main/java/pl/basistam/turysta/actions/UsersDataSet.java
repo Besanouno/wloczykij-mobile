@@ -10,6 +10,7 @@ import java.util.List;
 
 import pl.basistam.turysta.dto.Page;
 import pl.basistam.turysta.dto.UserDto;
+import pl.basistam.turysta.errors.ErrorMessages;
 import pl.basistam.turysta.service.UserService;
 
 
@@ -29,7 +30,7 @@ public abstract class UsersDataSet implements Serializable {
                     .execute()
                     .body();
         } catch (IOException e) {
-            Toast.makeText(context, "Błąd połączenia z serwerem", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, ErrorMessages.OFFLINE_MODE, Toast.LENGTH_LONG).show();
         }
         return new ArrayList<>();
     }
@@ -42,7 +43,7 @@ public abstract class UsersDataSet implements Serializable {
                     .execute()
                     .body();
         } catch (IOException e) {
-            Toast.makeText(context, "Błąd połączenia z serwerem", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, ErrorMessages.OFFLINE_MODE, Toast.LENGTH_LONG).show();
         }
         return new Page<>();
     }

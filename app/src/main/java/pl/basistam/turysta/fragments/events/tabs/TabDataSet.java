@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 import pl.basistam.turysta.adapters.EventAdapter;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.EventSimpleDetails;
+import pl.basistam.turysta.errors.ErrorMessages;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -46,6 +48,7 @@ public abstract class TabDataSet {
                     return prepareRequest(authToken)
                             .execute()
                             .body();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -54,7 +57,13 @@ public abstract class TabDataSet {
 
             @Override
             protected void onPostExecute(List<EventSimpleDetails> events) {
-                listView.setAdapter(new EventAdapter(events, activity));
+                if (events != null)
+                    listView.setAdapter(new EventAdapter(events, activity));
+                else {
+                    Toast.makeText(activity.getBaseContext(), ErrorMessages.OFFLINE_MODE, Toast.LENGTH_LONG).show();
+                    activity.getFragmentManager().popBackStack();
+
+                }
             }
         };
     }

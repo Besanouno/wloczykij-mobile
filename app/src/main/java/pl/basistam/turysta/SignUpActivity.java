@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import pl.basistam.turysta.auth.ServerAuthenticateImpl;
 import pl.basistam.turysta.dto.UserInputDto;
-import pl.basistam.turysta.exceptions.ServerConnectionException;
+import pl.basistam.turysta.errors.ServerConnectionException;
 
 import static pl.basistam.turysta.LoginActivity.KEY_ERROR_MESSAGE;
 

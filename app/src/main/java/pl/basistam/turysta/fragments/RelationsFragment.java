@@ -25,6 +25,7 @@ import pl.basistam.turysta.adapters.RelationsAdapter;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.components.utils.KeyboardUtils;
 import pl.basistam.turysta.dto.Page;
+import pl.basistam.turysta.errors.ErrorMessages;
 import pl.basistam.turysta.items.RelationItem;
 import pl.basistam.turysta.groups.FoundUsersGroup;
 import pl.basistam.turysta.groups.RelationsGroup;
@@ -157,7 +158,7 @@ public class RelationsFragment extends Fragment {
                                 getFragmentManager().popBackStack();
                             } catch (IOException e) {
                                 e.printStackTrace();
-                                Toast.makeText(getActivity().getBaseContext(), "Nie można zapisać zmian - brak połączenia z serwerem", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity().getBaseContext(), ErrorMessages.CANNOT_UPDATE_OFFLINE_MODE, Toast.LENGTH_LONG).show();
                             }
                             return null;
                         }
