@@ -1,39 +1,43 @@
 package pl.basistam.turysta.fragments;
 
-import android.Manifest;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.actions.LocationHandler;
 import pl.basistam.turysta.actions.UpdatePlaceDetailsAction;
+import pl.basistam.turysta.adapters.RouteAdapter;
 import pl.basistam.turysta.components.buttons.ZoomButtons;
 import pl.basistam.turysta.components.fields.PlaceDetailsField;
 import pl.basistam.turysta.components.fields.search.SearchField;
 import pl.basistam.turysta.database.AppDatabase;
-import pl.basistam.turysta.listeners.LocationListenerImpl;
+import pl.basistam.turysta.fragments.events.UpcomingEventFragment;
 import pl.basistam.turysta.map.MapInitializer;
 import pl.basistam.turysta.map.MarkersController;
+import pl.basistam.turysta.service.Callback;
 
 public class MapViewFragment extends Fragment {
 
@@ -41,6 +45,8 @@ public class MapViewFragment extends Fragment {
     private BottomSheetBehavior<View> bottomSheetBehavior;
     private MarkersController markersController;
     private LocationHandler locationHandler;
+    private List<Integer> route;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +68,12 @@ public class MapViewFragment extends Fragment {
         bottomSheetBehavior.setHideable(true);
         bottomSheetBehavior.setPeekHeight(160);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        final List<HashMap<String, String>> items = new ArrayList<>();
+        String[] from = {"name", "time"};
+        int[] to = {R.id.name, R.id.time};
+        final RouteAdapter adapter = new RouteAdapter(getActivity(), items, R.layout.item_route_node, from, to);
+        ListView lvRoute = bottomSheet.findViewById(R.id.lv_route);
+        lvRoute.setAdapter(adapter);
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap map) {
@@ -69,11 +81,43 @@ public class MapViewFragment extends Fragment {
                 initZoomButtons(map);
                 initMarkers(rootView, map);
                 initLocalizationButton(rootView, map);
-                markersController = new MarkersController(map);
+                markersController = new MarkersController(map, getActivity().getBaseContext(), adapter, items);
+                if (route != null) {
+                    markersController.initRoute(route);
+                }
             }
         });
 
+
+        ImageButton ibClearRoute = rootView.findViewById(R.id.ib_clear_route);
+        ibClearRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                markersController.clearRoute();
+            }
+        });
+
+        ImageButton ibAddEvent = rootView.findViewById(R.id.ib_add_event);
+        ibAddEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UpcomingEventFragment fragment = new UpcomingEventFragment();
+                Bundle args = new Bundle();
+                args.putBoolean("isAdmin", true);
+                args.putIntegerArrayList("route", markersController.getRouteTrailIds());
+                fragment.setArguments(args);
+                FragmentManager fragmentManager = getActivity().getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
         return rootView;
+    }
+
+    public void setRoute(List<Integer> trailIds) {
+        route = trailIds;
     }
 
 

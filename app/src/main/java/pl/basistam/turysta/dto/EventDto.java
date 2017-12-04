@@ -16,6 +16,7 @@ public class EventDto {
     private Date endDate;
     private boolean publicAccess;
     private List<EventUserItem> eventUsers;
+    private List<Integer> trailIds;
 
     public String getName() {
         return name;
@@ -87,5 +88,13 @@ public class EventDto {
 
     public void setEventUsers(List<EventUserItem> eventUsers) {
         this.eventUsers = eventUsers;
+    }
+
+    public List<Integer> getTrailIds() {
+        return trailIds;
+    }
+
+    public void setTrailIds(List<Integer> trailIds) {
+        this.trailIds = trailIds;
     }
 }

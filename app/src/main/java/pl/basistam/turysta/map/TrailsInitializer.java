@@ -30,7 +30,7 @@ public class TrailsInitializer extends AsyncTask<Void, Void, List<Trail>> {
     protected List<Trail> doInBackground(Void... voids) {
         TrailDao trailDao = appDatabase.trailDao();
         TrailPointDao trailPointDao = appDatabase.trailPointDao();
-        List<Trail> trails = trailDao.getAll();
+        List<Trail> trails = trailDao.getDrawable();
         for (Trail trail : trails) {
             trail.setPoints(trailPointDao.getByTrailId(trail.getId()));
         }

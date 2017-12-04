@@ -50,61 +50,96 @@
             android:src="@drawable/ic_zoom_out" />
     </RelativeLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <LinearLayout
         android:id="@+id/map_place"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@drawable/white_background_with_shadow"
         android:clipToPadding="true"
+        android:orientation="vertical"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+
+        <TextView
+            android:id="@+id/tv_place_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:paddingBottom="0dp"
+            android:text="Name"
+            android:textColor="@color/black"
+            android:textSize="22sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_height_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:padding="6dp"
+                android:paddingTop="0dp"
+                android:text="Height"
+                android:textColor="@color/black"
+                android:textSize="19sp" />
+
+
+            <ImageButton
+                android:id="@+id/ib_start_route"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@color/transparent"
+                android:paddingBottom="6dp"
+                android:paddingEnd="6dp"
+                android:src="@drawable/ic_flag" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tv_place_name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="6dp"
-                android:paddingBottom="0dp"
-                android:text="Name"
-                android:textColor="@color/black"
-                android:textSize="22sp" />
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="6dp"
+                android:paddingTop="6dp"
+                android:text="Trasa"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/ib_add_event"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:background="@drawable/green_background_with_shadow"
+                android:src="@drawable/ic_add_plus_button"/>
 
-                <TextView
-                    android:id="@+id/tv_height_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="6dp"
-                    android:paddingTop="0dp"
-                    android:layout_alignParentStart="true"
-                    android:text="Height"
-                    android:textColor="@color/black"
-                    android:textSize="19sp" />
+            <ImageButton
+                android:id="@+id/ib_clear_route"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/green_background_with_shadow"
+                android:src="@drawable/ic_trash_small" />
 
-                <ImageButton
-                    android:id="@+id/ib_start_route"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:src="@drawable/ic_flag"
-                    android:background="@color/transparent"
-                    android:paddingBottom="6dp"
-                    android:paddingEnd="6dp"
-                    />
-            </RelativeLayout>
-
-            <ScrollView
-                android:id="@+id/sv_route"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
         </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+        <pl.basistam.turysta.components.BottomSheetListView
+            android:id="@+id/lv_route"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

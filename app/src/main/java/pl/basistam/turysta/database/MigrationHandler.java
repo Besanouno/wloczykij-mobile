@@ -6,7 +6,8 @@ import android.arch.persistence.room.migration.Migration;
 public class MigrationHandler {
     public static Migration[] getAllMigrations() {
         return new Migration[]{
-//                createEmptyMigration(2,3)
+               createEmptyMigration(1,2),
+               createEmptyMigration(2,3)
         };
     }
 

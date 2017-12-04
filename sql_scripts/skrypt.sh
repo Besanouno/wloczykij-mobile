@@ -6,7 +6,7 @@ cat $POLYLINES > tmp.txt
 rm $POLYLINES
 sed -i '1,2d' tmp.txt
 sed -i '$ d' tmp.txt
-sed -i 's/\r/),/' tmp.txt # add ), in the end of every line in data
+sed -i 's/\r/),/' tmp.txt # add ), in the last of every line in data
 sed -i "1s/^/(select latitude from places where name = '$1'), (select longitude from places where name = '$1')),\n/" tmp.txt # add first point
 echo "(select latitude from places where name = '$2'), (select longitude from places where name = '$2')), " >> tmp.txt # add last point
 sed -i "s/^/($NUMBER, /" tmp.txt	# add trail_id in every line

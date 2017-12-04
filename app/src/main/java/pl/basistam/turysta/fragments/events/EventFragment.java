@@ -46,6 +46,7 @@ public abstract class EventFragment extends Fragment {
     protected boolean isAdmin = false;
     protected EventUsersAdapter adapter;
     protected EventUsers eventUsers;
+    protected List<Integer> trailIds;
 
     protected String eventGuid = null;
     protected final SparseArray<RelationsGroup<EventUserItem>> groups = new SparseArray<>();
@@ -110,6 +111,7 @@ public abstract class EventFragment extends Fragment {
                     protected void onPostExecute(EventDto event) {
                         fillFields(event);
                         prepareGroups(event.getEventUsers());
+                        trailIds = event.getTrailIds();
                     }
                 });
     }

@@ -148,6 +148,30 @@
                 android:layout_width="match_parent"
                 />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/ib_add_participant"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="end"
+                    android:background="@drawable/green_background_with_shadow"
+                    android:src="@drawable/ic_add_user" />
+
+                <ImageButton
+                    android:id="@+id/ib_route"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="end"
+                    android:layout_marginStart="15dp"
+                    android:background="@drawable/green_background_with_shadow"
+                    android:src="@drawable/ic_map" />
+            </LinearLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -158,7 +182,8 @@
                     android:id="@+id/ib_leave"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="15dp"
                     android:layout_gravity="end"
                     android:background="@drawable/red_background_with_shadow"
                     android:src="@drawable/ic_exit"
@@ -169,7 +194,6 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_gravity="center"
                     android:background="@drawable/green_background_with_shadow"
                     android:src="@drawable/ic_save" />
 
@@ -177,21 +201,13 @@
                     android:id="@+id/ib_remove"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="15dp"
                     android:layout_gravity="end"
                     android:background="@drawable/red_background_with_shadow"
                     android:src="@drawable/ic_remove"
                     android:visibility="gone" />
 
-                <ImageButton
-                    android:id="@+id/ib_add_participant"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="start"
-                    android:background="@drawable/green_background_with_shadow"
-                    android:src="@drawable/ic_add_user" />
             </RelativeLayout>
 
         </LinearLayout>

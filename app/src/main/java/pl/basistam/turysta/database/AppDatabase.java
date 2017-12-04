@@ -21,7 +21,7 @@ import pl.basistam.turysta.database.model.TrailPoint;
                 Trail.class,
                 TrailPoint.class
         },
-        version = 1)
+        version = 3)
 @TypeConverters({PlaceTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 

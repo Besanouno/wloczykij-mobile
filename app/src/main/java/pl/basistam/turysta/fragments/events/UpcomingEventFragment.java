@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.MapView;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ import pl.basistam.turysta.R;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.EventDto;
 import pl.basistam.turysta.errors.ErrorMessages;
+import pl.basistam.turysta.fragments.MapViewFragment;
 import pl.basistam.turysta.items.EventUserItem;
 import pl.basistam.turysta.enums.EventUserStatus;
 import pl.basistam.turysta.service.EventService;
@@ -48,6 +51,29 @@ public class UpcomingEventFragment extends EventFragment {
         initBtnSave(view);
         initBtnFriends(view);
         initRightButton(view);
+        initRouteButton(view);
+    }
+
+    private void initRouteButton(View view) {
+        final AppCompatImageButton btnRoute = view.findViewById(R.id.ib_route);
+        if (!isAdmin) {
+            btnRoute.setVisibility(View.GONE);
+            return;
+        }
+        btnRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MapViewFragment fragment = new MapViewFragment();
+                Bundle bundle = new Bundle();
+//                bundle.putIntegerArrayList("route", trailIds);
+                fragment.setArguments(bundle);
+                fragment.setRoute(trailIds);
+                getFragmentManager().beginTransaction()
+                        .addToBackStack(null)
+                        .add(R.id.content, fragment)
+                        .commit();
+            }
+        });
     }
 
     private void initRightButton(View view) {
@@ -59,6 +85,9 @@ public class UpcomingEventFragment extends EventFragment {
     }
 
     private void initBtnRemove(View view) {
+        if (eventGuid == null) {
+            return;
+        }
         final AppCompatImageButton btnRemove = view.findViewById(R.id.ib_remove);
         btnRemove.setVisibility(View.VISIBLE);
         btnRemove.setOnClickListener(new View.OnClickListener() {
@@ -272,5 +301,12 @@ public class UpcomingEventFragment extends EventFragment {
             e.printStackTrace();
             Toast.makeText(getActivity().getBaseContext(), ErrorMessages.CANNOT_UPDATE_OFFLINE_MODE, Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected EventDto prepareEventDto() {
+        EventDto eventDto = super.prepareEventDto();
+        eventDto.setTrailIds(trailIds);
+        return eventDto;
     }
 }

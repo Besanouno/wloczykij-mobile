@@ -33,7 +33,7 @@ class SearchViewOnItemClickListener extends AsyncTask<String, Void, Place> {
     @Override
     protected void onPostExecute(Place place) {
         if (place != null) {
-            CameraUtils.moveAndZoom(map, place.getLatitude(), place.getLongitude(), 12f);
+            CameraUtils.moveAndZoom(map, place.getLatitude(), place.getLongitude(), 9f);
             searchView.setCursorVisible(false);
             searchView.setText(place.getName());
         } else {

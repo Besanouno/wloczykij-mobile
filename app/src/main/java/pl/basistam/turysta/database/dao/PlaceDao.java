@@ -14,4 +14,7 @@ public interface PlaceDao {
 
     @Query("SELECT * FROM places WHERE UPPER(name) = UPPER(:name)")
     Place getByName(String name);
+
+    @Query("SELECT * FROM places WHERE id = :id")
+    Place getById(Integer id);
 }
