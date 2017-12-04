@@ -26,6 +26,7 @@ import android.widget.TextView;
 import pl.basistam.turysta.auth.AccountGeneral;
 import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.components.utils.KeyboardUtils;
+import pl.basistam.turysta.fragments.WeatherFragment;
 import pl.basistam.turysta.fragments.events.EventsFragment;
 import pl.basistam.turysta.fragments.MapViewFragment;
 import pl.basistam.turysta.fragments.UserFragment;
@@ -105,6 +106,8 @@ public class MainActivity extends AppCompatActivity
             showAccountPicker();
         } else if (id == R.id.nav_public_events) {
             openTab(new PublicEventsFragment());
+        } else if (id == R.id.nav_weather) {
+            openTab(new WeatherFragment());
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
