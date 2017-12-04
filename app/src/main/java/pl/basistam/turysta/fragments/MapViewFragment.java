@@ -37,6 +37,7 @@ import pl.basistam.turysta.database.AppDatabase;
 import pl.basistam.turysta.fragments.events.UpcomingEventFragment;
 import pl.basistam.turysta.map.MapInitializer;
 import pl.basistam.turysta.map.MarkersController;
+import pl.basistam.turysta.map.Route;
 import pl.basistam.turysta.service.Callback;
 
 public class MapViewFragment extends Fragment {
@@ -45,8 +46,7 @@ public class MapViewFragment extends Fragment {
     private BottomSheetBehavior<View> bottomSheetBehavior;
     private MarkersController markersController;
     private LocationHandler locationHandler;
-    private List<Integer> route;
-
+    private Route route;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,6 +55,9 @@ public class MapViewFragment extends Fragment {
         mapView = rootView.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
 
+        if (getArguments() != null) {
+            route = (Route) getArguments().getSerializable("route");
+        }
         mapView.onResume(); // needed to get the map to display immediately
 
         try {
@@ -64,10 +67,7 @@ public class MapViewFragment extends Fragment {
         }
 
         View bottomSheet = rootView.findViewById(R.id.map_place);
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        bottomSheetBehavior.setHideable(true);
-        bottomSheetBehavior.setPeekHeight(160);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        initBottomSheetBehaviour(bottomSheet);
         final List<HashMap<String, String>> items = new ArrayList<>();
         String[] from = {"name", "time"};
         int[] to = {R.id.name, R.id.time};
@@ -83,12 +83,10 @@ public class MapViewFragment extends Fragment {
                 initLocalizationButton(rootView, map);
                 markersController = new MarkersController(map, getActivity().getBaseContext(), adapter, items);
                 if (route != null) {
-                    markersController.initRoute(route);
+                    markersController.initRoute(route.getTrailIds());
                 }
             }
         });
-
-
         ImageButton ibClearRoute = rootView.findViewById(R.id.ib_clear_route);
         ibClearRoute.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,34 +94,48 @@ public class MapViewFragment extends Fragment {
                 markersController.clearRoute();
             }
         });
-
         initAddEventButton(rootView);
         return rootView;
     }
 
+    private void initBottomSheetBehaviour(View bottomSheet) {
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setHideable(true);
+        bottomSheetBehavior.setPeekHeight(160);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
     private void initAddEventButton(View rootView) {
+
         ImageButton ibAddEvent = rootView.findViewById(R.id.ib_add_event);
-        ibAddEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UpcomingEventFragment fragment = new UpcomingEventFragment();
-                Bundle args = new Bundle();
-                args.putBoolean("isAdmin", true);
-                args.putIntegerArrayList("route", markersController.getRouteTrailIds());
-                fragment.setArguments(args);
-                FragmentManager fragmentManager = getActivity().getFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.content, fragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
+        if (route == null) {
+            route = new Route(new ArrayList<Integer>());
+            ibAddEvent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UpcomingEventFragment fragment = new UpcomingEventFragment();
+                    Bundle args = new Bundle();
+                    args.putBoolean("isAdmin", true);
+                    args.putIntegerArrayList("trailIds", markersController.getRouteTrailIds());
+                    fragment.setArguments(args);
+                    FragmentManager fragmentManager = getActivity().getFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.content, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
+        } else {
+            ibAddEvent.setImageResource(R.drawable.ic_save_small);
+            ibAddEvent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    route.setTrailIds(markersController.getRouteTrailIds());
+                    getFragmentManager().popBackStack();
+                }
+            });
+        }
     }
-
-    public void setRoute(List<Integer> trailIds) {
-        route = trailIds;
-    }
-
 
     private void initLocalizationButton(final View view, final GoogleMap map) {
         locationHandler = new LocationHandler(
@@ -151,29 +163,26 @@ public class MapViewFragment extends Fragment {
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED
-                        || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
-
-                if (marker.getTitle() == null || marker.getTitle().isEmpty()) {
-                    return true;
+                if (marker.getTitle() != null && !marker.getTitle().isEmpty()) {
+                    refreshPlaceDetailsWindow(view, marker.getTitle());
                 }
-                new UpdatePlaceDetailsAction(
-                        new PlaceDetailsField(
-                                (TextView) view.findViewById(R.id.tv_place_name),
-                                (TextView) view.findViewById(R.id.tv_height_name),
-                                map
-                        ),
-                        AppDatabase.getInstance(getActivity().getBaseContext()).placeDao(),
-                        markersController)
-                        .execute(marker.getTitle());
-
-
                 return true;
             }
         });
+    }
+
+    private void refreshPlaceDetailsWindow(View view, String placeName) {
+        new UpdatePlaceDetailsAction(
+                new PlaceDetailsField(
+                        (TextView) view.findViewById(R.id.tv_place_name),
+                        (TextView) view.findViewById(R.id.tv_height_name)
+                ),
+                AppDatabase.getInstance(getActivity().getBaseContext()).placeDao(),
+                markersController)
+                .execute(placeName);
     }
 
     private void initZoomButtons(GoogleMap map) {

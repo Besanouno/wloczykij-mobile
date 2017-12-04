@@ -28,10 +28,12 @@ import pl.basistam.turysta.errors.ErrorMessages;
 import pl.basistam.turysta.fragments.MapViewFragment;
 import pl.basistam.turysta.items.EventUserItem;
 import pl.basistam.turysta.enums.EventUserStatus;
+import pl.basistam.turysta.map.Route;
 import pl.basistam.turysta.service.EventService;
 import pl.basistam.turysta.service.Callback;
 import pl.basistam.turysta.service.retrofit.RetrofitEventService;
 import retrofit2.Call;
+import retrofit2.Response;
 
 public class UpcomingEventFragment extends EventFragment {
 
@@ -41,7 +43,7 @@ public class UpcomingEventFragment extends EventFragment {
         if (getArguments() != null) {
             this.eventGuid = getArguments().getString("guid");
             this.isAdmin = getArguments().getBoolean("isAdmin");
-            this.trailIds = getArguments().getIntegerArrayList("route");
+            this.route = new Route(getArguments().getIntegerArrayList("trailIds"));
         }
         return inflater.inflate(R.layout.fragment_event, container, false);
     }
@@ -66,8 +68,8 @@ public class UpcomingEventFragment extends EventFragment {
             public void onClick(View v) {
                 MapViewFragment fragment = new MapViewFragment();
                 Bundle bundle = new Bundle();
+                bundle.putSerializable("route", route);
                 fragment.setArguments(bundle);
-                fragment.setRoute(trailIds);
                 getFragmentManager().beginTransaction()
                         .addToBackStack(null)
                         .add(R.id.content, fragment)
@@ -101,25 +103,27 @@ public class UpcomingEventFragment extends EventFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
-                                        new AsyncTask<String, Void, Object>() {
+                                        new AsyncTask<String, Void, Boolean>() {
                                             @Override
-                                            protected Object doInBackground(String... params) {
+                                            protected Boolean doInBackground(String... params) {
                                                 String authToken = params[0];
-                                                removeEvent(authToken);
-                                                return null;
+                                                return removeEvent(authToken);
                                             }
 
                                             @Override
-                                            protected void onPostExecute(Object o) {
-                                                getActivity().getFragmentManager().popBackStack();
+                                            protected void onPostExecute(Boolean result) {
+                                                if (result) {
+                                                    getActivity().getFragmentManager().popBackStack();
+                                                } else {
+                                                    Toast.makeText(getActivity().getBaseContext(), ErrorMessages.CANNOT_UPDATE_OFFLINE_MODE, Toast.LENGTH_LONG).show();
+                                                }
                                             }
                                         });
                             }
                         })
                         .setNegativeButton("nie", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
+                            public void onClick(DialogInterface dialog, int which) {// do nothing
                             }
                         })
                         .setIcon(R.drawable.ic_warning_sign)
@@ -130,15 +134,17 @@ public class UpcomingEventFragment extends EventFragment {
     }
 
 
-    private void removeEvent(String authToken) {
+    private boolean removeEvent(String authToken) {
         try {
-            EventService.getInstance()
+            Response<Void> response = EventService.getInstance()
                     .eventService()
                     .remove(authToken, eventGuid)
                     .execute();
+            return response.isSuccessful();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     private void initBtnLeave(View view) {
@@ -155,17 +161,16 @@ public class UpcomingEventFragment extends EventFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
-                                        new AsyncTask<String, Void, Object>() {
+                                        new AsyncTask<String, Void, Boolean>() {
                                             @Override
-                                            protected Object doInBackground(String... params) {
+                                            protected Boolean doInBackground(String... params) {
                                                 String authToken = params[0];
-                                                leaveEvent(authToken);
-                                                return null;
+                                                return leaveEvent(authToken);
                                             }
 
                                             @Override
-                                            protected void onPostExecute(Object o) {
-                                                getActivity().getFragmentManager().popBackStack();
+                                            protected void onPostExecute(Boolean result) {
+                                                finishAction(result, "Opuściłeś wydarzenie");
                                             }
                                         });
                             }
@@ -183,15 +188,17 @@ public class UpcomingEventFragment extends EventFragment {
         });
     }
 
-    private void leaveEvent(String authToken) {
+    private boolean leaveEvent(String authToken) {
         try {
-            EventService.getInstance()
+            Response<Void> response = EventService.getInstance()
                     .eventService()
                     .leave(authToken, eventGuid)
                     .execute();
+            return response.isSuccessful();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
 
@@ -257,17 +264,16 @@ public class UpcomingEventFragment extends EventFragment {
                                 if (eventDto == null) return;
 
                                 LoggedUser.getInstance().sendAuthorizedRequest(getActivity().getBaseContext(),
-                                        new AsyncTask<String, Void, Object>() {
+                                        new AsyncTask<String, Void, Boolean>() {
                                             @Override
-                                            protected Object doInBackground(String... params) {
+                                            protected Boolean doInBackground(String... params) {
                                                 String authToken = params[0];
-                                                saveEvent(authToken, eventDto);
-                                                return null;
+                                                return saveEvent(authToken, eventDto);
                                             }
 
                                             @Override
-                                            protected void onPostExecute(Object o) {
-                                                getActivity().getFragmentManager().popBackStack();
+                                            protected void onPostExecute(Boolean result) {
+                                                finishAction(result, "Wydarzenie zostało zapisane");
                                             }
                                         });
                             }
@@ -284,29 +290,29 @@ public class UpcomingEventFragment extends EventFragment {
         });
     }
 
-    private void saveEvent(String authToken, EventDto eventDto) {
+    private void finishAction(Boolean result, String successMessage) {
+        if (result) {
+            if (getView() != null) {
+                Snackbar.make(getView(), successMessage, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+            getActivity().getFragmentManager().popBackStack();
+        } else {
+            Toast.makeText(getActivity().getBaseContext(), ErrorMessages.CANNOT_UPDATE_OFFLINE_MODE, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private boolean saveEvent(String authToken, EventDto eventDto) {
         try {
             RetrofitEventService eventService = EventService.getInstance()
                     .eventService();
             Call<Void> request = (eventGuid == null)
                     ? eventService.saveEvent(authToken, eventDto)
                     : eventService.updateEvent(authToken, eventGuid, eventDto);
-            request.execute();
-            View view = getView();
-            if (view != null) {
-                Snackbar.make(getView(), "Pomyślnie zapisano wydarzenie", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+            return request.execute().isSuccessful();
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(getActivity().getBaseContext(), ErrorMessages.CANNOT_UPDATE_OFFLINE_MODE, Toast.LENGTH_LONG).show();
         }
-    }
-
-    @Override
-    protected EventDto prepareEventDto() {
-        EventDto eventDto = super.prepareEventDto();
-        eventDto.setTrailIds(trailIds);
-        return eventDto;
+        return false;
     }
 }

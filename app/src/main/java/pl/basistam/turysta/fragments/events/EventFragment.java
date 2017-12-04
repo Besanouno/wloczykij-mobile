@@ -27,6 +27,7 @@ import pl.basistam.turysta.items.EventUserItem;
 import pl.basistam.turysta.enums.EventUserStatus;
 import pl.basistam.turysta.groups.RelationsGroup;
 import pl.basistam.turysta.listeners.EventUsersGroupsListener;
+import pl.basistam.turysta.map.Route;
 import pl.basistam.turysta.service.EventService;
 import pl.basistam.turysta.service.EventUsers;
 import pl.basistam.turysta.service.UserService;
@@ -46,7 +47,7 @@ public abstract class EventFragment extends Fragment {
     protected boolean isAdmin = false;
     protected EventUsersAdapter adapter;
     protected EventUsers eventUsers;
-    protected List<Integer> trailIds;
+    protected Route route;
 
     protected String eventGuid = null;
     protected final SparseArray<RelationsGroup<EventUserItem>> groups = new SparseArray<>();
@@ -111,7 +112,7 @@ public abstract class EventFragment extends Fragment {
                     protected void onPostExecute(EventDto event) {
                         fillFields(event);
                         prepareGroups(event.getEventUsers());
-                        trailIds = event.getTrailIds();
+                        route.setTrailIds(event.getTrailIds());
                     }
                 });
     }
@@ -245,7 +246,7 @@ public abstract class EventFragment extends Fragment {
         ArrayList<EventUserItem> participants = new ArrayList<>();
         participants.addAll(eventUsers.getParticipants());
         eventDto.setEventUsers(participants);
-        eventDto.setTrailIds(trailIds);
+        eventDto.setTrailIds(route.getTrailIds());
         return eventDto;
     }
 }

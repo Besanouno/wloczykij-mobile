@@ -15,12 +15,10 @@ public class PlaceDetailsField {
 
     private TextView nameField;
     private TextView heightAboveSeaLevelField;
-    private GoogleMap map;
 
-    public PlaceDetailsField(TextView nameField, TextView heightAboveSeaLevelField, GoogleMap map) {
+    public PlaceDetailsField(TextView nameField, TextView heightAboveSeaLevelField) {
         this.nameField = nameField;
         this.heightAboveSeaLevelField = heightAboveSeaLevelField;
-        this.map = map;
     }
 
     public void updateName(String name) {

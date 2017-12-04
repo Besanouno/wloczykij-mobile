@@ -4,18 +4,13 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.BaseAdapter;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.dto.WeatherDto;
@@ -55,7 +50,7 @@ public class WeatherAdapter extends BaseAdapter implements Serializable {
         ((TextView) convertView.findViewById(R.id.tvTempValue)).setText(Double.toString(round(weather.getTemperature(), 1)));
         ((TextView) convertView.findViewById(R.id.tvTempMinMaxValue)).setText(Double.toString(round(weather.getTemperatureMin(), 1)) + " do " + Double.toString(round(weather.getTemperatureMax(), 1)));
         ((TextView) convertView.findViewById(R.id.tvHumidityValue)).setText(Double.toString(weather.getHumidity()));
-        ((TextView) convertView.findViewById(R.id.tvPressure)).setText(Double.toString(weather.getPressure()));
+        ((TextView) convertView.findViewById(R.id.tvPressureValue)).setText(Double.toString(weather.getPressure()));
         ((TextView) convertView.findViewById(R.id.tvDescriptionValue)).setText(weather.getWeatherDescription());
         ((TextView) convertView.findViewById(R.id.tvWindSpeedValue)).setText(Double.toString(weather.getWindSpeed()));
         return convertView;
