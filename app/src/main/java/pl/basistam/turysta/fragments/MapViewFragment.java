@@ -97,6 +97,11 @@ public class MapViewFragment extends Fragment {
             }
         });
 
+        initAddEventButton(rootView);
+        return rootView;
+    }
+
+    private void initAddEventButton(View rootView) {
         ImageButton ibAddEvent = rootView.findViewById(R.id.ib_add_event);
         ibAddEvent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +118,6 @@ public class MapViewFragment extends Fragment {
                         .commit();
             }
         });
-        return rootView;
     }
 
     public void setRoute(List<Integer> trailIds) {

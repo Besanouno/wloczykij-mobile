@@ -30,12 +30,4 @@ public class PlaceDetailsField {
     public void updateHeightAboveSeaLevel(double height) {
         heightAboveSeaLevelField.setText(Double.toString(height) + " m n.p.m.");
     }
-
-    public Marker updateMapPosition(double latitude, double longitude) {
-        CameraUtils.moveAndZoom(map, latitude, longitude, 12f);
-        return map.addMarker(new MarkerOptions()
-                .position(new LatLng(latitude, longitude))
-                .zIndex(MarkerPriority.CURRENT.getValue())
-                .icon(BitmapDescriptorFactory.fromAsset("marker.png")));
-    }
 }

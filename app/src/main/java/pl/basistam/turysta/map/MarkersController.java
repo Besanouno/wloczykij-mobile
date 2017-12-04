@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import pl.basistam.turysta.adapters.RouteAdapter;
+import pl.basistam.turysta.components.utils.CameraUtils;
 import pl.basistam.turysta.database.AppDatabase;
 import pl.basistam.turysta.database.model.Place;
 import pl.basistam.turysta.database.model.Trail;
@@ -27,6 +28,7 @@ public class MarkersController {
     private final List<HashMap<String, String>> items;
     private GoogleMap googleMap;
     private Marker currentMarker;
+    private Place currentMarkerPlace;
     private final AppDatabase appDatabase;
     private final List<Marker> routeMarkers = new ArrayList<>();
     private final ArrayList<Integer> trailIds = new ArrayList<>();
@@ -43,21 +45,6 @@ public class MarkersController {
         routeFinder = new RouteFinder(appDatabase);
     }
 
-    public void clearAndSetCurrentMarker(Marker marker) {
-        if (currentMarker != null) {
-            currentMarker.remove();
-        }
-        currentMarker = marker;
-        if (routeMode) {
-            addCurrentToRoute();
-        }
-    }
-
-
-    public List<Marker> getRouteMarkers() {
-        return routeMarkers;
-    }
-
     public void clearRoute() {
         for (Marker m : routeMarkers) {
             m.remove();
@@ -69,57 +56,6 @@ public class MarkersController {
         routeMode = false;
     }
 
-    public void addToRoute(final Marker marker) {
-        routeMode = true;
-        if (routeMarkers.size() > 0) {
-            final String previousPlaceName = routeMarkers.get(routeMarkers.size() - 1).getTitle();
-            new AsyncTask<String, Void, List<Trail>>() {
-
-                @Override
-                protected List<Trail> doInBackground(String... params) {
-                    String placeName = params[0];
-                    return routeFinder.findRoute(previousPlaceName, placeName);
-                }
-
-                @Override
-                protected void onPostExecute(List<Trail> trails) {
-                    if (trails.isEmpty()) {
-                        Toast.makeText(context, "Nie znaleziono odcinka prowadzącego do tego punktu", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    String name = trails.get(0).getLast().getName();
-                    String time = Integer.toString(trails.get(0).getTime()) + "m";
-                    putMarkerToRoute(
-                            marker.getPosition(),
-                            trails.get(0).getId(),
-                            name,
-                            time);
-                }
-            }.execute(marker.getTitle());
-        } else {
-            putMarkerToRoute(marker.getPosition(), null, marker.getTitle(), "");
-        }
-    }
-
-    private void putMarkerToRoute(LatLng position, Integer trailId, String name, String time) {
-        HashMap<String, String> item = new HashMap<>();
-        item.put("name", name);
-        item.put("time", time);
-        items.add(item);
-        adapter.notifyDataSetChanged();
-        Marker m = googleMap.addMarker(new MarkerOptions()
-                .position(position)
-                .zIndex(MarkerPriority.FLAG.getValue())
-                .title(name)
-                .icon(BitmapDescriptorFactory.fromAsset("flag.png")));
-        routeMarkers.add(m);
-        if (trailId != null)
-            trailIds.add(trailId);
-    }
-
-    public void addCurrentToRoute() {
-        addToRoute(currentMarker);
-    }
 
     public ArrayList<Integer> getRouteTrailIds() {
         return trailIds;
@@ -141,22 +77,95 @@ public class MarkersController {
             @Override
             protected void onPostExecute(List<Trail> trails) {
                 clearRoute();
+
                 routeMode = true;
-                Place firstPoint = trails.get(0).getFirst();
-                putMarkerToRoute(
-                        new LatLng(firstPoint.getLatitude(), firstPoint.getLongitude()),
-                        null,
-                        firstPoint.getName(),
-                        ""
-                );
-                for (int i = 0; i < trails.size(); i++) {
-                    clearAndSetCurrentMarker(googleMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(trails.get(i).getLast().getLatitude(), trails.get(i).getLast().getLongitude()))
-                            .zIndex(MarkerPriority.FLAG.getValue())
-                            .title(trails.get(i).getLast().getName())
-                            .icon(BitmapDescriptorFactory.fromAsset("flag.png"))));
+                Place start = trails.get(0).getFirst();
+                markRoute(start);
+                for (int i = 0; i < trails.size() - 1; i++) {
+                    createRouteNode(trails.get(i));
+                }
+                clearAndSetCurrentMarker(trails.get(trails.size()-1).getLast());
+            }
+        }.execute();
+    }
+
+    public void clearAndSetCurrentMarker(Place place) {
+        if (currentMarker != null) {
+            currentMarker.remove();
+        }
+        CameraUtils.moveAndZoom(googleMap, place.getLatitude(), place.getLongitude(), 12f);
+        currentMarker = googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(place.getLatitude(), place.getLongitude()))
+                .zIndex(MarkerPriority.CURRENT.getValue())
+                .icon(BitmapDescriptorFactory.fromAsset("marker.png"))
+                .title(place.getName()));
+        currentMarkerPlace = place;
+        if (routeMode) {
+            addCurrentToRoute();
+        }
+    }
+
+    public void addCurrentToRoute() {
+        routeMode = true;
+        if (routeMarkers.size() == 0) {
+            HashMap<String, String> item = new HashMap<>();
+            item.put("name", currentMarker.getTitle());
+            item.put("time", "");
+            items.add(item);
+            adapter.notifyDataSetChanged();
+            Marker m = googleMap.addMarker(new MarkerOptions()
+                    .position(currentMarker.getPosition())
+                    .zIndex(MarkerPriority.FLAG.getValue())
+                    .title(currentMarker.getTitle())
+                    .icon(BitmapDescriptorFactory.fromAsset("flag.png")));
+            routeMarkers.add(m);
+        } else {
+            addToRoute(currentMarkerPlace);
+        }
+    }
+
+    public void addToRoute(final Place place) {
+        if (!routeMode || routeMarkers.isEmpty()) {
+            return;
+        }
+        final String lastNodeName = routeMarkers.get(routeMarkers.size() - 1).getTitle();
+        new AsyncTask<Void, Void, List<Trail>>() {
+
+            @Override
+            protected List<Trail> doInBackground(Void... params) {
+                return routeFinder.findRoute(lastNodeName, place.getName());
+            }
+
+            @Override
+            protected void onPostExecute(List<Trail> trails) {
+                if (trails.isEmpty()) {
+                    Toast.makeText(context, "Nie znaleziono odcinka prowadzącego do tego punktu", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                for (Trail t: trails) {
+                    createRouteNode(t);
                 }
             }
         }.execute();
+    }
+
+    private void createRouteNode(Trail trail) {
+        final Place destination = trail.getLast();
+        HashMap<String, String> item = new HashMap<>();
+        item.put("name", destination.getName());
+        item.put("time", Integer.toString(trail.getTime()) + "m");
+        markRoute(destination);
+        items.add(item);
+        adapter.notifyDataSetChanged();
+        trailIds.add(trail.getId());
+    }
+
+    private void markRoute(Place place) {
+        Marker flag = googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(place.getLatitude(), place.getLongitude()))
+                .zIndex(MarkerPriority.FLAG.getValue())
+                .title(place.getName())
+                .icon(BitmapDescriptorFactory.fromAsset("flag.png")));
+        routeMarkers.add(flag);
     }
 }

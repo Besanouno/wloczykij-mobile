@@ -41,6 +41,7 @@ public class UpcomingEventFragment extends EventFragment {
         if (getArguments() != null) {
             this.eventGuid = getArguments().getString("guid");
             this.isAdmin = getArguments().getBoolean("isAdmin");
+            this.trailIds = getArguments().getIntegerArrayList("route");
         }
         return inflater.inflate(R.layout.fragment_event, container, false);
     }
@@ -65,7 +66,6 @@ public class UpcomingEventFragment extends EventFragment {
             public void onClick(View v) {
                 MapViewFragment fragment = new MapViewFragment();
                 Bundle bundle = new Bundle();
-//                bundle.putIntegerArrayList("route", trailIds);
                 fragment.setArguments(bundle);
                 fragment.setRoute(trailIds);
                 getFragmentManager().beginTransaction()

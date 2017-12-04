@@ -245,6 +245,7 @@ public abstract class EventFragment extends Fragment {
         ArrayList<EventUserItem> participants = new ArrayList<>();
         participants.addAll(eventUsers.getParticipants());
         eventDto.setEventUsers(participants);
+        eventDto.setTrailIds(trailIds);
         return eventDto;
     }
 }

@@ -33,8 +33,6 @@ public class UpdatePlaceDetailsAction extends AsyncTask<String, Void, Place> {
     protected void onPostExecute(Place place) {
         placeDetailsField.updateName(place.getName());
         placeDetailsField.updateHeightAboveSeaLevel(place.getHeight());
-        Marker marker = placeDetailsField.updateMapPosition(place.getLatitude(), place.getLongitude());
-        marker.setTitle(place.getName());
-        markersController.clearAndSetCurrentMarker(marker);
+        markersController.clearAndSetCurrentMarker(place);
     }
 }
