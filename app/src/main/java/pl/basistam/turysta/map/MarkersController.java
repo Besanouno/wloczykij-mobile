@@ -62,6 +62,7 @@ public class MarkersController {
         for (Integer i: polylinesIds) {
             polylines.get(i).setWidth(4f);
         }
+        polylinesIds.clear();
     }
 
 
@@ -84,6 +85,9 @@ public class MarkersController {
 
             @Override
             protected void onPostExecute(List<Trail> trails) {
+                if (trails == null || trails.isEmpty())
+                    return;
+
                 clearRoute();
 
                 routeMode = true;

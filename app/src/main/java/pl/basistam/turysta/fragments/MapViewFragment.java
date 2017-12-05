@@ -49,6 +49,7 @@ public class MapViewFragment extends Fragment {
     private MarkersController markersController;
     private LocationHandler locationHandler;
     private Route route;
+    private boolean editRoute = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class MapViewFragment extends Fragment {
 
         if (getArguments() != null) {
             route = (Route) getArguments().getSerializable("route");
+            editRoute = true;
         }
         mapView.onResume(); // needed to get the map to display immediately
 
@@ -87,7 +89,7 @@ public class MapViewFragment extends Fragment {
                 initMarkers(rootView, map);
                 initLocalizationButton(rootView, map);
                 markersController = new MarkersController(map, getActivity().getBaseContext(), adapter, items, trailsInitializer.getPolylines());
-                if (route != null) {
+                if (editRoute) {
                     markersController.initRoute(route.getTrailIds());
                 } else {
                     route = new Route(new ArrayList<Integer>());

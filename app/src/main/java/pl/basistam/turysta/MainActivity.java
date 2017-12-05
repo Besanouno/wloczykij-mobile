@@ -101,13 +101,22 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().replace(R.id.content, mapFragment).commit();
             searchPanel.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_events) {
+            if (LoggedUser.getInstance().getAccount() == null) {
+                signIn();
+            }
             openTab(new EventsFragment());
         } else if (id == R.id.nav_manage_account) {
             showAccountPicker();
         } else if (id == R.id.nav_public_events) {
+            if (LoggedUser.getInstance().getAccount() == null) {
+                signIn();
+            }
             openTab(new PublicEventsFragment());
         } else if (id == R.id.nav_weather) {
-            openTab(new WeatherFragment());
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content, new WeatherFragment())
+                    .addToBackStack(null)
+                    .commit();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -115,10 +124,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void openTab(Fragment fragment) {
-        getFragmentManager().beginTransaction()
-                .replace(R.id.content, fragment)
-                .addToBackStack(null)
-                .commit();
+        if (LoggedUser.getInstance().getAccount() == null) {
+            signIn();
+        } else {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     private void checkIfLoggedIn() {
