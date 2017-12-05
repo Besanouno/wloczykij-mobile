@@ -32,6 +32,7 @@ dependencies {
     compile 'android.arch.persistence.room:runtime:1.0.0-alpha1'
     compile 'com.mcxiaoke.volley:library:1.0.0'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile group: 'es.usc.citius.hipster', name: 'hipster-core', version: '1.0.1'
     compile group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.3.0'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
     testCompile 'junit:junit:4.12'

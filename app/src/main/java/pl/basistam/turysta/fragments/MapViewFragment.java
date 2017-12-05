@@ -84,6 +84,8 @@ public class MapViewFragment extends Fragment {
                 markersController = new MarkersController(map, getActivity().getBaseContext(), adapter, items);
                 if (route != null) {
                     markersController.initRoute(route.getTrailIds());
+                } else {
+                    route = new Route(new ArrayList<Integer>());
                 }
             }
         });
@@ -109,7 +111,6 @@ public class MapViewFragment extends Fragment {
 
         ImageButton ibAddEvent = rootView.findViewById(R.id.ib_add_event);
         if (route == null) {
-            route = new Route(new ArrayList<Integer>());
             ibAddEvent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

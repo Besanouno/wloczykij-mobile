@@ -8,7 +8,7 @@ import pl.basistam.turysta.database.type.PlaceType;
 @Entity(tableName = "places")
 public class Place {
     @PrimaryKey(autoGenerate = true)
-    private Long id;
+    private Integer id;
     private String name;
     private String description;
     private double latitude;
@@ -16,10 +16,10 @@ public class Place {
     private double height;
     private PlaceType type;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -14,8 +14,11 @@ public interface TrailDao {
 
     @Query("SELECT * FROM trails " +
             "WHERE (first_point = :startId AND last_point = :endId)")
-    Trail findByStartAndEndpoint(Long startId, Long endId);
+    Trail findByStartAndEndpoint(Integer startId, Integer endId);
 
     @Query("SELECT * FROM trails WHERE id IN (:trailIds)")
     List<Trail> findAllByIds(List<Integer> trailIds);
+
+    @Query("SELECT * FROM trails WHERE first_point = :id")
+    List<Trail> findAvailableTrails(Integer id);
 }
