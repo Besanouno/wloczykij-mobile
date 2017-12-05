@@ -37,7 +37,9 @@ import pl.basistam.turysta.database.AppDatabase;
 import pl.basistam.turysta.fragments.events.UpcomingEventFragment;
 import pl.basistam.turysta.map.MapInitializer;
 import pl.basistam.turysta.map.MarkersController;
+import pl.basistam.turysta.map.PlacesInitializer;
 import pl.basistam.turysta.map.Route;
+import pl.basistam.turysta.map.TrailsInitializer;
 import pl.basistam.turysta.service.Callback;
 
 public class MapViewFragment extends Fragment {
@@ -77,11 +79,14 @@ public class MapViewFragment extends Fragment {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap map) {
-                MapInitializer.init(AppDatabase.getInstance(getActivity()), map);
+                new PlacesInitializer(AppDatabase.getInstance(getActivity()), map).execute();
+                TrailsInitializer trailsInitializer = new TrailsInitializer(AppDatabase.getInstance(getActivity()), map);
+                trailsInitializer.execute();
+                MapInitializer.init(map);
                 initZoomButtons(map);
                 initMarkers(rootView, map);
                 initLocalizationButton(rootView, map);
-                markersController = new MarkersController(map, getActivity().getBaseContext(), adapter, items);
+                markersController = new MarkersController(map, getActivity().getBaseContext(), adapter, items, trailsInitializer.getPolylines());
                 if (route != null) {
                     markersController.initRoute(route.getTrailIds());
                 } else {

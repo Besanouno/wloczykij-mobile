@@ -2,6 +2,7 @@ package pl.basistam.turysta.map;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.SparseArray;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -9,10 +10,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pl.basistam.turysta.adapters.RouteAdapter;
 import pl.basistam.turysta.components.utils.CameraUtils;
@@ -33,16 +36,18 @@ public class MarkersController {
     private final List<Marker> routeMarkers = new ArrayList<>();
     private final ArrayList<Integer> trailIds = new ArrayList<>();
     private RouteFinder routeFinder;
-
+    private final SparseArray<Polyline> polylines;
+    private List<Integer> polylinesIds = new ArrayList<>();
     private boolean routeMode = false;
 
-    public MarkersController(GoogleMap map, Context context, RouteAdapter adapter, List<HashMap<String, String>> items) {
+    public MarkersController(GoogleMap map, Context context, RouteAdapter adapter, List<HashMap<String, String>> items, SparseArray<Polyline> polylines) {
         this.googleMap = map;
         this.adapter = adapter;
         this.items = items;
         this.context = context;
         this.appDatabase = AppDatabase.getInstance(context);
         routeFinder = new RouteFinder(appDatabase);
+        this.polylines = polylines;
     }
 
     public void clearRoute() {
@@ -54,6 +59,9 @@ public class MarkersController {
         items.clear();
         adapter.notifyDataSetChanged();
         routeMode = false;
+        for (Integer i: polylinesIds) {
+            polylines.get(i).setWidth(4f);
+        }
     }
 
 
@@ -156,6 +164,14 @@ public class MarkersController {
         item.put("time", Integer.toString(trail.getTime()) + "m");
         markRoute(destination);
         items.add(item);
+        Polyline polyline = polylines.get(trail.getId());
+        if (polyline == null) {
+            polyline = polylines.get(trail.getTwinTrail());
+            polylinesIds.add(trail.getTwinTrail());
+        } else {
+            polylinesIds.add(trail.getId());
+        }
+        polyline.setWidth(12f);
         adapter.notifyDataSetChanged();
         trailIds.add(trail.getId());
     }
