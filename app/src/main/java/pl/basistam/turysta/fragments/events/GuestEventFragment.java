@@ -20,8 +20,10 @@ import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.EventDto;
 import pl.basistam.turysta.enums.EventUserStatus;
 import pl.basistam.turysta.errors.ErrorMessages;
+import pl.basistam.turysta.fragments.MapViewFragment;
 import pl.basistam.turysta.fragments.events.enums.GuestType;
 import pl.basistam.turysta.items.EventUserItem;
+import pl.basistam.turysta.map.Route;
 import pl.basistam.turysta.service.EventService;
 import retrofit2.Response;
 
@@ -35,6 +37,9 @@ public class GuestEventFragment extends EventFragment {
         if (getArguments() != null) {
             this.eventGuid = getArguments().getString("guid");
             this.guestType = (GuestType) getArguments().getSerializable("type");
+            this.route = new Route(getArguments().getIntegerArrayList("trailIds"));
+        } else {
+            this.route = new Route(null);
         }
         return inflater.inflate(R.layout.fragment_guest_event, container, false);
     }
@@ -46,7 +51,26 @@ public class GuestEventFragment extends EventFragment {
             view.findViewById(R.id.rl_invitation_layout).setVisibility(View.VISIBLE);
             initAcceptAction(view);
             initRejectAction(view);
+            initRouteButton(view);
         }
+    }
+
+    private void initRouteButton(View view) {
+        final AppCompatImageButton btnRoute = view.findViewById(R.id.ib_route);
+        btnRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MapViewFragment fragment = new MapViewFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("route", route);
+                bundle.putBoolean("editable", false);
+                fragment.setArguments(bundle);
+                getFragmentManager().beginTransaction()
+                        .addToBackStack(null)
+                        .add(R.id.content, fragment)
+                        .commit();
+            }
+        });
     }
 
     @Override

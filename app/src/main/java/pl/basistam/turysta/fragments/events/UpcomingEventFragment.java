@@ -46,6 +46,8 @@ public class UpcomingEventFragment extends EventFragment {
             this.eventGuid = getArguments().getString("guid");
             this.isAdmin = getArguments().getBoolean("isAdmin");
             this.route = new Route(getArguments().getIntegerArrayList("trailIds"));
+        }else {
+            this.route = new Route(null);
         }
         return inflater.inflate(R.layout.fragment_event, container, false);
     }
@@ -62,16 +64,13 @@ public class UpcomingEventFragment extends EventFragment {
 
     private void initRouteButton(View view) {
         final AppCompatImageButton btnRoute = view.findViewById(R.id.ib_route);
-        if (!isAdmin) {
-            btnRoute.setVisibility(View.GONE);
-            return;
-        }
         btnRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MapViewFragment fragment = new MapViewFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("route", route);
+                bundle.putSerializable("editable", isAdmin);
                 fragment.setArguments(bundle);
                 getFragmentManager().beginTransaction()
                         .addToBackStack(null)

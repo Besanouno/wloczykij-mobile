@@ -47,7 +47,7 @@ public class MapViewFragment extends Fragment {
     private MarkersController markersController;
     private LocationHandler locationHandler;
     private Route route;
-    private boolean editRoute = false;
+    private boolean editRoute = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class MapViewFragment extends Fragment {
 
         if (getArguments() != null) {
             route = (Route) getArguments().getSerializable("route");
-            editRoute = true;
+            editRoute = !getArguments().containsKey("editable") || getArguments().getBoolean("editable");
         }
         mapView.onResume(); // needed to get the map to display immediately
 
@@ -87,7 +87,7 @@ public class MapViewFragment extends Fragment {
                 initMarkers(rootView, map);
                 initLocalizationButton(rootView, map);
                 markersController = new MarkersController(map, getActivity().getBaseContext(), adapter, items, trailsInitializer.getPolylines());
-                if (editRoute) {
+                if (route != null) {
                     markersController.initRoute(route.getTrailIds());
                 } else {
                     route = new Route(new ArrayList<Integer>());
@@ -95,12 +95,16 @@ public class MapViewFragment extends Fragment {
             }
         });
         ImageButton ibClearRoute = rootView.findViewById(R.id.ib_clear_route);
-        ibClearRoute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                markersController.clearRoute();
-            }
-        });
+        if (!editRoute) {
+            ibClearRoute.setVisibility(View.GONE);
+        } else {
+            ibClearRoute.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    markersController.clearRoute();
+                }
+            });
+        }
         initAddEventButton(rootView);
         return rootView;
     }
@@ -113,33 +117,36 @@ public class MapViewFragment extends Fragment {
     }
 
     private void initAddEventButton(View rootView) {
-
         ImageButton ibAddEvent = rootView.findViewById(R.id.ib_add_event);
-        if (route == null) {
-            ibAddEvent.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    UpcomingEventFragment fragment = new UpcomingEventFragment();
-                    Bundle args = new Bundle();
-                    args.putBoolean("isAdmin", true);
-                    args.putIntegerArrayList("trailIds", markersController.getRouteTrailIds());
-                    fragment.setArguments(args);
-                    FragmentManager fragmentManager = getActivity().getFragmentManager();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.content, fragment)
-                            .addToBackStack(null)
-                            .commit();
-                }
-            });
+        if (!editRoute) {
+            ibAddEvent.setVisibility(View.GONE);
         } else {
-            ibAddEvent.setImageResource(R.drawable.ic_save_small);
-            ibAddEvent.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    route.setTrailIds(markersController.getRouteTrailIds());
-                    getFragmentManager().popBackStack();
-                }
-            });
+            if (route == null) {
+                ibAddEvent.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UpcomingEventFragment fragment = new UpcomingEventFragment();
+                        Bundle args = new Bundle();
+                        args.putBoolean("isAdmin", true);
+                        args.putIntegerArrayList("trailIds", markersController.getRouteTrailIds());
+                        fragment.setArguments(args);
+                        FragmentManager fragmentManager = getActivity().getFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.content, fragment)
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                });
+            } else {
+                ibAddEvent.setImageResource(R.drawable.ic_save_small);
+                ibAddEvent.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        route.setTrailIds(markersController.getRouteTrailIds());
+                        getFragmentManager().popBackStack();
+                    }
+                });
+            }
         }
     }
 
@@ -160,12 +167,16 @@ public class MapViewFragment extends Fragment {
 
     private void initMarkers(final View view, final GoogleMap map) {
         ImageButton ibStartRoute = view.findViewById(R.id.ib_start_route);
-        ibStartRoute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                markersController.addCurrentToRoute();
-            }
-        });
+        if (!editRoute) {
+            ibStartRoute.setVisibility(View.GONE);
+        } else {
+            ibStartRoute.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    markersController.addCurrentToRoute();
+                }
+            });
+        }
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
