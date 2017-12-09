@@ -27,7 +27,7 @@
     <string name="access_section">Dostęp</string>
     <string name="event">Wydarzenie</string>
     <string name="prompt_event_name">Nazwa*</string>
-    <string name="prompt_place_of_meeting">Skąd wyruszamy?*</string>
+    <string name="prompt_place_of_meeting">Miejsce spotkania*</string>
     <string name="prompt_start_date">Start*</string>
     <string name="end_date">Koniec</string>
     <string name="prompt_participants_limit">Limit uczestników*</string>
