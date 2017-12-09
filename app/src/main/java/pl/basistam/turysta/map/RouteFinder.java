@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import es.usc.citius.hipster.algorithm.Algorithm;
@@ -40,6 +41,9 @@ public class RouteFinder {
 
     private List<Trail> designatePath(Place start, Place end) {
         List<Integer> placesIds = useDijkstraToDesignateRoute(start, end);
+        if (!Objects.equals(placesIds.get(placesIds.size() - 1), end.getId())) {
+            return new ArrayList<>();
+        }
         List<Place> places = findPlacesByIds(placesIds);
         return createRouteConnectingPlaces(places);
     }
