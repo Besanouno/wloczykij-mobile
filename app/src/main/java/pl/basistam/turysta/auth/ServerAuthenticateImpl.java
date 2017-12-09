@@ -46,15 +46,12 @@ public class ServerAuthenticateImpl implements ServerAuthenticate {
     }
 
     @Override
-    public void signUp(UserInputDto userInput) throws ServerConnectionException {
+    public Response<Void> signUp(UserInputDto userInput) throws ServerConnectionException {
         try {
-            Response<Void> response = UserService.getInstance()
+            return UserService.getInstance()
                     .userService()
                     .signUp(userInput)
                     .execute();
-            if (!response.isSuccessful()) {
-                throw new ServerConnectionException(Integer.toString(response.code()));
-            }
         } catch (IOException e) {
             throw new ServerConnectionException(e.getMessage());
         }
