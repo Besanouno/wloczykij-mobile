@@ -16,7 +16,7 @@ public class DatabaseInitializationHandler {
             return;
         }
 
-        if (databasePath.getParentFile().mkdirs()) {
+        if (databasePath.getParentFile().exists() || databasePath.getParentFile().mkdirs()) {
             try {
                 final InputStream inputStream = context.getAssets().open(databaseName);
                 final OutputStream output = new FileOutputStream(databasePath);

@@ -36,6 +36,7 @@ import pl.basistam.turysta.utils.Converter;
 public abstract class EventFragment extends Fragment {
     private EditText edtPlaceOfMeeting;
     private EditText edtName;
+    private EditText edtDescription;
     private EditText edtStartDate;
     private EditText edtStartHour;
     private EditText edtEndDate;
@@ -69,6 +70,7 @@ public abstract class EventFragment extends Fragment {
 
     protected void loadFormFields(View view) {
         edtName = view.findViewById(R.id.edt_name);
+        edtDescription = view.findViewById(R.id.edt_description);
         edtPlaceOfMeeting = view.findViewById(R.id.edt_place_of_meeting);
         edtStartDate = view.findViewById(R.id.edt_start_date);
         edtStartHour = view.findViewById(R.id.edt_start_hour);
@@ -145,6 +147,7 @@ public abstract class EventFragment extends Fragment {
 
     private void fillFields(EventDto event) {
         edtName.setText(event.getName());
+        edtDescription.setText(event.getDescription());
         edtParticipantsLimit.setText(Integer.toString(event.getParticipantsLimit()));
         edtPlaceOfMeeting.setText(event.getPlaceOfMeeting());
         edtStartDate.setText(Converter.dateToString(event.getStartDate()));
@@ -209,6 +212,7 @@ public abstract class EventFragment extends Fragment {
         edtStartDate.setEnabled(isAdmin);
         edtStartHour.setEnabled(isAdmin);
         edtEndDate.setEnabled(isAdmin);
+        edtDescription.setEnabled(isAdmin);
     }
 
 
@@ -222,6 +226,7 @@ public abstract class EventFragment extends Fragment {
         EventDto eventDto = new EventDto();
         eventDto.setName(edtName.getText().toString());
         eventDto.setPlaceOfMeeting(edtPlaceOfMeeting.getText().toString());
+        eventDto.setDescription(edtDescription.getText().toString());
         String startDateTime = edtStartDate.getText().toString() + " " + edtStartHour.getText().toString();
         try {
             eventDto.setStartDate(Converter.stringToDatetime(startDateTime));
@@ -248,5 +253,9 @@ public abstract class EventFragment extends Fragment {
         eventDto.setEventUsers(participants);
         eventDto.setTrailIds(route.getTrailIds());
         return eventDto;
+    }
+
+    protected String getName() {
+        return edtName.getText().toString();
     }
 }

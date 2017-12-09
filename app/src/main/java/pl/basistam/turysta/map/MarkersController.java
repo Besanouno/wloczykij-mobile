@@ -3,6 +3,7 @@ package pl.basistam.turysta.map;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.SparseArray;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -48,6 +49,7 @@ public class MarkersController {
         this.appDatabase = AppDatabase.getInstance(context);
         routeFinder = new RouteFinder(appDatabase);
         this.polylines = polylines;
+        this.adapter.setMarkersController(this);
     }
 
     public void clearRoute() {
@@ -115,6 +117,20 @@ public class MarkersController {
         if (routeMode) {
             addCurrentToRoute();
         }
+    }
+
+    private void undoCurrentMarker() {
+        if (currentMarker != null) {
+            currentMarker.remove();
+        }
+        routeMarkers.remove(routeMarkers.size() - 1);
+        Marker marker = routeMarkers.get(routeMarkers.size() - 1);
+        CameraUtils.moveAndZoom(googleMap, marker.getPosition(), 12f);
+        currentMarker = googleMap.addMarker(new MarkerOptions()
+                .position(marker.getPosition())
+                .zIndex(MarkerPriority.CURRENT.getValue())
+                .icon(BitmapDescriptorFactory.fromAsset("marker.png"))
+                .title(marker.getTitle()));
     }
 
     public void addCurrentToRoute() {
@@ -187,5 +203,16 @@ public class MarkersController {
                 .title(place.getName())
                 .icon(BitmapDescriptorFactory.fromAsset("flag.png")));
         routeMarkers.add(flag);
+    }
+
+    public void removeLast() {
+        int lastElementIndex = items.size() - 1;
+        items.remove(lastElementIndex);
+        routeMarkers.remove(lastElementIndex);
+        Integer lastTrailId = trailIds.get(lastElementIndex);
+        trailIds.remove(lastElementIndex);
+        polylines.get(lastTrailId).setWidth(4f);
+        polylines.remove(lastTrailId);
+        undoCurrentMarker();
     }
 }

@@ -12,6 +12,7 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.MapView;
@@ -26,6 +27,7 @@ import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.dto.EventDto;
 import pl.basistam.turysta.errors.ErrorMessages;
 import pl.basistam.turysta.fragments.MapViewFragment;
+import pl.basistam.turysta.fragments.MessagesFragment;
 import pl.basistam.turysta.items.EventUserItem;
 import pl.basistam.turysta.enums.EventUserStatus;
 import pl.basistam.turysta.map.Route;
@@ -51,6 +53,7 @@ public class UpcomingEventFragment extends EventFragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         initView(view);
+        initBtnNotes(view);
         initBtnSave(view);
         initBtnFriends(view);
         initRightButton(view);
@@ -145,6 +148,24 @@ public class UpcomingEventFragment extends EventFragment {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private void initBtnNotes(View view) {
+        ImageButton ibNotes = view.findViewById(R.id.ib_notes);
+        ibNotes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MessagesFragment fragment = new MessagesFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("eventGuid", eventGuid);
+                bundle.putString("eventName", getName());
+                fragment.setArguments(bundle);
+                getFragmentManager().beginTransaction()
+                        .addToBackStack(null)
+                        .add(R.id.content, fragment)
+                        .commit();
+            }
+        });
     }
 
     private void initBtnLeave(View view) {

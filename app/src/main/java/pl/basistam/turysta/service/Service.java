@@ -13,7 +13,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public abstract class Service {
-    private final String BASE_URL = "http://192.168.1.4:8070/api/";
+    private final String BASE_URL = "https://pacific-coast-18291.herokuapp.com/api/";
 
     protected JsonDeserializer<Date> dateJsonDeserializer() {
         return new JsonDeserializer<Date>() {

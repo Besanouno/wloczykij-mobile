@@ -10,7 +10,6 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -40,7 +39,6 @@ import pl.basistam.turysta.map.MarkersController;
 import pl.basistam.turysta.map.PlacesInitializer;
 import pl.basistam.turysta.map.Route;
 import pl.basistam.turysta.map.TrailsInitializer;
-import pl.basistam.turysta.service.Callback;
 
 public class MapViewFragment extends Fragment {
 

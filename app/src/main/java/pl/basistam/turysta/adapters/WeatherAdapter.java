@@ -46,7 +46,7 @@ public class WeatherAdapter extends BaseAdapter implements Serializable {
         }
         WeatherDto weather = (WeatherDto) getItem(position);
         ((TextView) convertView.findViewById(R.id.tvTime)).setText(weather.getTime());
-        ((TextView) convertView.findViewById(R.id.tvDate)).setText(weather.getDate());
+        ((TextView) convertView.findViewById(R.id.tv_date)).setText(weather.getDate());
         ((TextView) convertView.findViewById(R.id.tvTempValue)).setText(Double.toString(round(weather.getTemperature(), 1)));
         ((TextView) convertView.findViewById(R.id.tvTempMinMaxValue)).setText(Double.toString(round(weather.getTemperatureMin(), 1)) + " do " + Double.toString(round(weather.getTemperatureMax(), 1)));
         ((TextView) convertView.findViewById(R.id.tvHumidityValue)).setText(Double.toString(weather.getHumidity()));

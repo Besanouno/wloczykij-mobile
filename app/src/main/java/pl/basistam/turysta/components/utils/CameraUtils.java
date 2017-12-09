@@ -19,4 +19,11 @@ public class CameraUtils {
                 400,
                 null);
     }
+
+    public static void moveAndZoom(GoogleMap map, LatLng latLng, float zoom) {
+        map.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(latLng, Math.max(zoom, map.getCameraPosition().zoom)),
+                400,
+                null);
+    }
 }

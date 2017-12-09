@@ -20,20 +20,21 @@
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:layout_toStartOf="@+id/ib_remove"
-        android:textSize="18sp"
         android:padding="5dp"
-        />
+        android:textSize="18sp" />
 
     <ImageButton
         android:id="@+id/ib_remove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_alignParentEnd="true"
         android:layout_marginLeft="7dp"
         android:layout_marginRight="7dp"
+        android:layout_marginTop="4dp"
         android:background="@color/transparent"
-        android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_rubbish"/>
+        android:src="@drawable/ic_rubbish"
+        android:visibility="gone" />
 
 </RelativeLayout>

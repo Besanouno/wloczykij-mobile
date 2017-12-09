@@ -11,6 +11,7 @@
     android:background="@color/background"
     tools:context="pl.basistam.turysta.fragments.events.EventFragment">
 
+
     <ScrollView
         android:id="@+id/sv_login"
         android:layout_width="match_parent"
@@ -33,6 +34,19 @@
                     android:hint="@string/prompt_event_name"
                     android:inputType="text"
                     android:maxLines="1" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <EditText
+                    android:id="@+id/edt_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Opis"
+                    android:inputType="textMultiLine" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -170,6 +184,16 @@
                     android:layout_marginStart="15dp"
                     android:background="@drawable/green_background_with_shadow"
                     android:src="@drawable/ic_map" />
+
+                <ImageButton
+                    android:id="@+id/ib_notes"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="end"
+                    android:layout_marginStart="15dp"
+                    android:background="@drawable/green_background_with_shadow"
+                    android:src="@drawable/ic_mail"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <RelativeLayout
