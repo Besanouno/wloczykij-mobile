@@ -85,7 +85,7 @@ public class MapViewFragment extends Fragment {
                 initZoomButtons(map);
                 initMarkers(rootView, map);
                 initLocalizationButton(rootView, map);
-                markersController = new MarkersController(map, getActivity().getBaseContext(), adapter, items, trailsInitializer.getPolylines());
+                markersController = new MarkersController(map, getActivity(), adapter, items, trailsInitializer.getPolylines());
                 if (route != null) {
                     markersController.initRoute(route.getTrailIds());
                 } else {

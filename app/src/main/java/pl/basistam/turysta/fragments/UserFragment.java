@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -146,10 +147,13 @@ public class UserFragment extends Fragment {
                     protected Void doInBackground(String... params) {
                         try {
                             final String authToken = params[0];
-                            UserService.getInstance()
+                            Response<Void> response = UserService.getInstance()
                                     .userService()
                                     .update(authToken, user)
                                     .execute();
+                            if (response.isSuccessful()) {
+                                Snackbar.make(getView(), "Poprawnie zapisano dane", Snackbar.LENGTH_SHORT);
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
