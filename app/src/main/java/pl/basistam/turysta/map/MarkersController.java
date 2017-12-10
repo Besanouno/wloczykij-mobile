@@ -148,8 +148,10 @@ public class MarkersController {
         if (currentMarker != null) {
             currentMarker.remove();
         }
+        Marker marker = routeMarkers.get(routeMarkers.size()-1);
+        marker.remove();
         routeMarkers.remove(routeMarkers.size() - 1);
-        Marker marker = routeMarkers.get(routeMarkers.size() - 1);
+        marker = routeMarkers.get(routeMarkers.size()-1);
         CameraUtils.moveAndZoom(googleMap, marker.getPosition(), 12f);
         currentMarker = googleMap.addMarker(new MarkerOptions()
                 .position(marker.getPosition())
@@ -231,11 +233,15 @@ public class MarkersController {
     public void removeLast() {
         int lastElementIndex = items.size() - 1;
         items.remove(lastElementIndex);
-        routeMarkers.remove(lastElementIndex);
-        Integer lastTrailId = trailIds.get(lastElementIndex);
-        trailIds.remove(lastElementIndex);
-        polylines.get(lastTrailId).setWidth(NORMAL_WIDTH);
-        polylines.remove(lastTrailId);
+        adapter.notifyDataSetChanged();
+        Integer lastTrailId = trailIds.get(lastElementIndex - 1);
+        trailIds.remove(lastElementIndex - 1);
+        polylines.get(polylinesIds.get(polylinesIds.size()-1)).setWidth(NORMAL_WIDTH);
+        polylinesIds.remove(polylinesIds.size()-1);
         undoCurrentMarker();
+    }
+
+    public boolean isLast(Place place) {
+        return routeMarkers.get(routeMarkers.size()-1).getTitle().equals(place.getName());
     }
 }

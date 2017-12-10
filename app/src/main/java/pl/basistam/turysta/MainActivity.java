@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity
         LoggedUser.getInstance().setAccount(getAccountByLogin(name));
     }
 
-    private void signIn() {
+    public void signIn() {
         final AccountManager accountManager = AccountManager.get(this);
         accountManager.addAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
             @Override

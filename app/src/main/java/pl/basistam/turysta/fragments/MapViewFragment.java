@@ -26,10 +26,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import pl.basistam.turysta.MainActivity;
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.actions.LocationHandler;
 import pl.basistam.turysta.actions.UpdatePlaceDetailsAction;
 import pl.basistam.turysta.adapters.RouteAdapter;
+import pl.basistam.turysta.auth.LoggedUser;
 import pl.basistam.turysta.components.buttons.ZoomButtons;
 import pl.basistam.turysta.components.fields.PlaceDetailsField;
 import pl.basistam.turysta.components.fields.search.SearchViewInitializer;
@@ -54,6 +56,7 @@ public class MapViewFragment extends Fragment {
     private LocationHandler locationHandler;
     private Route route;
     private boolean editRoute = true;
+    private boolean newEvent;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,10 +95,13 @@ public class MapViewFragment extends Fragment {
                 initLocalizationButton(rootView, map);
                 markersController = new MarkersController(map, getActivity(), adapter, items, trailsInitializer.getPolylines());
                 if (route != null) {
+                    newEvent = false;
                     markersController.initRoute(route.getTrailIds());
                 } else {
+                    newEvent = true;
                     route = new Route(new ArrayList<Integer>());
                 }
+                initAddEventButton(rootView);
             }
         });
         ImageButton ibClearRoute = rootView.findViewById(R.id.ib_clear_route);
@@ -109,7 +115,6 @@ public class MapViewFragment extends Fragment {
                 }
             });
         }
-        initAddEventButton(rootView);
         return rootView;
     }
 
@@ -125,10 +130,17 @@ public class MapViewFragment extends Fragment {
         if (!editRoute) {
             ibAddEvent.setVisibility(View.GONE);
         } else {
-            if (route == null) {
+            if (newEvent) {
                 ibAddEvent.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (LoggedUser.getInstance().getAccount() == null) {
+                            if (getActivity() instanceof MainActivity) {
+                                MainActivity mainActivity = (MainActivity) getActivity();
+                                mainActivity.signIn();
+                                return;
+                            }
+                        }
                         UpcomingEventFragment fragment = new UpcomingEventFragment();
                         Bundle args = new Bundle();
                         args.putBoolean("isAdmin", true);

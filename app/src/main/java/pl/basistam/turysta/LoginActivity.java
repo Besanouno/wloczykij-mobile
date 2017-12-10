@@ -194,7 +194,7 @@ public class LoginActivity extends AccountAuthenticatorActivity /*implements Loa
     private void finishLogin(Intent intent) {
         String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
         String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
-        String accountType = intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE);
+        String accountType = AccountGeneral.ACCOUNT_TYPE;
         final Account account = new Account(accountName, accountType);
 
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {

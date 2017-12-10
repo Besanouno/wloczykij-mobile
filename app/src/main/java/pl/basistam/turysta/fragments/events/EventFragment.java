@@ -1,6 +1,7 @@
 package pl.basistam.turysta.fragments.events;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import pl.basistam.turysta.LoginActivity;
+import pl.basistam.turysta.MainActivity;
 import pl.basistam.turysta.R;
 import pl.basistam.turysta.adapters.EventUsersAdapter;
 import pl.basistam.turysta.auth.LoggedUser;
