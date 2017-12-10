@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
 
-        mapFragment.initSearchField(this, (SearchView) searchItem.getActionView());
+        mapFragment.initSearchField((SearchView) searchItem.getActionView());
         return super.onCreateOptionsMenu(menu);
     }
 

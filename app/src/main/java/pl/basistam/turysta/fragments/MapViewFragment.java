@@ -34,6 +34,7 @@ import pl.basistam.turysta.components.fields.PlaceDetailsField;
 import pl.basistam.turysta.components.fields.search.SearchField;
 import pl.basistam.turysta.database.AppDatabase;
 import pl.basistam.turysta.fragments.events.UpcomingEventFragment;
+import pl.basistam.turysta.items.RouteNodeItem;
 import pl.basistam.turysta.map.MapInitializer;
 import pl.basistam.turysta.map.MarkersController;
 import pl.basistam.turysta.map.PlacesInitializer;
@@ -70,10 +71,8 @@ public class MapViewFragment extends Fragment {
 
         View bottomSheet = rootView.findViewById(R.id.map_place);
         initBottomSheetBehaviour(bottomSheet);
-        final List<HashMap<String, String>> items = new ArrayList<>();
-        String[] from = {"name", "time"};
-        int[] to = {R.id.name, R.id.time};
-        final RouteAdapter adapter = new RouteAdapter(getActivity(), items, R.layout.item_route_node, from, to);
+        final List<RouteNodeItem> items = new ArrayList<>();
+        final RouteAdapter adapter = new RouteAdapter(getActivity(), R.layout.item_route_node, items);
         ListView lvRoute = bottomSheet.findViewById(R.id.lv_route);
         lvRoute.setAdapter(adapter);
         mapView.getMapAsync(new OnMapReadyCallback() {
@@ -211,12 +210,12 @@ public class MapViewFragment extends Fragment {
         }
     }
 
-    public void initSearchField(final Context context, final SearchView actionView) {
+    public void initSearchField(final SearchView actionView) {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap map) {
                 new SearchField(
-                        context,
+                        getActivity(),
                         actionView,
                         map).initialize();
             }

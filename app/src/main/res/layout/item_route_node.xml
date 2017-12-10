@@ -1,40 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
     android:background="@color/white"
-    >
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:textSize="18sp"
-        android:padding="5dp"
-        />
-
-    <TextView
-        android:id="@+id/time"
+        android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_toStartOf="@+id/ib_remove"
+        android:layout_alignParentStart="true"
         android:padding="5dp"
-        android:textSize="18sp" />
+        android:textSize="15sp" />
+    <!--
+            <ImageButton
+                android:id="@+id/ib_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:layout_marginTop="4dp"
+                android:background="@color/transparent"
+                android:src="@drawable/ic_rubbish"
+                android:visibility="gone" />-->
 
-    <ImageButton
-        android:id="@+id/ib_remove"
+    <ImageView
+        android:id="@+id/iv_arrow"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_toStartOf="@+id/tv_time"
+        app:srcCompat="@drawable/ic_up" />
+
+    <TextView
+        android:id="@+id/tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginLeft="7dp"
-        android:layout_marginRight="7dp"
-        android:layout_marginTop="4dp"
-        android:background="@color/transparent"
-        android:src="@drawable/ic_rubbish"
-        android:visibility="gone" />
+        android:padding="5dp"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_height_difference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/iv_arrow"
+        android:padding="5dp"
+        android:textSize="15sp" />
 
 </RelativeLayout>

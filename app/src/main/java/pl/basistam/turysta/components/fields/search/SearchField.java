@@ -1,5 +1,6 @@
 package pl.basistam.turysta.components.fields.search;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.SearchView;
 import android.view.View;
@@ -16,26 +17,27 @@ import pl.basistam.turysta.database.dao.PlaceDao;
 import pl.basistam.turysta.map.MapInitializer;
 
 public class SearchField {
-    private final Context context;
+    private final Activity activity;
     private final SearchView searchView;
     private final GoogleMap map;
 
+
     public SearchField(
-            final Context context,
+            final Activity activity,
             final SearchView actionView,
             final GoogleMap map) {
-        this.context = context;
+        this.activity = activity;
         this.searchView = actionView;
         this.map = map;
     }
 
     public void initialize() {
         final SearchView.SearchAutoComplete searchAutoComplete = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        final PlaceDao placeDao = AppDatabase.getInstance(context).placeDao();
+        final PlaceDao placeDao = AppDatabase.getInstance(activity).placeDao();
 
-        searchAutoComplete.setDropDownBackgroundDrawable(context.getDrawable(R.drawable.search_drop_down_background));
+        searchAutoComplete.setDropDownBackgroundDrawable(activity.getDrawable(R.drawable.search_drop_down_background));
         searchAutoComplete.setDropDownVerticalOffset(10);
-        new SearchViewInitializer(context, placeDao, searchAutoComplete).execute();
+        new SearchViewInitializer(activity, placeDao, searchAutoComplete).execute();
         searchAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -43,7 +45,7 @@ public class SearchField {
                 final String name = place.get("name");
                 new SearchViewOnItemClickListener(map, placeDao, searchAutoComplete).execute(name);
                 searchAutoComplete.dismissDropDown();
-                KeyboardUtils.hide(context, view);
+                KeyboardUtils.hide(activity, view);
             }
         });
     }

@@ -21,6 +21,8 @@ public class Trail {
     private Integer time;
     @ColumnInfo(name = "twin_trail")
     private Integer twinTrail;
+    @ColumnInfo(name = "height_difference")
+    private Double heightDifference;
 
     @Ignore
     private Place first;
@@ -88,8 +90,14 @@ public class Trail {
     public Integer getTwinTrail() {
         return twinTrail;
     }
-
     public void setTwinTrail(Integer twinTrail) {
         this.twinTrail = twinTrail;
+    }
+
+    public Double getHeightDifference() {
+        return heightDifference;
+    }
+    public void setHeightDifference(Double heightDifference) {
+        this.heightDifference = heightDifference;
     }
 }

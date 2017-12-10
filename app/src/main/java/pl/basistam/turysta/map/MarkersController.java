@@ -24,12 +24,15 @@ import pl.basistam.turysta.database.AppDatabase;
 import pl.basistam.turysta.database.model.Place;
 import pl.basistam.turysta.database.model.Trail;
 import pl.basistam.turysta.enums.MarkerPriority;
+import pl.basistam.turysta.items.RouteNodeItem;
 
 public class MarkersController {
 
+    private static final float ROUTE_NODE_WIDTH = 12f;
+    private static final float NORMAL_WIDTH = 4f;
     private final Context context;
     private final RouteAdapter adapter;
-    private final List<HashMap<String, String>> items;
+    private final List<RouteNodeItem> items;
     private GoogleMap googleMap;
     private Marker currentMarker;
     private Place currentMarkerPlace;
@@ -41,7 +44,7 @@ public class MarkersController {
     private List<Integer> polylinesIds = new ArrayList<>();
     private boolean routeMode = false;
 
-    public MarkersController(GoogleMap map, Context context, RouteAdapter adapter, List<HashMap<String, String>> items, SparseArray<Polyline> polylines) {
+    public MarkersController(GoogleMap map, Context context, RouteAdapter adapter, List<RouteNodeItem> items, SparseArray<Polyline> polylines) {
         this.googleMap = map;
         this.adapter = adapter;
         this.items = items;
@@ -136,9 +139,7 @@ public class MarkersController {
     public void addCurrentToRoute() {
         routeMode = true;
         if (routeMarkers.size() == 0) {
-            HashMap<String, String> item = new HashMap<>();
-            item.put("name", currentMarker.getTitle());
-            item.put("time", "");
+            RouteNodeItem item = new RouteNodeItem(currentMarker.getTitle());
             items.add(item);
             adapter.notifyDataSetChanged();
             Marker m = googleMap.addMarker(new MarkerOptions()
@@ -179,11 +180,9 @@ public class MarkersController {
 
     private void createRouteNode(Trail trail) {
         final Place destination = trail.getLast();
-        HashMap<String, String> item = new HashMap<>();
-        item.put("name", destination.getName());
-        item.put("time", Integer.toString(trail.getTime()) + "m");
-        markRoute(destination);
+        RouteNodeItem item = new RouteNodeItem(destination.getName(), trail.getHeightDifference(), trail.getTime());
         items.add(item);
+        markRoute(destination);
         Polyline polyline = polylines.get(trail.getId());
         if (polyline == null) {
             polyline = polylines.get(trail.getTwinTrail());
@@ -191,7 +190,7 @@ public class MarkersController {
         } else {
             polylinesIds.add(trail.getId());
         }
-        polyline.setWidth(12f);
+        polyline.setWidth(ROUTE_NODE_WIDTH);
         adapter.notifyDataSetChanged();
         trailIds.add(trail.getId());
     }
@@ -211,7 +210,7 @@ public class MarkersController {
         routeMarkers.remove(lastElementIndex);
         Integer lastTrailId = trailIds.get(lastElementIndex);
         trailIds.remove(lastElementIndex);
-        polylines.get(lastTrailId).setWidth(4f);
+        polylines.get(lastTrailId).setWidth(NORMAL_WIDTH);
         polylines.remove(lastTrailId);
         undoCurrentMarker();
     }
