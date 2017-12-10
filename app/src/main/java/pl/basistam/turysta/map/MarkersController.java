@@ -120,6 +120,14 @@ public class MarkersController {
         }.execute();
     }
 
+    public void stopRouteMode() {
+        this.routeMode = false;
+    }
+
+    public boolean isRouteMode() {
+        return routeMode;
+    }
+
     public void clearAndSetCurrentMarker(Place place) {
         if (currentMarker != null) {
             currentMarker.remove();

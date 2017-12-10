@@ -14,13 +14,13 @@ import pl.basistam.turysta.R;
 import pl.basistam.turysta.database.dao.PlaceDao;
 import pl.basistam.turysta.database.model.Place;
 
-class SearchViewInitializer extends AsyncTask<Void, Void, List<Place>> {
+public class SearchViewInitializer extends AsyncTask<Void, Void, List<Place>> {
 
     private final Context context;
     private final PlaceDao placeDao;
     private final SearchView.SearchAutoComplete searchView;
 
-    SearchViewInitializer(
+    public SearchViewInitializer(
             Context context,
             PlaceDao placeDao,
             SearchView.SearchAutoComplete searchView) {

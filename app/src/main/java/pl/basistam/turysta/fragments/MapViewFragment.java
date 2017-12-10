@@ -4,15 +4,16 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -31,8 +32,12 @@ import pl.basistam.turysta.actions.UpdatePlaceDetailsAction;
 import pl.basistam.turysta.adapters.RouteAdapter;
 import pl.basistam.turysta.components.buttons.ZoomButtons;
 import pl.basistam.turysta.components.fields.PlaceDetailsField;
-import pl.basistam.turysta.components.fields.search.SearchField;
+import pl.basistam.turysta.components.fields.search.SearchViewInitializer;
+import pl.basistam.turysta.components.fields.search.SearchViewOnItemClickListener;
+import pl.basistam.turysta.components.utils.KeyboardUtils;
 import pl.basistam.turysta.database.AppDatabase;
+import pl.basistam.turysta.database.dao.PlaceDao;
+import pl.basistam.turysta.database.model.Place;
 import pl.basistam.turysta.fragments.events.UpcomingEventFragment;
 import pl.basistam.turysta.items.RouteNodeItem;
 import pl.basistam.turysta.map.MapInitializer;
@@ -165,14 +170,20 @@ public class MapViewFragment extends Fragment {
     }
 
     private void initMarkers(final View view, final GoogleMap map) {
-        ImageButton ibStartRoute = view.findViewById(R.id.ib_start_route);
+        final ImageButton ibStartRoute = view.findViewById(R.id.ib_start_route);
         if (!editRoute) {
             ibStartRoute.setVisibility(View.GONE);
         } else {
             ibStartRoute.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    markersController.addCurrentToRoute();
+                    if (markersController.isRouteMode()) {
+                        markersController.stopRouteMode();
+                        ibStartRoute.setImageResource(R.drawable.ic_flag);
+                    } else {
+                        markersController.addCurrentToRoute();
+                        ibStartRoute.setImageResource(R.drawable.ic_flag_green);
+                    }
                 }
             });
         }
@@ -213,11 +224,40 @@ public class MapViewFragment extends Fragment {
     public void initSearchField(final SearchView actionView) {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapReady(GoogleMap map) {
+            public void onMapReady(final GoogleMap map) {
+
+                final SearchView.SearchAutoComplete searchAutoComplete = actionView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+                final PlaceDao placeDao = AppDatabase.getInstance(getActivity()).placeDao();
+
+                searchAutoComplete.setDropDownBackgroundDrawable(getActivity().getDrawable(R.drawable.search_drop_down_background));
+                searchAutoComplete.setDropDownVerticalOffset(10);
+                new SearchViewInitializer(getActivity(), placeDao, searchAutoComplete).execute();
+                searchAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        HashMap<String, String> place = (HashMap<String, String>) adapterView.getItemAtPosition(position);
+                        final String name = place.get("name");
+                        new SearchViewOnItemClickListener(map, placeDao, searchAutoComplete).execute(name);
+                        searchAutoComplete.dismissDropDown();
+                        KeyboardUtils.hide(getActivity(), view);
+                        new AsyncTask<Void, Void, Place>() {
+
+                            @Override
+                            protected Place doInBackground(Void... params) {
+                                return placeDao.getByName(name);
+                            }
+
+                            @Override
+                            protected void onPostExecute(Place place) {
+                                markersController.clearAndSetCurrentMarker(place);
+                            }
+                        }.execute();
+                    }
+                });/*
                 new SearchField(
                         getActivity(),
                         actionView,
-                        map).initialize();
+                        map).initialize();*/
             }
         });
     }

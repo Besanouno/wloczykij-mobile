@@ -10,13 +10,13 @@ import pl.basistam.turysta.components.utils.CameraUtils;
 import pl.basistam.turysta.database.dao.PlaceDao;
 import pl.basistam.turysta.database.model.Place;
 
-class SearchViewOnItemClickListener extends AsyncTask<String, Void, Place> {
+public class SearchViewOnItemClickListener extends AsyncTask<String, Void, Place> {
 
     private final GoogleMap map;
     private final PlaceDao placeDao;
     private final SearchView.SearchAutoComplete searchView;
 
-    SearchViewOnItemClickListener(
+    public SearchViewOnItemClickListener(
             GoogleMap map,
             PlaceDao placeDao,
             SearchView.SearchAutoComplete searchView) {
