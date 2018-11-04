@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="pl.basistam.turysta">
+    package="pl.basistam.wloczykij">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -38,7 +38,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="pl.basistam.wloczykij.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -48,14 +48,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name="pl.basistam.wloczykij.LoginActivity"
             android:label="@string/title_activity_login" />
 
         <activity
-            android:name=".SignUpActivity"
+            android:name="pl.basistam.wloczykij.SignUpActivity"
             android:label="@string/title_sign_up"/>
 
-        <service android:name=".auth.AuthenticatorService">
+        <service android:name="pl.basistam.wloczykij.auth.AuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Turysta</string>
+    <string name="app_name">Włóczykij</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -35,7 +35,7 @@
     <string name="action_save_event">Zapisz</string>
     <string name="prompt_end_date">Koniec</string>
     <string name="title_activity_login">Zaloguj się</string>
-    <string name="label">Turysta</string>
+    <string name="label">Włóczykij</string>
     <string name="register">Nie masz konta? Zarejestruj się</string>
     <string name="sign_up">Zarejestruj się</string>
     <string name="prompt_login_r">login</string>
