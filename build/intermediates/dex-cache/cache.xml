@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/159510e1351436ed8d539e33cacdcaed37c4ceed/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="c4f45092eee6cdf1a5dbd597b2b6819be652ce2e">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_40b816c7da535de9a7b2436921b6f1425135e0eb/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/229ed587afbec73ff2ecb36e8841237667150e68/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="88246166d5afb106f532f6e6deae683c66b42c89">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_113ada29eb11dc7f5ed97e8c6e8e34f33abae838/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/5a035ba07195263ed77c0e87f5346ba79b29a890/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="2e92aa0163544a804a0b34f169ca61801770839a">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_7142b727c45c838832fa74694ceabd1c7eda8eb2/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/19b10b76c813ab55e8f20e004220cac483bdd376/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="18d31838aa4fcc768a8a0516e22cc13b94655d89">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_e5a2e144bea7e8141c0cb341c1f079264e2495a3/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/opt/Sdk/extras/m2repository/com/android/support/constraint/constraint-layout-solver/1.0.2/constraint-layout-solver-1.0.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/constraint-layout-solver-1.0.2_f39d14438683f77a145dbc1cef95f7266f5f013b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/0601d96ff2c46d757ec820ec5819fb5b506cfa7b/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_b24d818245943f659df4a5e9498062015a085d88/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_669742b21c6be2adf1977f521b25738fff055360/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/opt/Sdk/extras/android/m2repository/com/android/support/support-annotations/26.0.0-alpha1/support-annotations-26.0.0-alpha1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="023ee503b631f69511e335a061ea008f8da60f40">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-26.0.0-alpha1_3ace0a526d094c354898a714027e5b43dea82cb2/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/6f0d9de353405ef4142a0c0f783abfe34da5d399/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="2430e711762a749feb00b3d64858ca4768251b9d">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_fdd06662fc2ff46c41f3b96a05e39c7158a616cc/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/f2d89f5f8f760279e13d135fdb04e54353a4043b/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="6a022bf00ccd0948a8180c505e8e458bbddd43a6">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_53ededeaa583517d1cd2234a8f28409e47f9716e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/83f7d4f0437f42195bfef9967299f7198fe8cb11/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="9935891f23923f39d002087085d9696568a9f657">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_8f32a13c323acf20dd46cc5085ce53a85e586d5c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.gradle/caches/modules-2/files-2.1/es.usc.citius.hipster/hipster-core/1.0.1/4c4aea98b7a6601aebaee3d689eea6e9903df351/hipster-core-1.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="4c4aea98b7a6601aebaee3d689eea6e9903df351">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/hipster-core-1.0.1_253be3c3253a0099644a308359ac4d15dbd3b0bd/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/560b9e2b2007e0f188189e3902d60bb080a838f2/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="47471eb19df288158b00b8d9cfa41bce7373f5cc">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_72d242d9511aadf4da9b5e6f5200ba786558c07d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/edcf8f452aaf641b6c187ed8245d0513c92d62b6/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="952944218ecedea1554a513dec0c14d570642843">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_ac3a26b553b31bfe9c08a4ad3c2db7f51f522774/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/53bc82c6bbb33056d5878a51f07474d45c6c85e4/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="364364bf77b4a71afc5930fc3ae57b3f0eea637c">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_5a0952610a04fdc9cecc7e7d4ae9b86869b573a8/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="4d7cf5082097b295ed9ee8768be16f14df45f389">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_21c6af0b5bd09c54e75068ceecb920a5d6c5bb75/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/68ccbe423f48855edb23a64f74ad623c9dc9ff0b/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="70ffe00aaf049893f59d1dad57bd82992faa38ef">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_18a9cfbe3d5aefedceb542b3bb4f76c895cec349/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/5da1acaba5b4c561476246f31051620e839dd7a6/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="cddcd0fb93bc70e27325f2f715b2710332004ebb">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_1e5c37abead5cf0065acb34def0ac8c737fa1a62/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/ae16ceadb0853f9b6afa4759ae6abb2e6ad7fd24/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_f98ea7deced465159ef6d501f0c169e88b1e46cc/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/b540a805c44e097fe9cd3e09dc5381100a9886d1/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="8df0e365e40beb151bc42dee20817721a6cab7b0">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_29e8d811c886ecb0c97aaaf4b1dac8b2c1453a25/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/7411e091108c05b30bd89c2d33fa38129de0bc06/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="fcd01fd11233459f546c437ec927e9b61bf7caf1">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_c3168826ea9b45c4a90bbeb3940098bceb5de786/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/besanouno/.android/build-cache/a75ebb8932f08e976b2e309c1b159d985203ab6e/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="fcae52a60bc07924d370b4d376116cd8f8581f54">
+        <dex dex="/home/besanouno/Projects/wloczykij-mobile/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_1d8f15242ba5a213dd2857aeaf9a5eedd13f6d6c/classes.dex" />
+    </item>
+
+</items>

@@ -32,8 +32,7 @@ import pl.basistam.turysta.fragments.MapViewFragment;
 import pl.basistam.turysta.fragments.UserFragment;
 import pl.basistam.turysta.fragments.events.PublicEventsFragment;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private MapViewFragment mapFragment = new MapViewFragment();
 
@@ -84,7 +83,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         FragmentManager fragmentManager = getFragmentManager();
@@ -101,16 +99,10 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().replace(R.id.content, mapFragment).commit();
             searchPanel.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_events) {
-            if (LoggedUser.getInstance().getAccount() == null) {
-                signIn();
-            }
             openTab(new EventsFragment());
         } else if (id == R.id.nav_manage_account) {
             showAccountPicker();
         } else if (id == R.id.nav_public_events) {
-            if (LoggedUser.getInstance().getAccount() == null) {
-                signIn();
-            }
             openTab(new PublicEventsFragment());
         } else if (id == R.id.nav_weather) {
             getFragmentManager().beginTransaction()
