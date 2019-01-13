@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/background"
-    tools:context="pl.basistam.turysta.fragments.events.EventsFragment">
+    tools:context="pl.basistam.wloczykij.fragments.events.EventsFragment">
 
     <TabHost
         android:id="@+id/tab_host"

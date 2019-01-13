@@ -143,7 +143,7 @@
 
         </LinearLayout>
 
-        <pl.basistam.turysta.components.BottomSheetListView
+        <pl.basistam.wloczykij.components.BottomSheetListView
             android:id="@+id/lv_route"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
