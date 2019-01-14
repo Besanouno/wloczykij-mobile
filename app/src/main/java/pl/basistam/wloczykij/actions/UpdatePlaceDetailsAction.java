@@ -29,12 +29,14 @@ public class UpdatePlaceDetailsAction extends AsyncTask<String, Void, Place> {
 
     @Override
     protected void onPostExecute(Place place) {
-        placeDetailsField.updateName(place.getName());
-        placeDetailsField.updateHeightAboveSeaLevel(place.getHeight());
-        if (markersController.isRouteMode() && markersController.isLast(place)) {
-            markersController.removeLast();
-        } else {
-            markersController.clearAndSetCurrentMarker(place);
+        if (place != null) {
+            placeDetailsField.updateName(place.getName());
+            placeDetailsField.updateHeightAboveSeaLevel(place.getHeight());
+            if (markersController.isRouteMode() && markersController.isLast(place)) {
+                markersController.removeLast();
+            } else {
+                markersController.clearAndSetCurrentMarker(place);
+            }
         }
     }
 }

@@ -96,7 +96,7 @@ public class MapViewFragment extends Fragment {
                 markersController = new MarkersController(map, getActivity(), adapter, items, trailsInitializer.getPolylines());
                 if (route != null) {
                     newEvent = false;
-                    markersController.initRoute(route.getTrailIds());
+                    markersController.initRoute(route.getTrailIds(), false);
                 } else {
                     newEvent = true;
                     route = new Route(new ArrayList<Integer>());

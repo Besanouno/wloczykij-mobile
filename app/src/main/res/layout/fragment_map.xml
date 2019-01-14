@@ -125,11 +125,11 @@
                 android:id="@+id/ib_add_event"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginTop="4dp"
                 android:layout_marginLeft="7dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginRight="7dp"
                 android:background="@drawable/green_background_with_shadow"
-                android:src="@drawable/ic_add_plus_button"/>
+                android:src="@drawable/ic_add_plus_button" />
 
             <ImageButton
                 android:id="@+id/ib_clear_route"

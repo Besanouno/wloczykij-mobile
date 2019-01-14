@@ -19,6 +19,9 @@ public interface TrailDao {
     @Query("SELECT * FROM trails WHERE id IN (:trailIds)")
     List<Trail> findAllByIds(List<Integer> trailIds);
 
+    @Query("SELECT * FROM trails WHERE id = :trailId")
+    Trail findById(Integer trailId);
+
     @Query("SELECT * FROM trails WHERE first_point = :id")
     List<Trail> findAvailableTrails(Integer id);
 }

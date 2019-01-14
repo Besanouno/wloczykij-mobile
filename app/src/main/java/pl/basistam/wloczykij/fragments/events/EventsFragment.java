@@ -26,7 +26,7 @@ import pl.basistam.wloczykij.fragments.events.tabs.UpcomingEventsDataSet;
 
 public class EventsFragment extends Fragment {
 
-    private static final String UPCOMING_EVENTS = "Nadchodzące";
+    private static final String UPCOMING_EVENTS = "Nowe";
     private static final String INVITATIONS = "Zaproszenia";
     private static final String ARCHIVAL_EVENTS = "Archiwalne";
 

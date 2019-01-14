@@ -56,6 +56,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().add(R.id.content, mapFragment).commit();
+
+        final View header = navigationView.getHeaderView(0);
+        TextView textView = (TextView) header.findViewById(R.id.tv_name);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signIn();
+            }
+        });
     }
 
 
@@ -101,6 +110,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_events) {
             openTab(new EventsFragment());
         } else if (id == R.id.nav_manage_account) {
+            fragmentManager.beginTransaction().replace(R.id.content, mapFragment).commit();
+            searchPanel.setVisibility(View.VISIBLE);
             showAccountPicker();
         } else if (id == R.id.nav_public_events) {
             openTab(new PublicEventsFragment());

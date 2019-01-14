@@ -21,6 +21,7 @@ import pl.basistam.wloczykij.database.model.TrailPoint;
                 Trail.class,
                 TrailPoint.class
         },
+        exportSchema = false,
         version = 3)
 @TypeConverters({PlaceTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {

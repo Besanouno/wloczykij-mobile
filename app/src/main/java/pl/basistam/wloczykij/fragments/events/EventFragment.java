@@ -148,7 +148,9 @@ public abstract class EventFragment extends Fragment {
     private void fillFields(EventDto event) {
         edtName.setText(event.getName());
         edtDescription.setText(event.getDescription());
-        edtParticipantsLimit.setText(Integer.toString(event.getParticipantsLimit()));
+        if (event.getParticipantsLimit() != null) {
+            edtParticipantsLimit.setText(Integer.toString(event.getParticipantsLimit()));
+        }
         edtPlaceOfMeeting.setText(event.getPlaceOfMeeting());
         edtStartDate.setText(Converter.dateToString(event.getStartDate()));
         edtStartHour.setText(Converter.timeToString(event.getStartDate()));
@@ -247,7 +249,7 @@ public abstract class EventFragment extends Fragment {
         }
         if (!edtParticipantsLimit.getText().toString().isEmpty())
             eventDto.setParticipantsLimit(Integer.parseInt(edtParticipantsLimit.getText().toString()));
-        eventDto.setPublicAccess(Boolean.getBoolean(chbPublicAccess.getText().toString()));
+        eventDto.setPublicAccess(chbPublicAccess.isChecked());
         ArrayList<EventUserItem> participants = new ArrayList<>();
         participants.addAll(eventUsers.getParticipants());
         eventDto.setEventUsers(participants);

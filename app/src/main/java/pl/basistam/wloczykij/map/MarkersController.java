@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import pl.basistam.wloczykij.R;
@@ -89,15 +90,17 @@ public class MarkersController {
         return trailIds;
     }
 
-    public void initRoute(final List<Integer> trailIds) {
+    public void initRoute(final List<Integer> trailIds, final boolean withRouteMode) {
         new AsyncTask<Void, Void, List<Trail>>() {
 
             @Override
             protected List<Trail> doInBackground(Void... params) {
-                List<Trail> trails = appDatabase.trailDao().findAllByIds(trailIds);
-                for (Trail t : trails) {
+                List<Trail> trails = new ArrayList<>();
+                for (Integer id : trailIds) {
+                    Trail t = appDatabase.trailDao().findById(id);
                     t.setFirst(appDatabase.placeDao().getById(t.getFirstPoint()));
                     t.setLast(appDatabase.placeDao().getById(t.getLastPoint()));
+                    trails.add(t);
                 }
                 return trails;
             }
@@ -116,6 +119,7 @@ public class MarkersController {
                     createRouteNode(trails.get(i));
                 }
                 clearAndSetCurrentMarker(trails.get(trails.size() - 1).getLast());
+                routeMode = withRouteMode;
             }
         }.execute();
     }

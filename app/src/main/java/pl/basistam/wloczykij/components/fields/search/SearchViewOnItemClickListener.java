@@ -7,6 +7,7 @@ import android.support.v7.widget.SearchView;
 import com.google.android.gms.maps.GoogleMap;
 
 import pl.basistam.wloczykij.components.utils.CameraUtils;
+import pl.basistam.wloczykij.components.utils.KeyboardUtils;
 import pl.basistam.wloczykij.database.dao.PlaceDao;
 import pl.basistam.wloczykij.database.model.Place;
 
@@ -36,7 +37,7 @@ public class SearchViewOnItemClickListener extends AsyncTask<String, Void, Place
             CameraUtils.moveAndZoom(map, place.getLatitude(), place.getLongitude(), 9f);
             searchView.setCursorVisible(false);
             searchView.setText(place.getName());
-        } else {
+            } else {
             searchView.showDropDown();
         }
     }
